@@ -1,0 +1,43 @@
+<h2>Remove a map from a layer <span class="admin-only">(admins only)</span></h2>
+<p>
+<br />
+Deletes the reference of this map to this layer.<br />
+The map will still exist and <br />
+The map can still belong to other layers <br />
+Cannot be undone.
+</p>
+<h3>Map</h3>
+<table>
+ <tr>
+    <td>
+
+  <%= link_to(image_tag("http://images.nypl.org/?t=t&id=#{@map.nypl_digital_id}"),
+    "http://images.nypl.org/?t=w&id=#{@map.nypl_digital_id}") %> 
+  </td>
+  <td>
+ <div class="maplist_title">
+<%=link_to(strip_brackets(h(@map.title)), @map) %> 
+  </div>
+<div class="map_description"><span><%=strip_brackets(h(@map.description)) -%> (In <%=link_to(pluralize(@map.layers.count, 'layer'), map_layers_path(@map.id)) -%>)</span></div> 
+
+  
+  </td>
+</table>
+<h3>Layer</h3>
+<table>
+<tr>
+    <td><%= image_tag("http://images.nypl.org/?t=t&id=#{@layer.map_nypl_digital_id}") %></td>
+    <td> <span class="layer_title">Layer <%=@layer.id%> : <%= link_to h(@layer.name),  layer_path(@layer) -%></span>
+    </td>
+  </tr>
+</table>
+
+
+
+<% form_for :layer, :url=> { :action=>"remove_map"},
+  :html => {:method => :put } do |f| %>
+    <%= hidden_field_tag 'id', @layer%>
+    <%= hidden_field_tag 'map_id', @map.id %>
+    <br />
+    <%= submit_tag 'Remove this map from the Layer', :confirm => "Are you sure, this cannot be undone?" %>
+  <% end%>

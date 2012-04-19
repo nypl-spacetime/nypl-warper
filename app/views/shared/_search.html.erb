@@ -1,0 +1,28 @@
+
+<% form_tag url_for(:controller => "maps"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
+  <strong>Search</strong>  
+ <select id="field" name="field">
+    <%= options_for_select([ ["Title", "title"], 
+                           ["Description", "description"], 
+                           ["CATNYP ID", "catnyp"], 
+                           ["Digital Gallery Id", "nypl_digital_id"]], @field)-%>
+    </select>
+  for 
+  <%= text_field_tag 'query', @query -%>
+
+  <% if @show_warped == "1" -%>
+    <% check_all = false -%>
+    <% check_rectified = true -%>
+  <% else -%>
+    <% check_all = true -%>
+    <% check_rectified = false -%>
+  <% end %>
+  in 
+  <%= radio_button_tag('show_warped', 0, check_all, :id => 'all_maps') %>
+  <label for="all_maps">all maps</label>
+  <%= radio_button_tag('show_warped', 1, check_rectified, :id => 'rectified_maps') %>
+  <label for="rectified_maps">rectified maps only</label>
+
+  <input type="submit" value=" Go ">
+
+<% end -%>

@@ -1,0 +1,255 @@
+
+LAYER
+		    NAME 'image10'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/romanba2.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'Roman map'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image12'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'engwalmap'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image14'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/monica_small.png.geo.tif'
+		    METADATA   
+		      'wms_title' 'test'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image16'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/monica_zoom2.png.geo.tif'
+		    METADATA   
+		      'wms_title' 'world map'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image18'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/monica.png.geo.tif'
+		    METADATA   
+		      'wms_title' 'tas'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image20'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/monica.png.geo.tif'
+		    METADATA   
+		      'wms_title' 'as'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image22'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/monica.png.geo.tif'
+		    METADATA   
+		      'wms_title' 'z\'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image24'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/romanba2.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'roman map'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image26'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/romanba2.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'd'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image28'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'as'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image30'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'asc'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image32'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'acs'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image34'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'ascasc'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image36'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'ascasc'
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image38'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/romanba2.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'as '
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+LAYER
+		    NAME 'image40'
+	 	    TYPE RASTER
+	 	    DATA '/home/tim/work/geowarp/public/mapimages/head.jpg.geo.tif'
+		    METADATA   
+		      'wms_title' 'headinley part '
+		    END
+	 	    STATUS ON
+	 	    TRANSPARENCY 100
+	 	    PROJECTION
+	 	    	'init=epsg:4326'
+	 	    END
+	END		
+	 
+	
+		 
+LAYER
+			    NAME 'image47'
+		 	    TYPE RASTER
+		 	    DATA '/home/tim/work/geowarper/public/mapimages/pict.jpeg.geo.tif'
+			    METADATA   
+			      'wms_title' 'qw'
+			    END
+		 	    STATUS ON
+		 	    TRANSPARENCY 100
+		 	    PROJECTION
+		 	    	'init=epsg:4326'
+		 	    END
+		END		
+		 
+LAYER
+			    NAME 'image49'
+		 	    TYPE RASTER
+		 	    DATA '/home/tim/work/geowarper/public/mapimages/ascasc.jpeg.geo.tif'
+			    METADATA   
+			      'wms_title' 'aascascasc'
+			    END
+		 	    STATUS ON
+		 	    TRANSPARENCY 100
+		 	    PROJECTION
+		 	    	'init=epsg:4326'
+		 	    END
+		END		
+		 

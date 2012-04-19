@@ -1,0 +1,106 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "openlayers/OpenLayers-dev" -%>
+        <%= javascript_include_tag "layers" %>
+        <%= stylesheet_link_tag "openlayers/theme/default/style" %> 
+        <%= stylesheet_link_tag "styles" %>
+  <script type="text/javascript">
+    var warpedwms_url2 = '<%= url_for :controller => 'layers', :action => 'wms', :id => @layer -%>'; 
+    var warpedwms_url = "http://dev.maps.nypl.org/mapserv?map=/home/tim/geowarper/warper/db/mapfiles/tile.map&";
+         var warped_bounds =  new OpenLayers.Bounds(<%=@layer.maps.warped.first.bounds-%>);
+OpenLayers.ImgPath = '<%=request.protocol + request.host_with_port + request.relative_url_root.to_s%>/javascripts/openlayers/img/';
+
+var map;
+function init(){
+ OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+     OpenLayers.Util.onImageLoadErrorColor = "transparent";
+
+     var options = {
+projection: new OpenLayers.Projection("EPSG:900913"),
+            displayProjection: new OpenLayers.Projection("EPSG:4326"),
+            units: "m",
+            numZoomLevels:18,
+            maxResolution: 156543.0339,
+            maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
+                20037508, 20037508.34),
+            controls: [
+              new OpenLayers.Control.Attribution(),
+            new OpenLayers.Control.LayerSwitcher(),
+            new OpenLayers.Control.Navigation(),
+            new OpenLayers.Control.PanZoomBar(),
+            new OpenLayers.Control.MousePosition()
+              ]
+     };
+     map = new OpenLayers.Map("map",options);
+     mapnik4 = mapnik.clone();
+      map.addLayer(mapnik4);
+
+           wmslayer =  new OpenLayers.Layer.WMS
+     ( "mapserv layer",
+       warpedwms_url,
+       {format: 'image/png', layers: "image" },
+       {         TRANSPARENT:'true', reproject: 'true'},
+       { gutter: 15, buffer:0},
+       { projection:"epsg:4326", units: "m"  }
+     );
+  wmslayer.setIsBaseLayer(false);
+  map.addLayer(wmslayer);
+
+   wmslayer2 =  new OpenLayers.Layer.WMS
+     ( "ruby mapscript layer",
+       warpedwms_url2,
+       {format: 'image/png', layers: "image" },
+       {         TRANSPARENT:'true', reproject: 'true'},
+       { gutter: 15, buffer:0},
+       { projection:"epsg:4326", units: "m"  }
+     );
+   wmslayer2.setIsBaseLayer(false);
+   wmslayer2.visibility = false;
+  map.addLayer(wmslayer2);
+
+
+      bounds_merc = new OpenLayers.Bounds();
+      
+   bounds_merc  = cliplonLatToMercatorBounds(warped_bounds);
+
+   map.zoomToExtent(bounds_merc);
+map.setCenter(new OpenLayers.LonLat(-8236481.958624719,4966396.75485034), 14);
+
+}
+function mercatorToLonLat(merc) {
+	 var lon = (merc.lon / 20037508.34) * 180;
+	 var lat = (merc.lat / 20037508.34) * 180;
+
+	 lat = 180/Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+
+ return new OpenLayers.LonLat(lon, lat);
+}
+
+function lonLatToMercator(ll) {
+	 var lon = ll.lon * 20037508.34 / 180;
+	 var lat = Math.log(Math.tan((90 + ll.lat) * Math.PI / 360)) / (Math.PI / 180);
+
+	 lat = lat * 20037508.34 / 180;
+
+	 return new OpenLayers.LonLat(lon, lat);
+}
+
+function cliplonLatToMercatorBounds(llbounds){
+var proj = new OpenLayers.Projection("EPSG:4326");
+var newbounds = llbounds.transform(proj, map.getProjectionObject());
+
+return newbounds;
+
+} 
+
+</script>
+
+      <% end%>
+
+      <% @onload = "init();" -%>
+      <table>
+        <%= render :partial => "layers/layer", :object => @layer %>
+      </table>
+      <div id = "map" >
+      
+      </div>
+

@@ -1,0 +1,121 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis projectname="" version="0.9.0-Ganymede" >
+    <title></title>
+    <mapcanvas>
+        <units>degrees</units>
+        <extent>
+            <xmin>-7.206504</xmin>
+            <ymin>48.709555</ymin>
+            <xmax>2.988808</xmax>
+            <ymax>56.535642</ymax>
+        </extent>
+        <projections>0</projections>
+        <destinationsrs>
+            <spatialrefsys>
+                <proj4>+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</proj4>
+                <srsid>2585</srsid>
+                <srid>4326</srid>
+                <epsg>4326</epsg>
+                <description>WGS 84</description>
+                <projectionacronym>longlat</projectionacronym>
+                <ellipsoidacronym>WGS84</ellipsoidacronym>
+                <geographicflag>true</geographicflag>
+            </spatialrefsys>
+        </destinationsrs>
+    </mapcanvas>
+    <legend>
+        <legendlayer open="true" checked="Qt::Checked" name="engwalmap1660-1892.jpg.geo" >
+            <filegroup open="false" hidden="true" >
+                <legendlayerfile layerid="engwalmap1660_1892_jpg_geo20080303145140503" visible="1" inOverview="0" />
+            </filegroup>
+        </legendlayer>
+        <legendlayer open="true" checked="Qt::Checked" name="NASA (JPL)" >
+            <filegroup open="false" hidden="true" >
+                <legendlayerfile layerid="NASA__JPL_20080303145057336" visible="1" inOverview="0" />
+            </filegroup>
+        </legendlayer>
+    </legend>
+    <projectlayers layercount="2" >
+        <maplayer minScale="0" maxScale="1e+08" scaleBasedVisibilityFlag="0" type="raster" >
+            <id>NASA__JPL_20080303145057336</id>
+            <datasource>http://wms.jpl.nasa.gov/wms.cgi</datasource>
+            <layername>NASA (JPL)</layername>
+            <srs>
+                <spatialrefsys>
+                    <proj4>+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</proj4>
+                    <srsid>2585</srsid>
+                    <srid>4326</srid>
+                    <epsg>4326</epsg>
+                    <description>WGS 84</description>
+                    <projectionacronym>longlat</projectionacronym>
+                    <ellipsoidacronym>WGS84</ellipsoidacronym>
+                    <geographicflag>true</geographicflag>
+                </spatialrefsys>
+            </srs>
+            <transparencyLevelInt>255</transparencyLevelInt>
+            <provider>wms</provider>
+            <rasterproperties>
+                <wmsSublayer>
+                    <name>global_mosaic</name>
+                    <style></style>
+                </wmsSublayer>
+                <wmsFormat>image/jpeg</wmsFormat>
+                <wmsProxyHost></wmsProxyHost>
+                <wmsProxyPort>80</wmsProxyPort>
+                <wmsProxyUser></wmsProxyUser>
+                <wmsProxyPass></wmsProxyPass>
+                <showDebugOverlayFlag boolean="false" />
+                <drawingStyle>MULTI_BAND_COLOR</drawingStyle>
+                <invertHistogramFlag boolean="false" />
+                <stdDevsToPlotDouble>0</stdDevsToPlotDouble>
+                <redBandNameQString></redBandNameQString>
+                <greenBandNameQString></greenBandNameQString>
+                <blueBandNameQString></blueBandNameQString>
+                <grayBandNameQString></grayBandNameQString>
+            </rasterproperties>
+        </maplayer>
+        <maplayer minScale="1" maxScale="1e+08" scaleBasedVisibilityFlag="0" type="raster" >
+            <id>engwalmap1660_1892_jpg_geo20080303145140503</id>
+            <datasource>/home/tim/work/geowarp/public/mapimages/engwalmap1660-1892.jpg.geo.tif</datasource>
+            <layername>engwalmap1660-1892.jpg.geo</layername>
+            <srs>
+                <spatialrefsys>
+                    <proj4>+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</proj4>
+                    <srsid>2585</srsid>
+                    <srid>4326</srid>
+                    <epsg>4326</epsg>
+                    <description>WGS 84</description>
+                    <projectionacronym>longlat</projectionacronym>
+                    <ellipsoidacronym>WGS84</ellipsoidacronym>
+                    <geographicflag>true</geographicflag>
+                </spatialrefsys>
+            </srs>
+            <transparencyLevelInt>121</transparencyLevelInt>
+            <provider></provider>
+            <rasterproperties>
+                <showDebugOverlayFlag boolean="false" />
+                <drawingStyle>MULTI_BAND_COLOR</drawingStyle>
+                <invertHistogramFlag boolean="false" />
+                <stdDevsToPlotDouble>0</stdDevsToPlotDouble>
+                <redBandNameQString>1 : Red</redBandNameQString>
+                <greenBandNameQString>2 : Green</greenBandNameQString>
+                <blueBandNameQString>3 : Blue</blueBandNameQString>
+                <grayBandNameQString>Not Set</grayBandNameQString>
+            </rasterproperties>
+        </maplayer>
+    </projectlayers>
+    <properties>
+        <Gui>
+            <SelectionColorBluePart type="int" >0</SelectionColorBluePart>
+            <SelectionColorGreenPart type="int" >255</SelectionColorGreenPart>
+            <SelectionColorRedPart type="int" >255</SelectionColorRedPart>
+            <CanvasColorBluePart type="int" >255</CanvasColorBluePart>
+            <CanvasColorGreenPart type="int" >255</CanvasColorGreenPart>
+            <CanvasColorRedPart type="int" >255</CanvasColorRedPart>
+        </Gui>
+        <PositionPrecision>
+            <DecimalPlaces type="int" >2</DecimalPlaces>
+            <Automatic type="bool" >true</Automatic>
+        </PositionPrecision>
+    </properties>
+</qgis>

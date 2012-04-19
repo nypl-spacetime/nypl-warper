@@ -1,0 +1,52 @@
+<tr>
+  <td >
+    <%= image_tag("http://images.nypl.org/?t=t&id=#{layer.map_nypl_digital_id}") %>
+  </td>
+  <td >
+    <span class="layer_title">
+      <%= link_to h(layer.name),  layer_path(layer) -%>
+    </span>
+    <br />
+    <span class="layer_description">
+      <%= layer.description %>
+    </span>
+    <span class="layer_year">
+    <%if layer.depicts_year%>Depicts : <%= layer.depicts_year %> <%end%>
+    </span>
+    <span class="map_links"> 
+     Bibiliographic records: <%= link_to 'CATNYP record', "http://catnyp.nypl.org/record=#{layer.catnyp}" -%>
+    </span>
+  <span class="layer_visibility">
+    <br />
+    <span id="vis-text-<%=layer.id%>"> 
+      <% if layer.is_visible -%>
+        (Visible)
+      <% else -%>
+        (Not Visible) 
+      <%end-%>
+    </span>
+
+    <% if admin_authorized? -%>
+      <%= link_to_remote("Toggle Visibility", :update => "vis-text-#{layer.id}", :url => { :action => "toggle_visibility", :id => layer})%> | 
+      <%= link_to("Merge", :controller => "layers", :action=> "merge", :id => layer) %> |
+      <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer)%> |
+    <%end -%>
+    <% if layer.is_visible && layer.rectified_maps_count > 0 %>
+      <%= link_to("Download KML", layer_url(:id => layer, :format=>:kml)) %>
+    <% end %>
+
+  </span>
+
+</td>
+<td>
+<%if layer.depicts_year -%><%= layer.depicts_year -%> <%end-%>
+</td>
+  <td>
+    <span class="layer_mapcount">
+      <%= pluralize layer.maps_count,'map' -%>
+    </span>
+    </td>
+    <td>
+    <%=number_to_percentage(layer.rectified_percent, :precision=>0) %><br />
+      (<%= pluralize layer.rectified_maps_count, 'map'-%>)
+  </td>

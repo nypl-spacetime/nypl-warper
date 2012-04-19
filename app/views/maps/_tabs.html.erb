@@ -1,0 +1,11 @@
+<div id="tabs">
+  <ul>
+    <%# tab_for TAB_SYM, LINK [,TEXT] %>
+    <%= tab_for :show, map_path, "View" %>
+    <%= tab_for :warp, warp_map_path, "Rectify" %>
+    <%= tab_for :clip, clip_map_path, "Crop" %>
+    <%= tab_for :align, align_map_path %>
+    <%= tab_for :warped, warped_map_path , "Preview Rectified Map" %>
+    <%= tab_for :activity, map_activity_path , "Activity History" %>
+</ul>
+</div>

@@ -1,0 +1,10 @@
+<div id="wooTabs">
+  <ul>
+    <li><a href="<%=map_path%>" title="mapshow"><span>Show</span></a></li>
+    <li><a href="<%=warp_map_path%>" title="maprectify"><span>Rectify</span></a></li>
+    <li><%= link_to("<span>Crop</span>",clip_map_path, {:title=>"crop"})-%></li>
+    <li><%= link_to("<span>Align</span>",align_map_path, {:title=>"align"})-%></li>
+    <li><%= link_to("<span>Preview Rectified Map</span>",warped_map_path, {:title=>"preview"})-%></li>
+    <li><%= link_to("<span>Activity History</span>",map_activity_path, {:title=>"activity"})-%></li>
+  </ul>
+</div>
