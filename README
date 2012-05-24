@@ -1,3 +1,11 @@
+NYPL Map Warper
+---------------
+
+This software has been developed by Topomancy LLC with the support and
+collaboration of the New York Public Library.
+
+You can see this code in action at http://maps.nypl.org/.
+
 README
 -------
 
@@ -18,3 +26,5 @@ rmagic gem is needed also, for thumbnails and image handling, using attachment_f
 tim waters ("chippy")
 
 tim_at_geothings_dot+net
+
+---
