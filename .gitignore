@@ -1,0 +1,8 @@
+bin/fetch.sh
+config/database.yml
+log/*.log
+log/*.log.tar.gz
+tmp
+secret
+
+*.*~
