@@ -11,9 +11,11 @@
   KML: <%= link_to("Download KML", formatted_layer_url(:id => @layer, :format=>:kml)) %>  
   (<%= link_to("View KML in Google Maps", "http://maps.google.com?q="+formatted_layer_url(:id => @layer, :format => :kml), :target => "_blank") %> )
   </li>
+  <!--
   <li>
     Bibliographic:  <%= link_to 'CATNYP record', "http://catnyp.nypl.org/record=#{@layer.catnyp}" -%>
   </li>
+  -->
 </ul>
 <br />
 <h3>Digitized Features</h3>

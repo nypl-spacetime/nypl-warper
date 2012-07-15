@@ -15,8 +15,7 @@
   Search  
  <select id="field" name="field">
     <%= options_for_select([ ["Title", "name"], 
-                           ["Description", "description"], 
-                           ["CATNYP ID", "catnyp"]], @field)-%>
+                           ["Description", "description"]], @field)-%>
     </select>
   for 
   <%= text_field_tag 'query', @query -%>

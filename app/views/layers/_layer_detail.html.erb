@@ -15,10 +15,12 @@
 <span id="depicts-year-span-top">
 <%if layer.depicts_year%>Depicts : <%= layer.depicts_year %><%end-%></span>
 <%if admin_authorized? %>&nbsp;<a href="#" id="edit-year-link-top">Add/Edit Year</a><%end-%> 
-    </span>
+</span>
+<!--
     <span class="layer_summary"> 
       Bibiliographic records: <%= link_to 'CATNYP record', "http://catnyp.nypl.org/record=#{layer.catnyp}" -%>
     </span>
+    -->
     <br />
     <span class="layer_mapcount">
       <%= pluralize layer.maps_count,'map' -%>

@@ -533,6 +533,16 @@ padding: 1em 1em 1em 0;
 
 }
 
+.awards {
+float: left;
+clear: both;
+margin: 4em;
+margin-top: 4em;
+text-align:center;
+text-size:smaller;
+color: gray;
+}
+
 #video_tutorial {
 }
 #map_list

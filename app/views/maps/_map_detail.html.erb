@@ -39,7 +39,7 @@
               add_my_map_path(:user_id => current_user, :map_id => map), :method => :post) -%>  |
             <% end -%>
           <% end -%>
-          <%= link_to('View CATNYP Record', "http://catnyp.nypl.org/record=#{map.catnyp}") -%> |
+          <%# link_to('View CATNYP Record', "http://catnyp.nypl.org/record=#{map.catnyp}") -%> 
 
     <%= link_to('View Digital Gallery record', "http://digitalgallery.nypl.org/nypldigital/dgkeysearchdetail.cfm?imageID=#{map.nypl_digital_id}") -%> 
     <% if map.status == :warped or map.status == :available %>
