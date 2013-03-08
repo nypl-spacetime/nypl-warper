@@ -421,7 +421,7 @@ class Map < ActiveRecord::Base
       f_in, f_out, f_err = Open3::popen3(command)
       logger.info "fetch exit status etc ="+ $?.inspect
       f_err_msg = f_err.readlines.to_s
-      if $?.exitstatus == 0 && f_err_msg.size == 0
+      if $?.exitstatus == 0 #&& f_err_msg.size == 0
          filename = File.join(maps_dir, id) + ".tif"
          img = Magick::Image.ping(filename)
          self.height       = img[0].rows
