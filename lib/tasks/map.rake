@@ -14,3 +14,20 @@ namespace :map do
         end
     end
 end
+
+namespace :map do
+  desc "Warp an image."
+  task(:warp => :environment) do
+    mapscan = Map.find(ENV['id'])
+    if mapscan.nil?
+      print "Map not found."
+      exit
+    end
+    print "Masking #{mapscan.title}... "
+    print mapscan.mask!
+    print "\nWarping #{mapscan.title}... "
+    print mapscan.warp! ENV['transform'], ENV['resample']
+    print "\n"
+  end
+end
+
