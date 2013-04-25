@@ -1137,6 +1137,7 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
             columns: columns
         });
         grid.on("rowcontextmenu", this.onContextClick, this);
+        grid.on("rowclick", this.onRowClick, this);
         this.add(grid);
         this.doLayout();
         this.grid = grid;
@@ -1203,6 +1204,10 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
         this.form.enable();
     },
 
+    onRowClick: function(grid, rowIndex, columnIndex, e){
+     var record = grid.store.getAt(rowIndex);
+     this.map.panTo(record.data.feature.geometry.bounds.getCenterLonLat())
+  },
     /**
      * Method: onContextClick
      * Is called when user right clicks on a feature grid row
@@ -1379,6 +1384,7 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
                     columns: columns
               });
                  grid.on("rowcontextmenu", this.onContextClick, this);
+                 grid.on("rowclick", this.onRowClick, this);
                  this.add(grid);
                  this.doLayout();
                  this.allGrid = grid;
