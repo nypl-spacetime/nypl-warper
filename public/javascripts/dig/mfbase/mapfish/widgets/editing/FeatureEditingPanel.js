@@ -622,6 +622,21 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
         };
         styleMap.addUniqueValueRules("default", "state", lookup, context);
         styleMap.addUniqueValueRules("delete", "state", lookup, context);
+
+        var contextcount = function(feature) {
+          count = 0
+          for (var prop in feature.attributes){
+            count++
+            }
+          return{"count": count}
+        }
+
+        var lookupcount = {};
+        lookupcount[3] = {
+          fillColor: "purple",
+        }
+        styleMap.addUniqueValueRules("default", "count", lookupcount, contextcount);
+
         return styleMap;
     },
 
