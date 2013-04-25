@@ -1172,6 +1172,17 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
                 this.grid.getView().focusRow(index);
             }
         }
+
+      if (this.allStore && this.allGrid) {
+            var index2 = this.allStore.findBy(function(rec, id) {
+                return rec.get("feature") == feature;
+            });
+            var record = this.allStore.getAt(index2);
+            this.allGrid.getSelectionModel().selectRecords([record]);
+            if (index2 != -1) {
+                this.allGrid.getView().focusRow(index2);
+            }
+        }
     },
 
     /**
@@ -1180,6 +1191,9 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
     unselectInGrid: function() {
         if (this.grid) {
             this.grid.getSelectionModel().clearSelections();
+        }
+        if (this.allGrid) {
+          this.allGrid.getSelectionModel().clearSelections();
         }
     },
 
