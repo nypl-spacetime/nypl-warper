@@ -1389,7 +1389,8 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
                      sortable: true
                      });
                  grid = new Ext.grid.GridPanel({title: OpenLayers.i18n("Features List"),
-                     autoHeight: true,
+                     height: 280,
+                     autoScroll: true,
                      collapsible: true, //NOTE collapsible:  false was default 
                      store: this.allStore,
                      view: new Ext.grid.GridView({groupTextTpl:
