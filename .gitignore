@@ -4,5 +4,5 @@ log/*.log
 log/*.log.tar.gz
 tmp
 secret
-
+*.*.swp
 *.*~
