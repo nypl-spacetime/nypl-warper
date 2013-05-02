@@ -69,6 +69,12 @@ mapfish.widgets.editing.BaseProperty.prototype = {
      */
     extFieldCfg: null,
 
+   /**
+    * Property: allowPaste
+    * {Boolean} - False to disable this field from being pasted for the last record copy paste functionalist. Defaults to true
+    */
+   allowPaste: true,
+
     /**
      * Method: getRecordType
      *

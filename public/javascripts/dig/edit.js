@@ -111,9 +111,9 @@ Ext.onReady(function() {
     //new mapfish.widgets.editing.StringProperty(
     //    {name: 'updated_at', showInGrid: false, extFieldCfg: {hidden: true, hideLabel: true}}),
     new mapfish.widgets.editing.StringProperty(
-      {name: 'name', label: 'Name', showInGrid: true}),
+      {name: 'name', label: 'Name', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.StringProperty(
-      {name: 'number', label: 'Number', showInGrid: true}),
+      {name: 'number', label: 'Number', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.StringProperty(
       {name: 'street', label: 'Street', showInGrid: true}),
     new mapfish.widgets.editing.ComboStringProperty(
@@ -137,9 +137,9 @@ Ext.onReady(function() {
     var districtCountyUrl = jsPath + "dig/combo/districtType.json";
     var districtLayerProps = [
     new mapfish.widgets.editing.StringProperty(
-      {name: 'name', label: 'Name', showInGrid: true}),
+      {name: 'name', label: 'Name', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.StringProperty(
-      {name: 'number', label: 'Number', showInGrid: true}),
+      {name: 'number', label: 'Number', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.ComboStringProperty(
       {name: 'feature_type', label: 'Feature Type', url: districtFeatTypeUrl, showInGrid: true}),
     new mapfish.widgets.editing.ComboStringProperty(
@@ -163,7 +163,7 @@ Ext.onReady(function() {
     var poiFeatTypeUrl = jsPath + "dig/combo/poiFeatType.json";
     poiLayerProps = [
     new mapfish.widgets.editing.StringProperty(
-      {name: 'name', label: 'Name', showInGrid: true}),
+      {name: 'name', label: 'Name', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.ComboStringProperty(
       {name: 'feature_type', label: 'Feature Type', url: poiFeatTypeUrl, showInGrid: true}),
     new mapfish.widgets.editing.StringProperty(
@@ -179,7 +179,7 @@ Ext.onReady(function() {
     var transportFeatTypeUrl = jsPath + "dig/combo/transportFeatType.json";
     var transportLayerProps = [
     new mapfish.widgets.editing.StringProperty(
-      {name: 'name', label: 'Name', showInGrid: true}),
+      {name: 'name', label: 'Name', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.ComboStringProperty(
       {name: 'feature_type', label: 'Feature Type', url: transportFeatTypeUrl, showInGrid: true}),
     new mapfish.widgets.editing.BooleanProperty(
@@ -199,7 +199,7 @@ Ext.onReady(function() {
     var hydroFeatTypeUrl = jsPath + "dig/combo/hydroFeatType.json";
     var hydroLayerProps =  [
     new mapfish.widgets.editing.StringProperty(
-      {name: 'name', label: 'Name', showInGrid: true}),
+      {name: 'name', label: 'Name', showInGrid: true, allowPaste: false}),
     new mapfish.widgets.editing.ComboStringProperty(
       {name: 'feature_type', label: 'Feature Type', url: hydroFeatTypeUrl, showInGrid: true}),
     new mapfish.widgets.editing.StringProperty(

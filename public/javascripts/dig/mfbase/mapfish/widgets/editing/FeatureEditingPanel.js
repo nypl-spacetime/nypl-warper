@@ -200,6 +200,12 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
      * {Ext.Button} The delete button.
      */
     deleteBtn: null,
+    
+    /**
+     * Property: pasteBtn
+     * {Ext.Button} The paste button for pasting in the last records attributes
+     */
+    pasteBtn: null,
 
     /**
      * Property: attributesFormDefaults
@@ -207,6 +213,13 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
      * in the form.
      */
     attributesFormDefaults: null,
+
+    /**
+     * Property: lastRecord
+     * {Ext.data.Record} The last record to be shown in the form
+     *
+     */
+    lastRecord: null,
 
     /**
      * Method: initComponent
@@ -280,12 +293,26 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
             },
             scope: this
         });
+
+       this.pasteBtn = new Ext.Button({
+           text: "Paste Last",
+           tooltip: "Paste in the values from the last record",
+           disabled: true,
+           handler: function(){
+              this.pasteRecord();
+           },
+           scope: this
+       });
+        
         var buttons = [
             this.importBtn
         ,
             this.commitBtn
         , '-',
             this.deleteBtn
+        , '-',
+            this.pasteBtn
+        , '-'
         ];
         return new mapfish.widgets.toolbar.Toolbar({
             items: buttons,
@@ -293,6 +320,40 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
         });
     },
 
+    /**
+     * Method: pasteRecord()
+     * pastes in the values from the last record 
+     *
+     */
+    pasteRecord: function(){
+      if (!this.lastRecord){
+        return;
+      }
+      var lastRecord = this.lastRecord; 
+
+      var layer_id = this.currentLayerId;
+      var config = this.layerConfig[layer_id];
+      var properties = config.featuretypes.properties;
+      for (i = 0; i < properties.length; i++) {
+        var property = properties[i];
+        if (property.allowPaste == false){
+          lastRecord.data[property.name] = property.defaultValue;
+        }
+      }
+      this.form.getForm().loadRecord(lastRecord);
+    },
+    /**
+     * Method: copyRecord()
+     * copies the record of the currently displayed record, from a passed in OL object with a feature property 
+     *
+     */
+    copyRecord: function(obj){
+      var feature = obj.feature;
+      var obj = this.store.reader.readRecords([feature]);
+      var record = obj.records[0];
+
+      this.lastRecord = record;
+    },
     /**
      * Method: refreshFeatures
      * Refresh the vector layor.
@@ -503,6 +564,8 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
             this.createDrawFeatureControl(config);
             this.createLayerStoreMediator();
             this.importBtn.enable();
+            this.pasteBtn.disable();
+            this.lastRecord = null;
             this.createForm(config);
             this.createGrid(config);
             //NEW for all
@@ -663,6 +726,9 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
      */
     onFeatureselected: function(obj) {
         var f = obj.feature;
+        if (this.lastRecord){
+          this.pasteBtn.enable();
+        }
         this.deleteBtn.enable();
         this.selectInGrid(f);
         this.editAttributes(f);
@@ -676,6 +742,8 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
      */
     onFeatureunselected: function(obj) {
         this.deleteBtn.disable();
+        this.pasteBtn.disable();
+        this.copyRecord(obj);  
         this.unselectInGrid();
         this.form.getForm().reset();
         this.form.setDisabled(true);
@@ -1213,7 +1281,7 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
         // to the edited feature
         var obj = this.store.reader.readRecords([feature]);
         var record = obj.records[0];
-
+        
         this.form.getForm().loadRecord(record);
         this.form.enable();
     },
