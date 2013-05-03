@@ -1289,6 +1289,12 @@ mapfish.widgets.editing.FeatureEditingPanel = Ext.extend(Ext.Panel, {
     onRowClick: function(grid, rowIndex, columnIndex, e){
      var record = grid.store.getAt(rowIndex);
      this.map.panTo(record.data.feature.geometry.bounds.getCenterLonLat())
+     this.modifyFeatureControl.selectControl.unselectAll();
+     var feature = record.data.feature;
+     this.modifyFeatureControl.selectControl.select(feature);
+     this.modifyFeatureControl.activate();
+
+
   },
     /**
      * Method: onContextClick
