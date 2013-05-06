@@ -233,7 +233,8 @@ class MapsController < ApplicationController
 
 
    def index
-      sort_init('updated_at', {:default_order => "desc"})
+
+      sort_init 'updated_at'
       sort_update
       @show_warped = params[:show_warped]
       request.query_string.length > 0 ?  qstring = "?" + request.query_string : qstring = ""
