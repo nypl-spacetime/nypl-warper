@@ -1,3 +1,4 @@
+nbproject
 bin/fetch.sh
 config/database.yml
 log/*.log
