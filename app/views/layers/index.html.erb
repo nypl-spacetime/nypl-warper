@@ -6,10 +6,7 @@
 </div>
 <% else %>
 
-
-
 <div id="search-form">
-
 
 <% form_tag url_for(:controller => "layers"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
   Search  
@@ -19,7 +16,7 @@
     </select>
   for 
   <%= text_field_tag 'query', @query -%>
-  <input type="submit" value=" Go ">
+      <input type="submit" value=" Go " />
 <% end %>
 </div>
 New: <%= link_to 'Find Layers by Location',  url_for(:controller => 'layers', :action=>'geosearch')%>
@@ -37,11 +34,12 @@ Sort:&nbsp;
 <%= sort_header_tag('mapscans_count', :title=> "Number of Maps") %> |
 <%= sort_header_tag('percent', :title => "Percent Complete") %> | 
 </div>
-<!--
+<div class="warper_pagination">
 <div id="search-pagination-top">
-  <%# will_paginate @layers %>
+    <%= will_paginate @layers %>
 </div>
--->
+</div>
+
 <div id="layers-div">
   <table id="layer_table" cellpadding="3">
     <thead>
@@ -55,14 +53,13 @@ Sort:&nbsp;
     </thead>
     <tbody id="results">
   <%= render :partial => 'layer', :collection => @layers unless @layers.nil? %>
-
 </tbody>
 
 </table>
 </div>
-
+<div class="warper_pagination">
 <div id="search-pagination-bottom">
-  <%= will_paginate @layers, :renderer => FlowPagination::LinkRenderer  %>
+    <%= will_paginate @layers %>
 </div>
-<%# pageless(@layers.total_pages, layers_path) %>
+</div>
 
