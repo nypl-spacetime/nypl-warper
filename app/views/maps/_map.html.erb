@@ -28,8 +28,12 @@
 
         <%-unless defined?(variety) && (variety =~ /detail/) %>
         	<%= link_to("View Map",map) -%> 
-        	|
-                <%= link_to("Edit/Rectify Map", map_path(:id=> map,:anchor=>"Rectify_tab")) -%> 
+                |
+          <% if !admin_authorized? && map.published? %>
+             <strong title="This map has been published by an admin and no further editing is possible">Published</strong>
+           <% else %>
+            <%= link_to("Edit/Rectify Map", map_path(:id=> map,:anchor=>"Rectify_tab")) -%> 
+          <% end %>      
         <%-end-%>
 
         <% if logged_in? -%>
@@ -41,10 +45,6 @@
           <% end -%>
         <% end -%>
 
-        <% if map.status == :warped and admin_authorized? -%>
-          |
-          <%= link_to "publish",{:controller => "maps", :action => "publish", :id => map}, :confirm => "Really publish this map? This will mean that no further editing can be done" -%>
-        <% end -%>
         <% if admin_authorized? and @layer -%>
           | <%= link_to "remove map from this layer", {:controller => "layers", :action=>"remove_map", :id => @layer, :map_id => map} %>
         <%end -%>
@@ -54,7 +54,7 @@
           | <%= render :partial  => 'maps/map_type', :object => @map -%>
         <% end -%>
 
-        <%if map.status == :warped -%> |
+      <%if map.warped_or_published?-%> |
           <%= link_to("Download KML", map_url(:id => map, :format=>:kml)) -%>
     <% end -%>
       </div>

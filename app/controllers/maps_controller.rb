@@ -184,7 +184,7 @@ class MapsController < ApplicationController
     @current_tab = "export"
     @selected_tab = 5
     @html_title = "Export Map" + @map.id.to_s
-    unless @map.status == :warped && @map.map_type == :is_map
+    unless @map.warped_or_published? && @map.map_type == :is_map
        flash.now[:notice] = "Map needs to be rectified before being able to be exported"
     end
     choose_layout_if_ajax
@@ -316,8 +316,9 @@ class MapsController < ApplicationController
 
      @current_tab = "show"
      @selected_tab = 0
+     @disabled_tabs =[]
      @map = Map.find(params[:id])
-    @html_title = "Viewing Map "+@map.id.to_s
+     @html_title = "Viewing Map "+@map.id.to_s
 
      if @map.status.nil? || @map.status == :unloaded
        @mapstatus = "unloaded"
@@ -358,7 +359,11 @@ class MapsController < ApplicationController
      #
      # Logged in users
      #
-
+     unless logged_in? && admin_authorized?
+       if @map.published?
+          @disabled_tabs += ["warp", "clip", "align"]  #dont show any others unless you're an editor
+       end
+     end
      #note, trying to view an image that hasnt been requested, will cause it to be requested
      if @map.status.nil? or @map.status == :unloaded
        @disabled_tabs = ["warp", "clip", "align", "warped", "preview","activity", "export"]
@@ -374,7 +379,7 @@ class MapsController < ApplicationController
 
      @title = "Viewing original map. "
 
-     if @map.status != :warped
+     if !@map.warped_or_published?
        @title += "This map has not been rectified yet."
      end
      choose_layout_if_ajax
@@ -391,8 +396,14 @@ class MapsController < ApplicationController
 
    #should check for admin only
    def publish
-     @map.publish
-     render :text => "Map will be published. (this functionality doesn't do anything at the moment)"
+     if params[:to] == "publish" && @map.status == :warped
+       @map.publish
+     elsif params[:to] == "unpublish" && @map.status == :published
+       @map.unpublish
+     end
+
+     flash[:notice] = "Map changed. New Status: " + @map.status.to_s
+     redirect_to @map
    end
 
    def save_mask
@@ -457,7 +468,7 @@ class MapsController < ApplicationController
      @current_tab = "warped"
      @selected_tab = 4
      @html_title = "Viewing Rectfied Map "+ @map.id.to_s
-    if @map.status == :warped and @map.gcps.hard.size > 2
+    if @map.warped_or_published? && @map.gcps.hard.size > 2
        @title = "Viewing warped map"
        width = @map.width
        height = @map.height
@@ -501,8 +512,6 @@ class MapsController < ApplicationController
      @html_title = "Align Maps "
      @current_tab = "align"
      @selected_tab = 3
-     width = @map.width
-     height = @map.height
 
      choose_layout_if_ajax
    end
@@ -518,11 +527,6 @@ class MapsController < ApplicationController
      end
 
      @gcps = @map.gcps_with_error
-
-     width = @map.width
-     height = @map.height
-     width_ratio = width / 180
-     height_ratio = height / 90
 
      choose_layout_if_ajax
    end

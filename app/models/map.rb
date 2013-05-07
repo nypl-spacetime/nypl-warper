@@ -27,7 +27,8 @@ class Map < ActiveRecord::Base
    acts_as_enum :rough_state, [:step_1, :step_2, :step_3, :step_4]
    default_values :status => :unloaded, :mask_status => :unmasked, :map_type => :is_map, :rough_state => :step_1
 
-   named_scope :warped, :conditions => {:status => Map.status(:warped), :map_type => Map.map_type(:is_map) }
+   named_scope :warped, :conditions => {:status => [Map.status(:warped), Map.status(:published)], :map_type => Map.map_type(:is_map) }
+   named_scope :published, :conditions => {:status => Map.status(:published), :map_type => Map.map_type(:is_map)}
 
    named_scope :real_maps, :conditions => {:map_type => Map.map_type(:is_map)}
    attr_accessor :error
@@ -138,6 +139,20 @@ class Map < ActiveRecord::Base
        end
      end
    end
+   
+   #method to publish the map
+   #sets status to published
+   def publish
+     self.status = :published
+     self.save
+   end
+
+   #unpublishes a map, sets it's status to warped
+   def unpublish
+     self.status = :warped
+     self.save
+   end
+
 
    def update_map_type(map_type)
      if Map::MAP_TYPE.include? map_type.to_sym
@@ -169,11 +184,6 @@ class Map < ActiveRecord::Base
      self.layers.with_year.collect(&:depicts_year).compact.first
    end
 
-   #method to publish the map to cluster
-   def publish
-      #self.status = :published
-      #save!
-   end
 
    #attempts to align based on the extent and offset of the 
    #reference map's warped image
@@ -403,7 +413,15 @@ class Map < ActiveRecord::Base
 
 
    def available?
-      return [:available,:warping,:warped].include?(status)
+      return [:available,:warping,:warped, :published].include?(status)
+   end
+
+   def published?
+    status == :published
+   end
+
+   def warped_or_published?
+     return [:warped, :published].include?(status)
    end
 
    def fetch_from_image_server (force = false)
@@ -494,7 +512,7 @@ class Map < ActiveRecord::Base
    ##warp method without masking
 
    def warp!(resample_option, transform_option, use_mask="false")
-
+      prior_status = self.status
       self.status = :warping
       save!
 
@@ -582,7 +600,11 @@ class Map < ActiveRecord::Base
 
       # don't care too much if overviews threw a random warning
       if w_err.size <= 0 and t_err.size <= 0
-         self.status = :warped
+         if prior_status == :published
+           self.status = :published
+         else 
+           self.status = :warped
+         end
          spawn do 
            convert_to_png
          end
