@@ -139,9 +139,10 @@ def index
     sort_nulls = " NULLS FIRST"
   end
   
+    @per_page = params[:per_page] || 20
   paginate_params = {    
     :page => params[:page],
-    :per_page => 20,
+    :per_page => @per_page,
     :select => select,
     :order => sort_clause + sort_nulls,
     :conditions => conditions
