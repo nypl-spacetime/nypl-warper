@@ -580,6 +580,7 @@ class MapsController < ApplicationController
       mapobj = MapObj.new(File.join(RAILS_ROOT, '/db/mapfiles/wms.map'))
       projfile = File.join(RAILS_ROOT, '/lib/proj')
       mapobj.setConfigOption("PROJ_LIB", projfile)
+
       #map.setProjection("init=epsg:900913")
       mapobj.applyConfigOptions
 
@@ -590,6 +591,7 @@ class MapsController < ApplicationController
       raster = LayerObj.new(mapobj)
       raster.name = "image"
       raster.type = MS_LAYER_RASTER;
+      raster.setProcessingKey("CLOSE_CONNECTION", "ALWAYS")
 
 
       if status == "unwarped"
@@ -610,7 +612,7 @@ class MapsController < ApplicationController
       raster.metadata.set('wcs_formats', 'GEOTIFF')
       raster.metadata.set('wms_title', @map.title)
       raster.metadata.set('wms_srs', 'EPSG:4326 EPSG:4269 EPSG:900913')
-      raster.debug= MS_TRUE
+      #raster.debug= MS_TRUE
 
       msIO_installStdoutToBuffer
       result = mapobj.OWSDispatch(ows)
