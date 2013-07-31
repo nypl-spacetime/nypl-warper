@@ -176,7 +176,7 @@ class MapsController < ApplicationController
         :per_page => @maps.per_page,
         :total_entries => @maps.total_entries,
         :total_pages => @maps.total_pages,
-        :items => @maps.to_a}.to_json , :callback => params[:callback]}
+        :items => @maps.to_a}.to_json(:methods => :depicts_year) , :callback => params[:callback]}
     end
   end
 
@@ -289,7 +289,7 @@ class MapsController < ApplicationController
           :per_page => @maps.per_page,
           :total_entries => @maps.total_entries,
           :total_pages => @maps.total_pages,
-          :items => @maps.to_a}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail]) , :callback => params[:callback]
+          :items => @maps.to_a}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail], :methods => :depicts_year) , :callback => params[:callback]
         }
 
       end
