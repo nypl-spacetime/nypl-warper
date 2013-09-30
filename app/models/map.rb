@@ -424,22 +424,35 @@ class Map < ActiveRecord::Base
      return [:warped, :published].include?(status)
    end
 
-   def fetch_from_image_server (force = false)
+   def fetch_from_image_server(force = false)
       return if available? and not force
       if not available?
          self.height       = 0
          self.width        = 0
          self.filename     = ''
          self.status       = :loading
-         save!
+         logger.debug "saving if not available"
+         self.save!
       end
-      id = self.nypl_digital_id
-      logger.debug("#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}")
-      command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"
-      f_in, f_out, f_err = Open3::popen3(command)
-      logger.info "fetch exit status etc ="+ $?.inspect
-      f_err_msg = f_err.readlines.to_s
-      if $?.exitstatus == 0 #&& f_err_msg.size == 0
+      
+      #to work with new nypl repo / digital archive
+      id = self.uuid      
+      url = NyplRepo.get_highreslink(id)
+
+      #id = self.nypl_digital_id
+      #command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"
+      command = "#{RAILS_ROOT}/bin/fetch_repo.sh #{id} #{url} #{maps_dir}"
+      logger.debug command
+      
+      if url
+        f_in, f_out, f_err = Open3::popen3(command)
+
+        logger.info "fetch exit status etc ="+ $?.inspect
+        f_err_msg = f_err.readlines.to_s
+        logger.debug "err msg: "+ f_err_msg
+      end
+
+      if url && $?.exitstatus == 0 && !f_err_msg.include?("ERROR")
          filename = File.join(maps_dir, id) + ".tif"
          img = Magick::Image.ping(filename)
          self.height       = img[0].rows
@@ -447,10 +460,15 @@ class Map < ActiveRecord::Base
          self.filename     = filename
          self.status       = :available if not available?
       elsif not available?
+        if f_err_msg
          logger.error "fetch std error =" + f_err_msg
+        end
          self.status       = :unloaded
       end
-      save!
+      #logger.debug [self.height, self.width, self.filename, self.status]
+      logger.debug "now saving after"
+      self.save!
+      
       return $?.exitstatus == 0 ? true : false
    end
 
