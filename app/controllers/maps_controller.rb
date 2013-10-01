@@ -190,15 +190,10 @@ class MapsController < ApplicationController
     choose_layout_if_ajax
     respond_to do | format |
       format.html {}
-    #FIXME TODO temp fix
-    unless logged_in? && admin_authorized? 
-      format.tif {  render :text => "sorry, not currently available" }
-      format.png {  render :text => "sorry, not currently available" }
-    else
+    if logged_in? 
       format.tif {  send_file @map.warped_filename, :x_sendfile => true }
       format.png  { send_file @map.warped_png, :x_sendfile => true }
     end
-    #FIXME TODO temp fix
      format.aux_xml { send_file @map.warped_png_aux_xml, :x_sendfile => true }
     end
   end
