@@ -8,7 +8,6 @@ namespace :map do
     count = 0
     unsuccessful = []
     Map.find(:all).each do |map|
-      break if count == 30      
       uuid = NyplRepo.get_uuid(map.nypl_digital_id)
       map.uuid = uuid
       map.save
