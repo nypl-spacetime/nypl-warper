@@ -188,13 +188,19 @@ class MapsController < ApplicationController
        flash.now[:notice] = "Map needs to be rectified before being able to be exported"
     end
     choose_layout_if_ajax
+    if params[:unwarped]
+      tif_filename = @map.filename
+    else
+      tif_filename =  @map.warped_filename
+    end
+    
     respond_to do | format |
       format.html {}
-    if logged_in? 
-      format.tif {  send_file @map.warped_filename, :x_sendfile => true }
-      format.png  { send_file @map.warped_png, :x_sendfile => true }
-    end
-     format.aux_xml { send_file @map.warped_png_aux_xml, :x_sendfile => true }
+      if logged_in? 
+        format.tif {  send_file tif_filename, :x_sendfile => true }
+        format.png  { send_file @map.warped_png, :x_sendfile => true }
+      end
+      format.aux_xml { send_file @map.warped_png_aux_xml, :x_sendfile => true }
     end
   end
 
