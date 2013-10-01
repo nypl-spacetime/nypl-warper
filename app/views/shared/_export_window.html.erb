@@ -48,10 +48,10 @@
           </li>
           <% if logged_in? -%>
             <li>
-            <%= link_to(image_tag("image-icon-20x25.png")+"Download original Tiff", export_map_url(:id => @map, :format => :tif, :unwarped => true)) %> 
+            <%= link_to(image_tag("image-icon-20x25.png")+"Download original TIFF", export_map_url(:id => @map, :format => :tif, :unwarped => true)) %> 
             </li>
-          <li><%= link_to(image_tag("image-icon-20x25.png")+"Download rectified GeoTiff", export_map_url(:id => @map, :format => :tif)) %> </li>
-          <li><%= link_to(image_tag("image-icon-20x25.png")+"Download rectified PNG", export_map_url(:id => @map, :format => :png)) %></li>
+          <li><%= link_to(image_tag("image-icon-20x25.png")+"Download warped GeoTIFF", export_map_url(:id => @map, :format => :tif)) %> </li>
+          <li><%= link_to(image_tag("image-icon-20x25.png")+"Download warped PNG", export_map_url(:id => @map, :format => :png)) %></li>
           <li>&nbsp;</li>
         <% else -%>
           <li> Log in for</li>
