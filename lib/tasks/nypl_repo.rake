@@ -9,7 +9,7 @@ namespace :map do
     count = 0
     unsuccessful = []
     Map.find(:all).each do |map|
-      bibl_uuid = NyplRepo.get_bibl_uuid(map.nypl_digital_id)
+      bibl_uuid = NyplRepo.get_bibl_uuid(map.nypl_digital_id.upcase)
       map.bibl_uuid = bibl_uuid
       map.save
       if count % 10 == 0
@@ -37,7 +37,7 @@ namespace :map do
    broken = []
    Map.find(:all).each do |map|
      if map.bibl_uuid
-       mods_uuid = NyplRepo.get_mods_uuid(map.bibl_uuid, map.nypl_digital_id)
+       mods_uuid = NyplRepo.get_mods_uuid(map.bibl_uuid, map.nypl_digital_id.upcase)
        if mods_uuid
         map.mods_uuid = mods_uuid
         map.save
