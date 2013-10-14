@@ -19,7 +19,6 @@ class NyplRepo
    url = "http://api.repo.nypl.org/api/v1/items/#{bibl_uuid}.json?per_page=500"
    json = self.get_json(url)
    mods_uuid = nil
- puts url
    json["nyplAPI"]["response"]["capture"].each do | capture|
      if capture["imageID"] == image_id
        mods_uuid = capture["uuid"]
