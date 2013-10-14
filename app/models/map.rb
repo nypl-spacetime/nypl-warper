@@ -9,7 +9,8 @@ class Map < ActiveRecord::Base
   def self.table_name()
     "mapscans"
   end
-
+   alias_attribute :bibl_uuid, :parent_uuid
+   alias_attribute :mods_uuid, :uuid
 
    has_many :map_layers, :foreign_key => "mapscan_id"
    has_many :layers, :through => :map_layers
@@ -436,8 +437,8 @@ class Map < ActiveRecord::Base
       end
       
       #to work with new nypl repo / digital archive
-      id = self.uuid      
-      url = NyplRepo.get_highreslink(id)
+      id = self.bibl_uuid 
+      url = NyplRepo.get_highreslink(id, self.nypl_digital_id)
 
       #id = self.nypl_digital_id
       #command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"

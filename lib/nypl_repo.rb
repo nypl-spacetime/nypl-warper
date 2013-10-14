@@ -1,38 +1,65 @@
 class NyplRepo
 
-  # get uuid from an image_id
-  def self.get_uuid(image_id)
+  #get the item detail from a uuid
+  def self.get_mods_item(mods_uuid)
+    url = "http://api.repo.nypl.org/api/v1/items/mods/#{mods_uuid}.json"
+    json = self.get_json(url)
+    
+    item = nil
+    if json["nyplAPI"]["response"]["mods"]
+      item = json["nyplAPI"]["response"]["mods"]
+    end
+
+    return item
+  end
+
+  #gets the mods uuid of the item, passing in the bibliographic uuid and image_id
+  #since there could be many maps for the same item
+  def self.get_mods_uuid(bibl_uuid, image_id)
+   url = "http://api.repo.nypl.org/api/v1/items/#{bibl_uuid}.json?per_page=500"
+   json = self.get_json(url)
+   mods_uuid = nil
+ puts url
+   json["nyplAPI"]["response"]["capture"].each do | capture|
+     if capture["imageID"] == image_id
+       mods_uuid = capture["uuid"]
+       break
+     end #if
+   end if json["nyplAPI"]["response"]["numResults"].to_i > 0
+
+
+   return mods_uuid
+  end
+
+
+  # get bibliographic container uuid from an image_id
+  def self.get_bibl_uuid(image_id)
     url = "http://api.repo.nypl.org/api/v1/items/local_image_id/#{image_id}.json"   
     json = self.get_json(url)
+    bibl_uuid = nil
     if json["nyplAPI"]["response"]["numResults"].to_i > 0
-      uuid = json["nyplAPI"]["response"]["uuid"]
-    else
-      uuid = nil
+      bibl_uuid = json["nyplAPI"]["response"]["uuid"]
     end
    
-    return uuid
-  end
-
-  #gets imageid from an item
-  def self.get_image_id(uuid)
-    url = "http://api.repo.nypl.org/api/v1/items/#{uuid}.json"
-    json = self.get_json(url)
-    image_id = json["nyplAPI"]["response"]["capture"][0]["imageID"]
-
-    return image_id
+    return bibl_uuid
   end
 
 
-  #get highreslink from an item
-  def self.get_highreslink(uuid)
-    url = "http://api.repo.nypl.org/api/v1/items/#{uuid}.json"
+  #get highreslink from an item, matching up the image idi
+  #since some bibliographic items may have many maps under them
+  def self.get_highreslink(bibl_uuid, image_id)
+    url = "http://api.repo.nypl.org/api/v1/items/#{bibl_uuid}.json?per_page=500"
     json = self.get_json(url)
-    if json["nyplAPI"]["response"]["numResults"].to_i > 0
-      highreslink = json["nyplAPI"]["response"]["capture"][0]["highResLink"]
-    else
-      highreslink = nil
-    end
     
+    highreslink = nil
+
+    json["nyplAPI"]["response"]["capture"].each do | capture|
+      if capture["imageID"] == image_id
+        highreslink = capture["highResLink"]
+        break 
+      end #if
+    end if json["nyplAPI"]["response"]["numResults"].to_i > 0 
+
     return highreslink
   end
 
