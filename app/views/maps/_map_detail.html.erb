@@ -41,7 +41,8 @@
       <% end -%>
 <%# link_to('View CATNYP Record', "http://catnyp.nypl.org/record=#{map.catnyp}") -%> 
 
-      <%= link_to('View Digital Gallery record', "http://digitalgallery.nypl.org/nypldigital/dgkeysearchdetail.cfm?imageID=#{map.nypl_digital_id}") -%>
+<%= link_to('View Digital Gallery record', "http://digitalgallery.nypl.org/nypldigital/dgkeysearchdetail.cfm?imageID=#{map.nypl_digital_id}") -%>
+&nbsp;| <%= link_to 'View Digital Collections (beta)', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
 
       <% if !admin_authorized? && map.published? %>
         | <strong>Published [<a href="#" title="This map has been published by an admin and no further editing is possible.">?</a>]</strong>

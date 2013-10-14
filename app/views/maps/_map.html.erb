@@ -60,7 +60,7 @@
       </div>
       <div class="map_links">
         Bibiliographic records: <%= link_to 'Digital Gallery', "http://digitalgallery.nypl.org/nypldigital/dgkeysearchdetail.cfm?imageID=#{map.nypl_digital_id}" %> 
-        <%# link_to 'CATNYP', "http://catnyp.nypl.org/record=#{map.catnyp}" -%>
+        | <%= link_to 'Digital Collections (beta)', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
       </div>
 
     </td>
