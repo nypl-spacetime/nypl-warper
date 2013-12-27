@@ -438,7 +438,8 @@ class Map < ActiveRecord::Base
       
       #to work with new nypl repo / digital archive
       id = self.bibl_uuid 
-      url = NyplRepo.get_highreslink(id, self.nypl_digital_id.upcase)
+      repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
+      url = repo_client.get_highreslink(id, self.nypl_digital_id.upcase)
 
       #id = self.nypl_digital_id
       #command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"
