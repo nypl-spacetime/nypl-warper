@@ -1,5 +1,6 @@
 namespace :map do
   namespace :repo do
+
     desc "Updates the bibliographic item uuid from the nypl_digital_id using the NYPL Repo API"
 
     task(:update_bibl_uuid => :environment) do
@@ -28,11 +29,7 @@ namespace :map do
       puts unsuccessful.inspect
     end
 
-  end
-end
 
-namespace :map do
-  namespace :repo do
     desc "Updates the mods_uuid of a map based on the bibliographic uuid and the image id."
     task(:update_mods_uuid => :environment) do
       puts "This will update the mods_uuid of a map. This cannot be undone"
@@ -68,6 +65,109 @@ namespace :map do
       puts broken.inspect
 
     end
+
+    ##
+    ## NOTE: you should make sure that  Layer.update_all(:uuid => nil)
+    ## is run before doing this, as it won't update layers with existing uuids
+    ##  This fixed 280 layers out of 313
+    ##
+    desc "updates layers uuid based on the maps within them"
+    task("layers_item_uuid" => :environment) do
+      puts "This will update all the layers in the database. This cannot be undone"
+      puts "Before running, make sure that the uuid of all layers have been set to nil"
+      puts "Are you sure you want to continue? [y/N]"
+      break unless STDIN.gets.match(/^y$/i)
+      count = 0
+      broken = []
+
+      def update_layer(layer, related_item)
+        #puts "update layers"
+        #puts related_item["identifier"].inspect
+        uuid = related_item["identifier"].detect{|a| a["type"] == "uuid"}["$"]
+
+        layer.uuid = uuid
+        layer.save!
+      end
+      
+      def match_layers(layers, related_item)
+        item_title = related_item["titleInfo"]["title"]["$"]
+
+        layers.each do |layer|
+          next unless layer.uuid.nil?
+
+          if layer.name.squish.start_with? item_title
+            #p layer.name.squish + " :: "+ item_title
+            #p "match title"
+            update_layer(layer, related_item)
+
+          elsif related_item["identifier"].size > 0
+            catnyp_prop = layer.layer_properties.detect {|a| a.name == "catnyp"}
+            layer_catnyp = catnyp_prop.value unless catnyp_prop.nil?
+
+            item_cat_prop = related_item["identifier"].detect {|a| a["type"]=="local_catnyp"}
+            item_catnyp = item_cat_prop["$"] unless item_cat_prop.nil?
+
+            if layer_catnyp && layer_catnyp == item_catnyp
+              update_layer(layer, related_item)
+            else
+               #p "no match " + layer.id.to_s
+               
+            end
+
+          else
+             #nowt
+          end
+
+        end
+
+        if related_item["relatedItem"] && related_item["relatedItem"]["titleInfo"]
+          match_layers(layers, related_item["relatedItem"])
+        end
+      
+      end
+
+      repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
+      
+      Map.find(:all).each do | map |
+        if map.mods_uuid
+          layers = map.layers
+          next if layers.empty?
+          
+          next unless layers.find_all{|ll| ll.uuid.nil?}.length > 0 #skip unless there is more than one layer without a uuid
+          
+          map_item =  repo_client.get_mods_item(map.mods_uuid)
+
+          if map_item.nil?
+            broken << {map.id => map.mods_uuid}
+            next
+          end
+          
+          related_item = map_item["relatedItem"]
+          if related_item.nil?
+            broken << {map.id => "relateditem nil"}
+            next
+          end
+
+          match_layers(layers, related_item) 
+
+          sleep(10) if count % 100 == 0
+          if count % 10 == 0
+            STDOUT.print "\r"
+            STDOUT.print count.to_s + " " 
+            STDOUT.flush
+          end
+
+          count = count+1
+        end
+      end #Map.all
+
+      puts "unsuccessful maps ("+broken.size.to_s+"):"
+      puts "Done " + count.to_s + " maps."
+
+
+    end
+
+
   end
 end
 
