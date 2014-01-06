@@ -1,7 +1,7 @@
 namespace :map do
   namespace :repo do
 
-    desc "Updates the bibliographic item uuid from the nypl_digital_id using the NYPL Repo API"
+    desc "Sets maps bibliographic item uuid from the nypl_digital_id using the NYPL Repo API if it doesnt have one already"
 
     task(:update_bibl_uuid => :environment) do
       desc "updates biblio_uuid for maps"
@@ -12,6 +12,8 @@ namespace :map do
       unsuccessful = []
       repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
       Map.find(:all).each do |map|
+        next unless map.bibl_uuid.nil?  #skip this if it has one already
+
         bibl_uuid = repo_client.get_bibl_uuid(map.nypl_digital_id.upcase)
         map.bibl_uuid = bibl_uuid
         map.save
@@ -30,9 +32,9 @@ namespace :map do
     end
 
 
-    desc "Updates the mods_uuid of a map based on the bibliographic uuid and the image id."
+    desc "Updates the mods_uuid of all maps based with no existing mods_uuid on the bibliographic uuid and the image id."
     task(:update_mods_uuid => :environment) do
-      puts "This will update the mods_uuid of a map. This cannot be undone"
+      puts "This will update the mods_uuid of all maps. It needs a bibl_uuid first. This cannot be undone"
       puts "Are you sure you want to continue? [y/N]"
       break unless STDIN.gets.match(/^y$/i)
       count = 0
@@ -40,6 +42,8 @@ namespace :map do
 
       repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
       Map.find(:all).each do |map|
+        next unless map.mods_uuid.nil? #skip if it has one already
+        
         if map.bibl_uuid
           mods_uuid = repo_client.get_mods_uuid(map.bibl_uuid, map.nypl_digital_id.upcase)
           if mods_uuid
