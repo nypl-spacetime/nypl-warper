@@ -8,7 +8,61 @@ module NyplRepo
     def initialize(token)
       @token = token
     end
-  
+ 
+    #date format: YYYY-MM-DD
+    #physical_location  i.e "Map%20Division"&field=physicalLocation
+    def get_items_since(query, since, untildate)
+      url = 'http://api.repo.nypl.org/api/v1/items/search.json?q='+query+'&since='+since+'&until='+untildate+'&per_page=500'
+      json = self.get_json(url)
+      results = []
+      result = json["nyplAPI"]["response"]["result"]
+      results << result
+      totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
+      
+      if totalPages >= 2
+        (2..totalPages).each do | page |
+          newurl = url + "&page=#{page}"
+          json = self.get_json(newurl)
+          newresult = json["nyplAPI"]["response"]["result"]
+          results << newresult
+        end
+      end
+      results.flatten!
+     
+      results
+    end
+
+
+    # Given a container uuid, or biblographic uuid, returns a
+    # list of mods uuids. 
+    # optional boolean only_image and only_link parameters to only return those items with imageID and a HighResLink respectively
+    def get_capture_items(c_uuid, only_image=true, only_link=true)
+      url = "http://api.repo.nypl.org/api/v1/items/#{c_uuid}.json?per_page=500"
+      json = self.get_json(url)
+      captures = []
+      capture = json["nyplAPI"]["response"]["capture"]
+      captures << capture
+
+      totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
+      if totalPages >= 2
+        (2..totalPages).each do | page |
+          newurl = url + "&page=#{page}"
+          json = self.get_json(newurl)
+          newcapture = json["nyplAPI"]["response"]["capture"]
+          captures << newcapture
+        end
+      end
+      captures.flatten!
+      filtered_captures = []
+      captures.each do | c |
+        next if c["imageID"].nil? && only_image
+        next if c["highResLink"].nil? && only_link
+      filtered_captures << c
+      end
+
+      filtered_captures
+    end
+
     #get the item detail from a uuid
     def get_mods_item(mods_uuid)
       url = "http://api.repo.nypl.org/api/v1/items/mods/#{mods_uuid}.json"
@@ -38,6 +92,23 @@ module NyplRepo
 
 
      return mods_uuid
+    end
+
+    # gets the image id for an item based on the the bibliographic uuid (container uuid) and the mods uuid (the actual item)
+    #
+    def get_image_id(bibl_uuid, mods_uuid)
+      url = "http://api.repo.nypl.org/api/v1/items/#{bibl_uuid}.json?per_page=500"
+      json = self.get_json(url)
+      image_id = nil
+      
+      json["nyplAPI"]["response"]["capture"].each do | capture|
+      if capture["uuid"] == mods_uuid
+        image_id = capture["imageID"]
+        break
+      end #if
+      end if json["nyplAPI"]["response"]["numResults"].to_i > 0
+
+      return image_id
     end
 
 
