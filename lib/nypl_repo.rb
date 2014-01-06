@@ -11,8 +11,8 @@ module NyplRepo
  
     #date format: YYYY-MM-DD
     #physical_location  i.e "Map%20Division"&field=physicalLocation
-    def get_items_since(query, since, untildate)
-      url = 'http://api.repo.nypl.org/api/v1/items/search.json?q='+query+'&since='+since+'&until='+untildate+'&per_page=500'
+    def get_items_since(query, since_date, until_date)
+      url = 'http://api.repo.nypl.org/api/v1/items/search.json?q='+query+'&since='+since_date+'&until='+until_date+'&per_page=500'
       json = self.get_json(url)
       results = []
       result = json["nyplAPI"]["response"]["result"]

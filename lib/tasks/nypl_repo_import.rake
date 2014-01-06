@@ -30,7 +30,10 @@ namespace :map do
       uuid = related_item["identifier"].detect{|a| a["type"]=="uuid"}["$"]
       title = related_item["titleInfo"]["title"]["$"]
       layer = Layer.new(:name => title, :uuid => uuid)
-
+      match_data = /1[3456789][0-9][0-9]/.match title
+      if match_data
+        layer.depicts_year = md[0]
+      end
       layer
     end
     
@@ -135,14 +138,15 @@ namespace :map do
         puts "usage: rake map:repo:import_map since=date until=date"
         break
       end
-      since = ENV["since"] 
-      untildate = ENV["until"]
+      since_date = ENV["since"] 
+      until_date = ENV["until"]
       client = NyplRepo::Client.new(REPO_CONFIG[:token])
-      maps = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since, untildate)
+      maps = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
     
       maps.each do | map |
       next if map["highResLink"].nil? ||  map["imageID"].nil?
         puts map.inspect
+        #BUG WITH API
       end
 
     end
