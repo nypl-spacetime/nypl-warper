@@ -5,8 +5,9 @@ module NyplRepo
    require 'net/http'
    require 'json'
    
-    def initialize(token)
+    def initialize(token, debug=false)
       @token = token
+      @debug = debug
     end
  
     #date format: YYYY-MM-DD
@@ -20,7 +21,9 @@ module NyplRepo
       totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
       
       if totalPages >= 2
+        puts "total pages " + totalPages.to_s if @debug
         (2..totalPages).each do | page |
+          puts "page: "+page.to_s if @debug
           newurl = url + "&page=#{page}"
           json = self.get_json(newurl)
           newresult = json["nyplAPI"]["response"]["result"]
@@ -45,7 +48,9 @@ module NyplRepo
 
       totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
       if totalPages >= 2
+        puts "total pages " + totalPages.to_s if @debug
         (2..totalPages).each do | page |
+          puts "page: "+page.to_s if @debug
           newurl = url + "&page=#{page}"
           json = self.get_json(newurl)
           newcapture = json["nyplAPI"]["response"]["capture"]
