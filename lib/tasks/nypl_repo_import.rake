@@ -54,15 +54,15 @@ namespace :map do
       ActiveRecord::Base.transaction do
         #1 save map
         map.save if map.new_record?
-
         #2 save new  or get layers
         assign_layers = []
         layers.each do | layer |
           if Layer.exists?(:uuid => layer.uuid)
             #the layer exists
-            unless MapLayer.exists?(:mapscan_id => map.id, :layer_id => layer.id)  
+            layer = Layer.find_by_uuid(layer.uuid)
+            unless MapLayer.exists?(:mapscan_id => map.id, :layer_id => layer.id) 
               #layer exists, but the map is not in the relationship
-              assign_layers << Layer.find_by_uuid(layer.uuid)
+              assign_layers << layer
             end
 
           else
@@ -113,7 +113,7 @@ namespace :map do
         break
       end
       uuid = ENV["uuid"]
-      client = NyplRepo::Client.new(REPO_CONFIG[:token])
+      client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
       map_items = client.get_capture_items(uuid, true, true)
       map_items.each do | map_item |
         item = client.get_mods_item(map_item["uuid"])
