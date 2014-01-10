@@ -9,6 +9,15 @@
 </span>
 
 <h3>Properties</h3>
+<div class="nypl_repo_metadata">
+  NYPL Digital Collections Repository
+  uuid:
+  <% if @layer.uuid %>
+    <%= @layer.uuid %>
+  <% else %>
+    Not known.
+  <% end %>
+</div>
 <% @layer_properties.each do | property | %>
   <%= property.name.titleize %> : <%= property.value %> <br />
 <% end %>
