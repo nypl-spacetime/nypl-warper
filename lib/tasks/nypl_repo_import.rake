@@ -5,7 +5,9 @@ namespace :map do
     #optionally pass in image_id if you know it
     def get_map(item, uuid, image_id=nil)
       title = item["titleInfo"].select{|a|a["usage"]=="primary"}.last["title"]["$"]
-      extra = item["note"].detect{|a| a["type"]=="statement of responsibility"} if item["note"]
+      extra = item["note"].detect{|a| a["type"]=="statement of responsibility"} if item["note"] && item["note"].class == Array
+      extra = item["note"]["statement of responsibility"] if item["note"].class == Hash && item["note"]["statement of responsibility"]
+      
       extra_title = extra.nil? ? "" : " / " + extra["$"]
       title = title + extra_title
 
@@ -29,7 +31,7 @@ namespace :map do
     def get_layer(related_item)
       uuid = related_item["identifier"].detect{|a| a["type"]=="uuid"}["$"]
       title = related_item["titleInfo"]["title"]["$"]
-      layer = Layer.new(:name => title, :uuid => uuid)
+      layer = Layer.new(:name => title, :uuid => uuid, :description => "")
       match_data = /1[3456789][0-9][0-9]/.match title
       if match_data
         layer.depicts_year = md[0]
@@ -51,23 +53,27 @@ namespace :map do
     def save_map_with_layers(map, layers)
       ActiveRecord::Base.transaction do
         #1 save map
-        #map.save if map.new_record?
+        map.save if map.new_record?
 
         #2 save new  or get layers
         assign_layers = []
         layers.each do | layer |
           if Layer.exists?(:uuid => layer.uuid)
-            #p "exist: " + layer.uuid
-            assign_layers << Layer.find_by_uuid(layer.uuid)
+            #the layer exists
+            unless MapLayer.exists?(:mapscan_id => map.id, :layer_id => layer.id)  
+              #layer exists, but the map is not in the relationship
+              assign_layers << Layer.find_by_uuid(layer.uuid)
+            end
+
           else
-            #p "no exist, save as new "+layer.uuid
-            #layer.save
+            #the layer does not exist, create is as  new Layer
+            layer.save if layer.new_record?
             assign_layers << layer
           end
         end
-        puts assign_layers.inspect
         #3 then set the map to the layer
-        #map.layers << layers ?
+        map.layers << assign_layers 
+
       end #transaction
 
     end
@@ -94,12 +100,8 @@ namespace :map do
       layers = get_layers(item["relatedItem"]) 
       layers.flatten! 
       
-      puts layers.inspect
-      puts map.inspect
-      
       save_map_with_layers(map,layers)
 
-  
     end #task
 
 
@@ -121,7 +123,7 @@ namespace :map do
         else
           map = get_map(item, map_item["uuid"], map_item["imageID"])
         end
-
+        
         layers = get_layers(item["relatedItem"]) 
         layers.flatten! 
         
@@ -146,7 +148,7 @@ namespace :map do
       maps.each do | map |
       next if map["highResLink"].nil? ||  map["imageID"].nil?
         puts map.inspect
-        #BUG WITH API
+        #TODO - problem with the API here. no highResLink in results
       end
 
     end
