@@ -4,13 +4,17 @@ namespace :map do
     #creates a map object from an item
     #optionally pass in image_id if you know it
     def get_map(item, uuid, image_id=nil)
-      title = item["titleInfo"].select{|a|a["usage"]=="primary"}.last["title"]["$"]
+      title = item["titleInfo"].select{|a|a["usage"]=="primary"}.last["title"]["$"] if item["titleInfo"].class == Array
+      title = item["titleInfo"]["title"]["$"] if item["titleInfo"].class == Hash
       extra = item["note"].detect{|a| a["type"]=="statement of responsibility"} if item["note"] && item["note"].class == Array
       extra = item["note"]["statement of responsibility"] if item["note"].class == Hash && item["note"]["statement of responsibility"]
       
       extra_title = extra.nil? ? "" : " / " + extra["$"]
       title = title + extra_title
 
+      #truncate long titles
+      title = (title.chars.to_a.size > 254 ? title.chars.to_a[0...251].join + "..." : title).to_s
+      
       #relatedItem for :
       parent_uuid = item["relatedItem"]["identifier"].detect{|a| a["type"]=="uuid"}["$"]
       description = "From " + item["relatedItem"]["titleInfo"]["title"]["$"]
@@ -53,7 +57,29 @@ namespace :map do
     def save_map_with_layers(map, layers)
       ActiveRecord::Base.transaction do
         #1 save map
-        map.save if map.new_record?
+        if map.new_record?
+          #
+          # This is a check for records where they have the digital id but the API is unable to find it
+          # So there uuids were not updated
+          #
+          if Map.exists?(:nypl_digital_id => map.nypl_digital_id)
+            existing_map = Map.find_by_nypl_digital_id(map.nypl_digital_id)
+            if existing_map.uuid.nil?
+              existing_map.uuid = map.uuid
+              existing_map.parent_uuid = map.parent_uuid
+              existing_map.save
+              puts "Updated existing map: "+ existing_map.inspect
+            end
+            map = existing_map
+
+          else #map  is really new now
+          
+          map.save
+          puts "Saved new Map: " + map.inspect
+        
+          end #already exists?
+        end #new record
+
         #2 save new  or get layers
         assign_layers = []
         layers.each do | layer |
@@ -67,7 +93,10 @@ namespace :map do
 
           else
             #the layer does not exist, create is as  new Layer
-            layer.save if layer.new_record?
+            if layer.new_record?
+              layer.save
+              puts "Saved new Layer: "+ layer.inspect
+            end
             assign_layers << layer
           end
         end
@@ -114,8 +143,11 @@ namespace :map do
       end
       uuid = ENV["uuid"]
       client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
-      map_items = client.get_capture_items(uuid, true, true)
+      map_items = client.get_capture_items(uuid)
+      # the above call only gets the items with image AND highreslink (true, true)
       map_items.each do | map_item |
+        next if map_item["imageID"].nil? || map_item["highResLink"].nil?
+        
         item = client.get_mods_item(map_item["uuid"])
 
         if Map.exists?(:uuid => map_item["uuid"])
@@ -142,16 +174,36 @@ namespace :map do
       end
       since_date = ENV["since"] 
       until_date = ENV["until"]
-      client = NyplRepo::Client.new(REPO_CONFIG[:token])
-      maps = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
-    
-      maps.each do | map |
-      next if map["highResLink"].nil? ||  map["imageID"].nil?
-        puts map.inspect
-        #TODO - problem with the API here. no highResLink in results
-      end
+      client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
+      map_items = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
 
-    end
+      map_items.each do | map_item |
+        #Uncomment when FIXME below is fixed. 
+        #next if map_item["highResLink"].nil? ||  map_item["imageID"].nil?
+        next if  map_item["imageID"].nil?
+    
+        item = client.get_mods_item(map_item["uuid"])
+
+        if Map.exists?(:uuid => map_item["uuid"])
+          map = Map.find_by_uuid(map_item["uuid"])
+        else
+          map = get_map(item, map_item["uuid"], map_item["imageID"])
+        end
+
+        #TODO - problem with the API here. no highResLink in results
+        #FIXME workaround starts
+        highResLink = client.get_highreslink(map.bibl_uuid, map.nypl_digital_id)
+        next if highResLink.nil?
+        #FIXME Workaround ends
+        
+        layers = get_layers(item["relatedItem"]) 
+        layers.flatten! 
+        
+        save_map_with_layers(map,layers)
+
+      end #map_items
+
+    end #task
 
   end
 end

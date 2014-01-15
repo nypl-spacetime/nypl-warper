@@ -38,8 +38,7 @@ module NyplRepo
 
     # Given a container uuid, or biblographic uuid, returns a
     # list of mods uuids. 
-    # optional boolean only_image and only_link parameters to only return those items with imageID and a HighResLink respectively
-    def get_capture_items(c_uuid, only_image=true, only_link=true)
+    def get_capture_items(c_uuid)
       url = "http://api.repo.nypl.org/api/v1/items/#{c_uuid}.json?per_page=500"
       json = self.get_json(url)
       captures = []
@@ -58,14 +57,8 @@ module NyplRepo
         end
       end
       captures.flatten!
-      filtered_captures = []
-      captures.each do | c |
-        next if c["imageID"].nil? && only_image
-        next if c["highResLink"].nil? && only_link
-      filtered_captures << c
-      end
-
-      filtered_captures
+    
+      captures
     end
 
     #get the item detail from a uuid
@@ -150,6 +143,8 @@ module NyplRepo
 
 
     def get_json(url)
+      puts "Calling URL: " + url if @debug
+
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
 
@@ -158,7 +153,6 @@ module NyplRepo
       response = http.request(request)
       body = response.body
       json = JSON.parse(body)
-
       return json
     end
 
