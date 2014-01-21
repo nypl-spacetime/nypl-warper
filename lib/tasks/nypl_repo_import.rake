@@ -18,6 +18,8 @@ namespace :map do
       #relatedItem for :
       parent_uuid = item["relatedItem"]["identifier"].detect{|a| a["type"]=="uuid"}["$"]
       description = "From " + item["relatedItem"]["titleInfo"]["title"]["$"]
+      description = (description.chars.to_a.size > 254 ? description.chars.to_a[0...251].join + "..." : description).to_s
+
       
       #go into layers to find:
       client = NyplRepo::Client.new(REPO_CONFIG[:token])
@@ -35,10 +37,12 @@ namespace :map do
     def get_layer(related_item)
       uuid = related_item["identifier"].detect{|a| a["type"]=="uuid"}["$"]
       title = related_item["titleInfo"]["title"]["$"]
+      title = (title.chars.to_a.size > 254 ? title.chars.to_a[0...251].join + "..." : title).to_s
+
       layer = Layer.new(:name => title, :uuid => uuid, :description => "")
       match_data = /1[3456789][0-9][0-9]/.match title
       if match_data
-        layer.depicts_year = md[0]
+        layer.depicts_year = match_data[0]
       end
       layer
     end
