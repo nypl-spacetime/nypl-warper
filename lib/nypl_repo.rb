@@ -141,6 +141,16 @@ module NyplRepo
       return highreslink
     end
 
+   
+    #checks the response for error
+    def check_error(json)
+      if json["nyplAPI"]["response"]["headers"]["status"] == "error"
+          msg = "NYPL Repo API Error: " + json["nyplAPI"]["response"]["headers"]["code"] + " "+ json["nyplAPI"]["response"]["headers"]["message"]
+          raise msg
+       end
+
+    end
+ 
 
     def get_json(url)
       puts "Calling URL: " + url if @debug
@@ -153,6 +163,9 @@ module NyplRepo
       response = http.request(request)
       body = response.body
       json = JSON.parse(body)
+
+      check_error(json)
+
       return json
     end
 
