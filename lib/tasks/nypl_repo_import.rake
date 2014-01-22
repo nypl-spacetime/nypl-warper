@@ -173,7 +173,7 @@ namespace :map do
     desc "Imports new maps (with highreslinks and imageids) and associated layers from a date to a date.  Date to be in YYYY-MM-DD"
     task(:import_latest => :environment) do
       unless ENV["since"] && ENV["until"]
-        puts "usage: rake map:repo:import_map since=date until=date"
+        puts "usage: rake map:repo:import_latest since=date until=date"
         break
       end
       since_date = ENV["since"] 
