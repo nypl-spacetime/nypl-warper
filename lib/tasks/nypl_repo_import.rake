@@ -16,7 +16,11 @@ namespace :map do
       title = (title.chars.to_a.size > 254 ? title.chars.to_a[0...251].join + "..." : title).to_s
       
       #relatedItem for :
-      parent_uuid = item["relatedItem"]["identifier"].detect{|a| a["type"]=="uuid"}["$"]
+      identifier =  item["relatedItem"]["identifier"]
+      if identifier.class == Hash
+        identifier = [identifier]
+      end
+      parent_uuid = identifier.detect{|a| a["type"]=="uuid"}["$"]
       description = "From " + item["relatedItem"]["titleInfo"]["title"]["$"]
       description = (description.chars.to_a.size > 254 ? description.chars.to_a[0...251].join + "..." : description).to_s
 
@@ -36,7 +40,7 @@ namespace :map do
 
     def get_layer(related_item)
       identifier =  related_item["identifier"]
-      if related_item["identifier"].class == Hash
+      if identifier.class == Hash
         identifier = [identifier]
       end
       uuid = identifier.detect{|a| a["type"]=="uuid"}["$"]
