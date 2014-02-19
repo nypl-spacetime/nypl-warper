@@ -35,7 +35,11 @@ namespace :map do
     end
 
     def get_layer(related_item)
-      uuid = related_item["identifier"].detect{|a| a["type"]=="uuid"}["$"]
+      identifier =  related_item["identifier"]
+      if related_item["identifier"].class == Hash
+        identifier = [identifier]
+      end
+      uuid = identifier.detect{|a| a["type"]=="uuid"}["$"]
       title = related_item["titleInfo"]["title"]["$"]
       title = (title.chars.to_a.size > 254 ? title.chars.to_a[0...251].join + "..." : title).to_s
 
