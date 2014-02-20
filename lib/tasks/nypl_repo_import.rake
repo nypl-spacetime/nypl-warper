@@ -188,11 +188,14 @@ namespace :map do
       until_date = ENV["until"]
       client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
       map_items = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
+      
+      if map_items == [nil]
+        puts "No items found!"
+      end
 
       map_items.each do | map_item |
-        #Uncomment when FIXME below is fixed. 
-        #next if map_item["highResLink"].nil? ||  map_item["imageID"].nil?
-        next if  map_item["imageID"].nil?
+        next if map_item.nil? 
+        next if map_item["imageID"].nil?
     
         item = client.get_mods_item(map_item["uuid"])
 
@@ -202,11 +205,10 @@ namespace :map do
           map = get_map(item, map_item["uuid"], map_item["imageID"])
         end
 
-        #TODO - problem with the API here. no highResLink in results
-        #FIXME workaround starts
+        #TODO - possible problem with the API here. no highResLink in results
+        #workaround starts
         highResLink = client.get_highreslink(map.bibl_uuid, map.nypl_digital_id)
         next if highResLink.nil?
-        #FIXME Workaround ends
         
         layers = get_layers(item["relatedItem"]) 
         layers.flatten! 
