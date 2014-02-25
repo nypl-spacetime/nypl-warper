@@ -65,6 +65,13 @@ namespace :map do
       layers
     end
 
+    def update_layer_counts
+      puts "Updating layer counts...."
+      Layer.all.each do | layer |
+        layer.update_counts
+      end
+    end
+
     #saves a map if it's new and with associated layers to that map
     def save_map_with_layers(map, layers)
       ActiveRecord::Base.transaction do
@@ -142,6 +149,7 @@ namespace :map do
       layers.flatten! 
       
       save_map_with_layers(map,layers)
+      update_layer_counts
 
     end #task
 
@@ -174,6 +182,7 @@ namespace :map do
         save_map_with_layers(map,layers)
       end
 
+      update_layer_counts
     end
 
 
@@ -217,6 +226,7 @@ namespace :map do
 
       end #map_items
 
+      update_layer_counts
     end #task
 
   end
