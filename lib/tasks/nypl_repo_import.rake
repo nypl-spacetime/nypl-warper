@@ -166,8 +166,11 @@ namespace :map do
       map_items = client.get_capture_items(uuid)
       # the above call only gets the items with image AND highreslink (true, true)
       map_items.each do | map_item |
-        next if map_item["imageID"].nil? || map_item["highResLink"].nil?
-        
+        if map_item["imageID"].nil? || map_item["highResLink"].nil?
+          puts "Missing ImageID or highResLink: "+ map_item["uuid"]
+          next
+        end
+
         item = client.get_mods_item(map_item["uuid"])
 
         if Map.exists?(:uuid => map_item["uuid"])
