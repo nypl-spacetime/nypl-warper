@@ -4,7 +4,8 @@
  <select id="field" name="field">
     <%= options_for_select([ ["Title", "title"], 
                            ["Description", "description"], 
-                           ["Digital Gallery Id", "nypl_digital_id"]], @field)-%>
+                           ["Digital Gallery Id", "nypl_digital_id"],
+                           ["Repo UUID", "uuid"]], @field)-%>
     </select>
   for 
   <%= text_field_tag 'query', @query -%>

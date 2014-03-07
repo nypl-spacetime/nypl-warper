@@ -244,7 +244,7 @@ class MapsController < ApplicationController
 
       @query = params[:query]
 
-      @field = %w(title description status catnyp nypl_digital_id).detect{|f| f== (params[:field])}
+      @field = %w(title description status catnyp nypl_digital_id uuid).detect{|f| f== (params[:field])}
       @field = "title" if @field.nil?
 
       #we'll use POSIX regular expression for searches    ~*'( |^)robinson([^A-z]|$)' and to strip out brakets etc  ~*'(:punct:|^|)plate 6([^A-z]|$)';
