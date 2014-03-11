@@ -13,6 +13,7 @@ namespace :map do
       repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
       Map.find(:all).each do |map|
         next unless map.bibl_uuid.nil?  #skip this if it has one already
+        next if map.nypl_digital_id.nil?
 
         bibl_uuid = repo_client.get_bibl_uuid(map.nypl_digital_id.upcase)
         map.bibl_uuid = bibl_uuid
@@ -99,16 +100,21 @@ namespace :map do
         layers.each do |layer|
           next unless layer.uuid.nil?
 
+          identifier = related_item["identifier"]
+          if identifier.class == Hash
+            identifier = [identifier]
+          end
+
           if layer.name.squish.start_with? item_title
             #p layer.name.squish + " :: "+ item_title
             #p "match title"
             update_layer(layer, related_item)
 
-          elsif related_item["identifier"].size > 0
+          elsif identifier.size > 0
             catnyp_prop = layer.layer_properties.detect {|a| a.name == "catnyp"}
             layer_catnyp = catnyp_prop.value unless catnyp_prop.nil?
 
-            item_cat_prop = related_item["identifier"].detect {|a| a["type"]=="local_catnyp"}
+            item_cat_prop = identifier.detect {|a| a["type"]=="local_catnyp"}
             item_catnyp = item_cat_prop["$"] unless item_cat_prop.nil?
 
             if layer_catnyp && layer_catnyp == item_catnyp
