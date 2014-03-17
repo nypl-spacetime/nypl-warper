@@ -437,15 +437,17 @@ class Map < ActiveRecord::Base
       end
       
       #to work with new nypl repo / digital archive
-      id = self.bibl_uuid 
+      bibl_id = self.bibl_uuid 
+      uuid = self.uuid
+
       repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
-      url = repo_client.get_highreslink(id, self.nypl_digital_id)
+      url = repo_client.get_highreslink(bibl_id, self.nypl_digital_id)
       if url.nil?
-        url = repo_client.get_highreslink(id, self.nypl_digital_id.upcase)
+        url = repo_client.get_highreslink(bibl_id, self.nypl_digital_id.upcase)
       end
       #id = self.nypl_digital_id
       #command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"
-      command = "#{RAILS_ROOT}/bin/fetch_repo.sh #{id} #{url} #{maps_dir}"
+      command = "#{RAILS_ROOT}/bin/fetch_repo.sh #{uuid} #{url} #{maps_dir}"
       logger.debug command
       
       if url
@@ -456,8 +458,9 @@ class Map < ActiveRecord::Base
         logger.debug "err msg: "+ f_err_msg
       end
 
+
       if url && $?.exitstatus == 0 && !f_err_msg.include?("ERROR")
-         filename = File.join(maps_dir, id) + ".tif"
+         filename = File.join(maps_dir, uuid) + ".tif"
          img = Magick::Image.ping(filename)
          self.height       = img[0].rows
          self.width        = img[0].columns
