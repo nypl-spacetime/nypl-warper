@@ -88,7 +88,11 @@ namespace :map do
       def update_layer(layer, related_item)
         #puts "update layers"
         #puts related_item["identifier"].inspect
-        uuid = related_item["identifier"].detect{|a| a["type"] == "uuid"}["$"]
+        identifier = related_item["identifier"]
+        if identifier.class == Hash
+          identifier = [identifier]
+        end
+        uuid = identifier.detect{|a| a["type"] == "uuid"}["$"]
 
         layer.uuid = uuid
         layer.save!
