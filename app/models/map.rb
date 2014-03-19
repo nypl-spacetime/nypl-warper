@@ -12,9 +12,9 @@ class Map < ActiveRecord::Base
    alias_attribute :bibl_uuid, :parent_uuid
    alias_attribute :mods_uuid, :uuid
 
-   has_many :map_layers, :foreign_key => "mapscan_id"
+   has_many :map_layers, :dependent => :destroy,  :foreign_key => "mapscan_id"
    has_many :layers, :through => :map_layers
-   has_many :my_maps, :dependent => :destroy
+   has_many :my_maps, :dependent => :destroy, :foreign_key => "mapscan_id"
    has_many :users, :through => :my_maps
       
    has_many :gcps, :foreign_key => "mapscan_id",  :dependent => :destroy  #gcps also destroyed if mapscan is
