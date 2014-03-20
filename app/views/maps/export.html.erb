@@ -31,7 +31,10 @@ Bibliographic:
 <ul>
   <li>
    <%= link_to 'Digital Gallery', "http://digitalgallery.nypl.org/nypldigital/dgkeysearchdetail.cfm?imageID=#{@map.nypl_digital_id}" %> 
-  </li>
+   </li>
+   <li>
+   <%= link_to 'Digital Collections (beta)', "http://digitalcollections.nypl.org/items/#{@map.mods_uuid}" -%>
+   </li>
 <!--
   <li> <%= link_to 'CATNYP record', "http://catnyp.nypl.org/record=#{@map.catnyp}" -%>
   </li>
