@@ -185,7 +185,7 @@ class MapsController < ApplicationController
     @selected_tab = 5
     @html_title = "Export Map" + @map.id.to_s
     unless @map.warped_or_published? && @map.map_type == :is_map
-       flash.now[:notice] = "Map needs to be rectified before being able to be exported"
+       flash.now[:notice] = "Map needs to be warped before being able to be exported"
     end
     choose_layout_if_ajax
     if params[:unwarped]
@@ -368,7 +368,7 @@ class MapsController < ApplicationController
      #note, trying to view an image that hasnt been requested, will cause it to be requested
      if @map.status.nil? or @map.status == :unloaded
        @disabled_tabs = ["warp", "clip", "align", "warped", "preview","activity", "export"]
-       @title = "Viewing unrectified map."
+       @title = "Viewing unwarped map."
        logger.debug("starting spawn fetch iamge")
        spawn do
          logger.info "starting fetch from image server"
@@ -381,7 +381,7 @@ class MapsController < ApplicationController
      @title = "Viewing original map. "
 
      if !@map.warped_or_published?
-       @title += "This map has not been rectified yet."
+       @title += "This map has not been warped yet."
      end
      choose_layout_if_ajax
 
@@ -448,16 +448,16 @@ class MapsController < ApplicationController
        @map.mask!
        stat = "ok"
        if @map.gcps.hard.size.nil? || @map.gcps.hard.size < 3
-         msg = "Map masked, but it needs more control points to rectify. Click the Rectify tab to add some."
+         msg = "Map masked, but it needs more control points to warp. Click the Rectify tab to add some."
          stat = "fail"
        else
          params[:use_mask] = "true"
          rectify_main
-         msg = "Map masked and rectified."
+         msg = "Map masked and warped."
        end
      else
        stat = "fail"
-       msg = "Mask saved, but not applied, as the map is currently being rectified somewhere else, please try again later."
+       msg = "Mask saved, but not applied, as the map is currently being warped somewhere else, please try again later."
      end
      respond_to do |format|
        format.json {render :json => {:stat => stat, :message => msg}.to_json , :callback => params[:callback]}
@@ -479,7 +479,7 @@ class MapsController < ApplicationController
         end
 
      else
-       flash.now[:notice] = "Whoops, the map needs to be rectified before you can view it"
+       flash.now[:notice] = "Whoops, the map needs to be warped before you can view it"
      end
        choose_layout_if_ajax
    end
@@ -765,7 +765,7 @@ end
         end
 
         @output = @map.warp! transform_option, resample_option, use_mask #,masking_option
-        @notice_text = "Map rectified."
+        @notice_text = "Map warped."
       end
    end
 
