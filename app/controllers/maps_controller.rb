@@ -1,7 +1,7 @@
 class MapsController < ApplicationController
   layout 'mapdetail', :only => [:show, :preview, :warp, :clip, :align, :activity, :warped, :export, :comments]
 
-  before_filter :login_or_oauth_required, :only => [:warp, :rectify, :clip, :align, :rectify, :warp_align, :mask_map, :delete_mask, :save_mask, :save_mask_and_warp, :update, :export, :set_rough_state, :set_rough_centroid ]
+  before_filter :login_or_oauth_required, :only => [:warp, :rectify, :clip, :align, :rectify, :warp_align, :mask_map, :delete_mask, :save_mask, :save_mask_and_warp, :update, :set_rough_state, :set_rough_centroid ]
   before_filter :check_administrator_role, :only => [:publish, :edit, :destroy, :update, :toggle_map, :map_type, :create]
   before_filter :find_map_if_available, :except => [:show, :index, :wms,  :status, :thumb, :update, :toggle_map, :map_type,  :geosearch]
 
@@ -184,9 +184,7 @@ class MapsController < ApplicationController
     @current_tab = "export"
     @selected_tab = 5
     @html_title = "Export Map" + @map.id.to_s
-    unless @map.warped_or_published? && @map.map_type == :is_map
-       flash.now[:notice] = "Map needs to be warped before being able to be exported"
-    end
+    
     choose_layout_if_ajax
     if params[:unwarped]
       tif_filename = @map.filename
@@ -196,10 +194,8 @@ class MapsController < ApplicationController
     
     respond_to do | format |
       format.html {}
-      if logged_in? 
-        format.tif {  send_file tif_filename, :x_sendfile => true }
-        format.png  { send_file @map.warped_png, :x_sendfile => true }
-      end
+      format.tif {  send_file tif_filename, :x_sendfile => true }
+      format.png  { send_file @map.warped_png, :x_sendfile => true }
       format.aux_xml { send_file @map.warped_png_aux_xml, :x_sendfile => true }
     end
   end
@@ -331,9 +327,9 @@ class MapsController < ApplicationController
      # Not Logged in users
      #
      if !logged_in?
-       @disabled_tabs = ["warp", "clip", "align", "export", "activity"]
+       @disabled_tabs = ["warp", "clip", "align", "activity"]
        if @map.status.nil? or @map.status == :unloaded or @map.status == :loading
-         @disabled_tabs = ["warp", "clip", "warped", "align", "activity", "export"]
+         @disabled_tabs = ["warp", "clip", "warped", "align", "activity"]
        end
         flash.now[:notice] = "You may need to %s to start editing the map"
         flash.now[:notice_item] = ["log in", new_session_path]

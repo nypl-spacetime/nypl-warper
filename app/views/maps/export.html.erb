@@ -4,6 +4,7 @@
   Original TIFF: <%= link_to  "Download original unwarped TIFF", export_map_url(:id => @map, :format => :tif, :unwarped => true) %>
   </li>
 </ul>
+<% if @map.warped_or_published? && @map.map_type == :is_map %>
 <ul>
   <li>
   Warped GeoTIFF: <%= link_to  "Download warped GeoTIFF", export_map_url(:id => @map, :format => :tif) %> 
@@ -27,7 +28,10 @@
     Tiles (Google/OSM scheme): <%=link_to "Tiles base URL", tile_url %> 
   </li>
 </ul>
-Bibliographic:
+<% else %>
+  Rectifying a map enables more options to download.
+<% end %>
+<h3>Bibliographic:</h3>
 <ul>
   <li>
    <%= link_to 'Digital Gallery', "http://digitalgallery.nypl.org/nypldigital/dgkeysearchdetail.cfm?imageID=#{@map.nypl_digital_id}" %> 

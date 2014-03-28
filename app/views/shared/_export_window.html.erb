@@ -46,17 +46,15 @@
           <% tile_url = url_for(:controller => "maps", :action => "tile", :x => "x", :y => "y", :z => "z", :only_path => false) %>
           <%=link_to image_tag("tiles-20x25.png")+"Tiles base URL", tile_url %> 
           </li>
-          <% if logged_in? -%>
             <li>
             <%= link_to(image_tag("image-icon-20x25.png")+"Download original TIFF", export_map_url(:id => @map, :format => :tif, :unwarped => true)) %> 
             </li>
           <li><%= link_to(image_tag("image-icon-20x25.png")+"Download warped GeoTIFF", export_map_url(:id => @map, :format => :tif)) %> </li>
           <li><%= link_to(image_tag("image-icon-20x25.png")+"Download warped PNG", export_map_url(:id => @map, :format => :png)) %></li>
           <li>&nbsp;</li>
-        <% else -%>
-          <li> Log in for</li>
+       <% unless logged_in? -%>
+          <li> Log in for more export options</li>
         <% end -%>
-          <li> <%= link_to_if(logged_in?, "More export options", map_path(:id=> @map,:anchor=>"Export_tab")) -%> </li>
         </ul>
         <% else  -%>
           <%#layer%>
@@ -69,9 +67,8 @@
           <%=link_to image_tag("tiles-20x25.png")+"Tiles base URL", tile_url %> 
           </li>
           <% unless logged_in? -%>
-            <li> Log in for</li>
+            <li> Log in for more export options</li>
           <% end -%>
-          <li> <%= link_to_if(logged_in?, "More export options", layer_path(:id=> @layer,:anchor=>"Export_tab")) -%> </li>
 
         </ul>
 
