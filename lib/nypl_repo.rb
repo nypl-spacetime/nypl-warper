@@ -123,15 +123,34 @@ module NyplRepo
     end
 
 
-    #get highreslink from an item, matching up the image idi
+    #get highreslink from an item, matching up the image id
     #since some bibliographic items may have many maps under them
     def get_highreslink(bibl_uuid, image_id)
       url = "http://api.repo.nypl.org/api/v1/items/#{bibl_uuid}.json?per_page=500"
       json = self.get_json(url)
       
       highreslink = nil
+      captures = []
+      capture = json["nyplAPI"]["response"]["capture"]
+      captures << capture
 
-      json["nyplAPI"]["response"]["capture"].each do | capture|
+      totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
+
+      if totalPages >= 2
+        puts "total pages " + totalPages.to_s if @debug
+        (2..totalPages).each do | page |
+          puts "page: "+page.to_s if @debug
+          newurl = url + "&page=#{page}"
+          json = self.get_json(newurl)
+          newcapture = json["nyplAPI"]["response"]["capture"]
+          captures << newcapture
+      
+        end  
+      end
+
+      captures.flatten!
+      
+      captures.each do | capture|
         if capture["imageID"] == image_id
           highreslink = capture["highResLink"]
           break 
