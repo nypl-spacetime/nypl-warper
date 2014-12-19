@@ -19,7 +19,8 @@
   </li>
 <li>
   <% tile_url = url_for(:controller => "maps", :action => "tile", :x => "x", :y => "y", :z => "z", :only_path => false) %>
-    Tiles (Google/OSM scheme): <%=link_to "Tiles base URL", tile_url %> 
+  <% tile_url_proper = url_for(:controller => "maps", :action => "tile", :x => "{x}", :y => "{y}", :z => "{z}", :only_path => false) %>
+    Tiles (Google/OSM scheme): <%=link_to "Tiles base URL", tile_url %> <%= URI.unescape tile_url_proper %>
   </li>
 </ul>
 Bibliographic:
