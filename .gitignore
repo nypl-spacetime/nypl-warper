@@ -1,3 +1,5 @@
+.ruby-gemset
+.ruby-version
 nbproject
 bin/fetch.sh
 config/database.yml
