@@ -388,6 +388,8 @@ end
       raster.metadata.set('wcs_formats', 'GEOTIFF')
       raster.metadata.set('wms_title', @layer.name)
       raster.metadata.set('wms_srs', 'EPSG:4326 EPSG:4269 EPSG:900913')
+      raster.metadata.set('wms_enable_request', '*')
+      
       raster.debug= MS_TRUE
 
       msIO_installStdoutToBuffer
