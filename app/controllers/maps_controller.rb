@@ -573,7 +573,7 @@ class MapsController < ApplicationController
       ows.setParameter("STYLES", "")
       ows.setParameter("LAYERS", "image")
       ows.setParameter("COVERAGE", "image")
-
+      
       mapobj = MapObj.new(File.join(RAILS_ROOT, '/db/mapfiles/wms.map'))
       projfile = File.join(RAILS_ROOT, '/lib/proj')
       mapobj.setConfigOption("PROJ_LIB", projfile)
@@ -589,6 +589,7 @@ class MapsController < ApplicationController
       raster.name = "image"
       raster.type = MS_LAYER_RASTER;
       raster.setProcessingKey("CLOSE_CONNECTION", "ALWAYS")
+      raster.metadata.set('wms_enable_request', '*')
 
 
       if status == "unwarped"
