@@ -27,7 +27,7 @@ MAP
   END
   OUTPUTFORMAT
     NAME "png"
-    DRIVER "GD/PNG"
+   DRIVER "AGG/PNG"
     IMAGEMODE "rgba"
     EXTENSION "png"
     MIMETYPE "image/png"
@@ -36,7 +36,7 @@ MAP
   END
   OUTPUTFORMAT
     NAME "png8"
-    DRIVER "GD/PNG"
+    DRIVER "AGG/PNG"
     IMAGEMODE "rgba"
     EXTENSION "png"
     MIMETYPE "image/png"
