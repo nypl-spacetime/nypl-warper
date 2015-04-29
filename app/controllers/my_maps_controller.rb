@@ -41,8 +41,8 @@ end
 
 def destroy
   if @user == current_user 
-    #note, mapscan_id is the database field name
-    my_map = @user.my_maps.find_by_mapscan_id(params[:map_id])
+    
+    my_map = @user.my_maps.find_by_map_id(params[:map_id])
     if my_map.destroy 
       flash[:notice] = "Map removed from list!"
     else

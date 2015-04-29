@@ -4,11 +4,11 @@ class Gcp < ActiveRecord::Base
     "gcps"
   end
 
-  belongs_to :map, :foreign_key => "mapscan_id"
+  belongs_to :map, :foreign_key => "map_id"
 
   acts_as_audited 
   validates_numericality_of :x, :y, :lat, :lon
-  validates_presence_of :x, :y, :lat, :lon, :mapscan_id
+  validates_presence_of :x, :y, :lat, :lon, :map_id
 
   named_scope  :soft, :conditions => {:soft => true}
   named_scope  :hard, :conditions => ["gcps.soft IS NULL OR gcps.soft = 'F'"]

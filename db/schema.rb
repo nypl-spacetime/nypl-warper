@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 30) do
+ActiveRecord::Schema.define(:version => 31) do
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(:version => 30) do
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
   create_table "gcps", :force => true do |t|
-    t.integer  "mapscan_id"
+    t.integer  "map_id"
     t.float    "x"
     t.float    "y"
     t.decimal  "lat",        :precision => 15, :scale => 10
@@ -82,24 +82,24 @@ ActiveRecord::Schema.define(:version => 30) do
     t.string   "catnyp"
     t.string   "uuid"
     t.string   "parent_uuid"
-    t.boolean  "is_visible",                            :default => true
+    t.boolean  "is_visible",                        :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "mapscans_count",                        :default => 0
-    t.integer  "rectified_mapscans_count",              :default => 0
+    t.integer  "maps_count",                        :default => 0
+    t.integer  "rectified_maps_count",              :default => 0
     t.string   "bbox"
-    t.string   "depicts_year",             :limit => 4, :default => ""
-    t.polygon  "bbox_geom",                                               :srid => 0
+    t.string   "depicts_year",         :limit => 4, :default => ""
+    t.polygon  "bbox_geom",                                           :srid => 0
   end
 
   add_index "layers", ["bbox_geom"], :name => "index_layers_on_bbox_geom", :spatial => true
 
-  create_table "mapscan_layers", :force => true do |t|
-    t.integer "mapscan_id"
+  create_table "map_layers", :force => true do |t|
+    t.integer "map_id"
     t.integer "layer_id"
   end
 
-  create_table "mapscans", :force => true do |t|
+  create_table "maps", :force => true do |t|
     t.string   "title"
     t.text     "description"
     t.string   "filename"
@@ -130,18 +130,18 @@ ActiveRecord::Schema.define(:version => 30) do
     t.datetime "gcp_touched_at"
   end
 
-  add_index "mapscans", ["bbox_geom"], :name => "index_mapscans_on_bbox_geom", :spatial => true
-  add_index "mapscans", ["rough_centroid"], :name => "index_mapscans_on_rough_centroid", :spatial => true
+  add_index "maps", ["bbox_geom"], :name => "index_mapscans_on_bbox_geom", :spatial => true
+  add_index "maps", ["rough_centroid"], :name => "index_mapscans_on_rough_centroid", :spatial => true
 
   create_table "my_maps", :force => true do |t|
-    t.integer  "mapscan_id"
+    t.integer  "map_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "my_maps", ["mapscan_id", "user_id"], :name => "index_my_maps_on_mapscan_id_and_user_id", :unique => true
-  add_index "my_maps", ["mapscan_id"], :name => "index_my_maps_on_mapscan_id"
+  add_index "my_maps", ["map_id", "user_id"], :name => "index_my_maps_on_mapscan_id_and_user_id", :unique => true
+  add_index "my_maps", ["map_id"], :name => "index_my_maps_on_mapscan_id"
 
   create_table "oauth_nonces", :force => true do |t|
     t.string   "nonce"

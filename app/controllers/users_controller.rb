@@ -15,7 +15,7 @@ class UsersController < ApplicationController
 
      the_sql = "select user_id, username, COUNT(user_id) as total_count, 
       COUNT(case when auditable_type='Gcp' then 1 end) as gcp_count,
-      COUNT(case when auditable_type='Map' or auditable_type='Mapscan' then 1 end) as map_count,
+      COUNT(case when auditable_type='Map' or auditable_type='Map' then 1 end) as map_count,
       COUNT(case when action='update' and auditable_type='Gcp' then 1 end) as gcp_update_count,
       COUNT(case when action='create' and auditable_type='Gcp' then 1 end) as gcp_create_count,
       COUNT(case when action='destroy' and auditable_type='Gcp' then 1 end) as gcp_destroy_count

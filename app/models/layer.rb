@@ -6,8 +6,8 @@ class Layer < ActiveRecord::Base
 
   #replace "has_finder" with "named_scope" if we use a newer rails 2 (uses has_finder gem)
   named_scope :visible, :order=> 'id', :conditions => {:is_visible => true}
-  named_scope :with_year, :order => :mapscans_count, :conditions => "depicts_year is not null"
-  named_scope :with_maps, :order => :rectified_mapscans_count, :conditions => "rectified_mapscans_count >=  1"
+  named_scope :with_year, :order => :maps_count, :conditions => "depicts_year is not null"
+  named_scope :with_maps, :order => :rectified_maps_count, :conditions => "rectified_maps_count >=  1"
 
   def tileindex_filename;   self.id.to_s + '.shp' ; end
 
@@ -38,16 +38,12 @@ class Layer < ActiveRecord::Base
   end
 
   def update_counts
-   update_attribute(:mapscans_count, self.maps.real_maps.length)
-   update_attribute(:rectified_mapscans_count, self.maps.warped.count)
+   update_attribute(:maps_count, self.maps.real_maps.length)
+   update_attribute(:rectified_maps_count, self.maps.warped.count)
   end
 
   def rectified_maps_count
     self.maps.warped.count #4 = rectified
-  end
-
-  def maps_count
-    mapscans_count
   end
 
   def rectified_percent
@@ -81,7 +77,7 @@ class Layer < ActiveRecord::Base
   #removes map from a layer
   def remove_map(map_id)
     logger.info "layer #{self.id} will have map #{map_id} removed from it"
-    map_layer = MapLayer.find(:first, :conditions =>["mapscan_id = ? and layer_id = ?", map_id, self.id])
+    map_layer = MapLayer.find(:first, :conditions =>["map_id = ? and layer_id = ?", map_id, self.id])
     logger.info "this relationship to be deleted"
     logger.info map_layer.inspect
     map_layer.destroy

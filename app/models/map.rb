@@ -6,18 +6,16 @@ require 'RMagick'
 
 
 class Map < ActiveRecord::Base
-  def self.table_name()
-    "mapscans"
-  end
+
    alias_attribute :bibl_uuid, :parent_uuid
    alias_attribute :mods_uuid, :uuid
 
-   has_many :map_layers, :dependent => :destroy,  :foreign_key => "mapscan_id"
+   has_many :map_layers, :dependent => :destroy,  :foreign_key => "map_id"
    has_many :layers, :through => :map_layers
-   has_many :my_maps, :dependent => :destroy, :foreign_key => "mapscan_id"
+   has_many :my_maps, :dependent => :destroy, :foreign_key => "map_id"
    has_many :users, :through => :my_maps
       
-   has_many :gcps, :foreign_key => "mapscan_id",  :dependent => :destroy  #gcps also destroyed if mapscan is
+   has_many :gcps, :foreign_key => "map_id",  :dependent => :destroy  #gcps also destroyed if mapis
 
    acts_as_audited :except => [:filename]
 
@@ -293,16 +291,16 @@ class Map < ActiveRecord::Base
       end
    end
 
-   # mapscan gets error attibute set and gcps get error attribute set
+   # maps gets error attibute set and gcps get error attribute set
    # not saved to db, though.
    #
    # ported to ruby by chippy and based on bsd licenced code  
    #  from oldmapsonline.org Klokan Petr Pridal (python) & Bernhard Jenny (Java) from mapanalyst project (gpl2)
    def gcps_with_error(soft=nil)
     unless soft == 'true'
-      gcps = Gcp.hard.find(:all, :conditions =>["mapscan_id = ?", self.id], :order => 'created_at')
+      gcps = Gcp.hard.find(:all, :conditions =>["map_id = ?", self.id], :order => 'created_at')
     else
-      gcps = Gcp.soft.find(:all, :conditions =>["mapscan_id = ?", self.id], :order => 'created_at')
+      gcps = Gcp.soft.find(:all, :conditions =>["map_id = ?", self.id], :order => 'created_at')
     end
       
 

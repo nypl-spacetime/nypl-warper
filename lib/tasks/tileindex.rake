@@ -13,7 +13,7 @@ namespace :layer do
     layers = Layer.visible.find :all
     layers.each do |layer|
       layer.update_counts
-      if layer.rectified_mapscans_count > 0
+      if layer.rectified_maps_count > 0
         layer.update_layer
         #sleep(0.2)
         #print '.'

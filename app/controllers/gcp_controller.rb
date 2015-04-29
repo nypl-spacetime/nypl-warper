@@ -107,7 +107,7 @@ class GcpController < ApplicationController
       soft = params[:soft]
 
       if params[:mapid]
-         @gcp = Gcp.new(:mapscan_id=>params[:mapid].to_i, :x=>x, :y=>y, :lat=>lat, :lon=>lon, :name => name, :soft => soft)
+         @gcp = Gcp.new(:map_id=>params[:mapid].to_i, :x=>x, :y=>y, :lat=>lat, :lon=>lon, :name => name, :soft => soft)
       else
          @gcp = Gcp.new(:x=>x, :y=>y, :lat=>lat, :lon=>lon)
       end

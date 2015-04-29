@@ -6,7 +6,7 @@ class HomeController < ApplicationController
     @html_title = @html_title 
 
     @maps = Map.find(:all, 
-                             :order => "mapscans.updated_at DESC",
+                             :order => "maps.updated_at DESC",
                              :conditions => 'status = 4', 
                              :limit => 3, 
                             :include => :gcps)

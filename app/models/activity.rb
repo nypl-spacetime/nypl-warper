@@ -52,7 +52,7 @@ class Activity < Audit
 
          end # mask_status
 
-      end #mapscan
+      end #map
 
       summ
    end

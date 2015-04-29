@@ -93,7 +93,7 @@ def geosearch
   end
 
   paginate_params = {
-    :select => "bbox, name, updated_at, id, mapscans_count, rectified_mapscans_count, depicts_year",
+    :select => "bbox, name, updated_at, id, maps_count, rectified_maps_count, depicts_year",
     :page => params[:page],
     :per_page => 20,
     :order => sort_geo + sort_clause + sort_nulls,
@@ -127,8 +127,8 @@ def index
     conditions = nil
   end
   if params[:sort_key] == "percent"
-    select = "*, round(rectified_mapscans_count::float / mapscans_count::float * 100) as percent"
-    conditions.nil? ? conditions = ["mapscans_count > 0"] : conditions.add_condition('mapscans_count > 0')
+    select = "*, round(rectified_maps_count::float / maps_count::float * 100) as percent"
+    conditions.nil? ? conditions = ["maps_count > 0"] : conditions.add_condition('maps_count > 0')
   else
     select = nil
   end 
