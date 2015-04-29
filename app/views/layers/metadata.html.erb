@@ -1,25 +1,21 @@
 <h2>metadata</h2>
-<h3>Layer</h3>
-<!--Catnyp ID : <%= @layer.catnyp -%> <br /> -->
+
+<div class="column span-12">
+  <p>
+    <b>Name</b> <br />
+    <%= @layer.name %>
+  </p>
+  <p>
+    <b>Description</b><br />
+    <%= @layer.description %>
+  </p>
+  <p>
+    <b>Source/ Bibliographic Ref URL</b><br />
+    <%= @layer.source_uri %>
+  </p>
+</div>
 <span>
   <span id="depicts-year-span">
-  Depicts Year: <%if @layer.depicts_year%><%= @layer.depicts_year %><%end%>
+    Depicts Year: <%if @layer.depicts_year%><%= @layer.depicts_year %><%end%>
   </span>
-
 </span>
-
-<h3>Properties</h3>
-<div class="nypl_repo_metadata">
-  NYPL Digital Collections Repository
-  uuid:
-  <% if @layer.uuid %>
-    <%= @layer.uuid %>
-  <% else %>
-    Not known.
-  <% end %>
-</div>
-<% @layer_properties.each do | property | %>
-  <%= property.name.titleize %> : <%= property.value %> <br />
-<% end %>
-
-

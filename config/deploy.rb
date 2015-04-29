@@ -1,79 +1,63 @@
-set :application, "warper"
-set :repository,  "http://svn2.geothings.net/warper/"
+# config valid only for Capistrano 3.1
+lock '3.2.1'
 
-#wrp.geothings.net
-# If you aren't deploying to /u/apps/#{application} on the target
-# servers (which is the default), you can specify the actual location
-# via the :deploy_to variable:
-# set :deploy_to, "/var/www/#{application}"
+set :application, 'mapwarper'
+set :repo_url, 'git@github.com:timwaters/mapwarper.git'
 
-# If you aren't using Subversion to manage your source code, specify
-# your SCM below:
-# set :scm, :subversion
+# Default branch is :master
+# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
+set :branch, "master"
 
-role :app, "wrp.geothings.net"
-role :web, "wrp.geothings.net"
-role :db,  "wrp.geothings.net", :primary => true
+# Default deploy_to directory is /var/www/my_app
+# set :deploy_to, '/var/www/my_app'
+set :deploy_via, :copy
 
-set :deploy_to, "/home/timwarp/wrp.geothings.net/"
-set :use_sudo, false
-set :checkout, "export"
-set :user, "timwarp"
+# Default value for :scm is :git
+set :scm, :git
 
-#tasks
+set :user, "tim"
 
-desc "Tasks to execute after code update" 
-   task :after_update_code, :roles => [:app, :db, :web] do
-    # fix permissions
-    run "chmod +x #{release_path}/script/process/reaper" 
-    run "chmod +x #{release_path}/script/process/spawner" 
-    run "chmod 755 #{release_path}/public/dispatch.*" 
-    run "chmod 755 #{latest_release}/script/spin"
-   end
-   
-   task :after_update_code, :roles => :app do
-   
-   db_config = "#{shared_path}/config/database.yml.production"
-	 run "cp #{db_config} #{release_path}/config/database.yml"
-   
-  %w{mapimages}.each do |share|
-    run "rm -rf #{release_path}/public/#{share}"
-    run "mkdir -p #{shared_path}/system/#{share}"
-    run "ln -nfs #{shared_path}/system/#{share} #{release_path}/public/#{share}"
- 
-   
+# Default value for :format is :pretty
+set :format, :pretty
+
+# Default value for :log_level is :debug
+set :log_level, :debug
+
+# Default value for :pty is false
+set :pty, true
+
+# Default value for :linked_files is []
+set :linked_files, %w{config/database.yml config/application.yml config/secrets.yml} 
+
+# Default value for linked_dirs is []
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/uploads public/mapimages db/maptileindex}
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+set :rails_env, "production"
+
+# Default value for keep_releases is 5
+set :keep_releases, 5
+
+namespace :deploy do
+
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      # Your restart mechanism here, for example:
+      execute :touch, release_path.join('tmp/restart.txt')
+    end
   end
 
-  
-end
-   
-   desc "Link in the production extras" 
-task :after_symlink do
-	 run "mkdir -p #{shared_path}/system/mapfiles"
+  after :publishing, :restart
 
-	#prob not needed...
-    run "cp #{release_path}/db/mapfiles/test.map #{shared_path}/system/mapfiles/test.map"
-    
-     run "cp #{release_path}/db/mapfiles/default.map #{shared_path}/system/mapfiles/default.map"
-    	run "rm -rf #{release_path}/db/mapfiles"
-     run "ln -nfs #{shared_path}/system/mapfiles #{release_path}/db/mapfiles"
-     
-     #put the mapserv in this folder
-      run "rm -rf #{release_path}/public/cgi"
-    run "mkdir -p #{shared_path}/system/cgi"
-    run "ln -nfs #{shared_path}/system/cgi #{release_path}/public/cgi"
- 
-end
-   
-   
-   desc "Restarting after deployment" 
-   task :after_deploy, :roles => [:app, :db, :web] do
-    run "touch /home/timwarp/wrp.geothings.net/current/public/dispatch.fcgi" 
-   end
-   
-   desc "Restarting after rollback" 
-   task :after_rollback, :roles => [:app, :db, :web] do
-    run "touch /home/timwarp/wrp.geothings.net/current/public/dispatch.fcgi" 
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
     end
-    
+  end
 
+end

@@ -10,8 +10,8 @@ north = bounds[3]
 width = 256
 height = 256
 depictsYear = @layer.depicts_year
-wms_layers=
-  wms_baseurl = "http://"+request.host_with_port+ url_for(:controller => "layers", :action=> "wms", :id=>@layer)
+
+wms_baseurl = "http://"+request.host_with_port+ url_for(:controller => "layers", :action=> "wms", :id=>@layer)
 this_baseurl = "http://"+request.host_with_port+ url_for(:controller => "layers", :action=> "show", :id=>@layer, :format=>"kml")
 xml.instruct! :xml
 xml.kml(:xmlns => "http://www.opengis.net/kml/2.2") do
@@ -41,7 +41,7 @@ xml.kml(:xmlns => "http://www.opengis.net/kml/2.2") do
         }
       }
       xml.GroundOverlay{
-        if !depictsYear.blank? 
+        unless depictsYear.blank?
           xml.TimeStamp{
             xml.when(depictsYear)
           }
@@ -111,7 +111,7 @@ xml.kml(:xmlns => "http://www.opengis.net/kml/2.2") do
 
       xml.NetworkLink {
         #xml.visibility(1)
-        if !depictsYear.blank?
+        unless depictsYear.blank?
           xml.TimeStamp{
             xml.when(depictsYear)
           }

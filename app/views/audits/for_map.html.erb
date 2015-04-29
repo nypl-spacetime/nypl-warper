@@ -1,6 +1,6 @@
 <h2> <%= @title %> </h2>
 
-<%=image_tag 'feed-icon-14x14.png' -%> <%= link_to 'RSS Feed' , 'http://'+ request.host_with_port + ActionController::Base.relative_url_root + request.path + '.rss' %>&nbsp;
+<%=image_tag 'feed-icon-14x14.png' -%> <%= link_to 'RSS Feed' , 'http://'+ request.host_with_port + request.path + '.rss' %>&nbsp;
 <% if @linktomap %><%= link_to "Show Just Map Activity", :controller=>"maps", :action=>"activity" %><% end %>
 <br /><br />
 

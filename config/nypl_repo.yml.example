@@ -1,6 +1,0 @@
-development:
-  token: nypl_api_token
-
-production:
-  token: nypl_repo_token
-

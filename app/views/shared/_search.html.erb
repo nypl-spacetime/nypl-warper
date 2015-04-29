@@ -1,15 +1,15 @@
-
-<% form_tag url_for(:controller => "maps"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
-  <strong>Search</strong>  
- <select id="field" name="field">
+<%= form_tag url_for(:controller => "maps"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
+  Search  
+  <select id="field" name="field">
     <%= options_for_select([ ["Title", "title"], 
-                           ["Description", "description"], 
-                           ["Digital Gallery Id", "nypl_digital_id"],
-                           ["Repo UUID", "uuid"]], @field)-%>
-    </select>
+        ["Description", "description"], 
+        ["Publisher", "publisher"],
+        ["Author", "authors"],
+        ["Tags", "tags"]], @field)-%>
+  </select>
   for 
   <%= text_field_tag 'query', @query -%>
-
+  <input type="submit" value=" Go ">
   <% if @show_warped == "1" -%>
     <% check_all = false -%>
     <% check_rectified = true -%>
@@ -17,12 +17,12 @@
     <% check_all = true -%>
     <% check_rectified = false -%>
   <% end %>
-  in 
-  <%= radio_button_tag('show_warped', 0, check_all, :id => 'all_maps') %>
-  <label for="all_maps">all maps</label>
-  <%= radio_button_tag('show_warped', 1, check_rectified, :id => 'rectified_maps') %>
-  <label for="rectified_maps">rectified maps only</label>
 
-  <input type="submit" value=" Go ">
+  <label for="all_maps">All maps</label>
+  <%= radio_button_tag('show_warped', 0, check_all, :id => 'all_maps') %>
+  <label for="rectified_maps">Rectified maps only</label>
+  <%= radio_button_tag('show_warped', 1, check_rectified, :id => 'rectified_maps') %>
 
 <% end -%>
+  <br />
+  New: <%= link_to 'Find Rectified Maps by Location',  url_for(:controller => 'maps', :action=>'geosearch'), :class => "buttonWarper" %>
