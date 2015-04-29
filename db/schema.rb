@@ -27,13 +27,6 @@ ActiveRecord::Schema.define(:version => 30) do
   add_index "audits", ["created_at"], :name => "index_audits_on_created_at"
   add_index "audits", ["user_id", "user_type"], :name => "user_index"
 
-  create_table "changesets", :primary_key => "revision", :force => true do |t|
-    t.string   "author",  :limit => 256
-    t.datetime "date",                   :null => false
-    t.text     "message"
-    t.polygon  "bbox",                                   :srid => 4326
-  end
-
   create_table "client_applications", :force => true do |t|
     t.string   "name"
     t.string   "url"
@@ -96,19 +89,15 @@ ActiveRecord::Schema.define(:version => 30) do
     t.integer  "rectified_mapscans_count",              :default => 0
     t.string   "bbox"
     t.string   "depicts_year",             :limit => 4, :default => ""
-    t.polygon  "bbox_geom"
+    t.polygon  "bbox_geom",                                               :srid => 0
   end
 
   add_index "layers", ["bbox_geom"], :name => "index_layers_on_bbox_geom", :spatial => true
-  add_index "layers", ["uuid"], :name => "layers_uuid_uidx", :unique => true
 
   create_table "mapscan_layers", :force => true do |t|
     t.integer "mapscan_id"
     t.integer "layer_id"
   end
-
-  add_index "mapscan_layers", ["layer_id", "mapscan_id"], :name => "mapscan_layers_ids_idx", :unique => true
-  add_index "mapscan_layers", ["layer_id"], :name => "mapscan_layers_layer_id_idx"
 
   create_table "mapscans", :force => true do |t|
     t.string   "title"
@@ -131,10 +120,10 @@ ActiveRecord::Schema.define(:version => 30) do
     t.boolean  "map",                                             :default => true
     t.string   "bbox"
     t.integer  "map_type"
-    t.polygon  "bbox_geom"
+    t.polygon  "bbox_geom",                                                         :srid => 0
     t.decimal  "rough_lat",       :precision => 15, :scale => 10
     t.decimal  "rough_lon",       :precision => 15, :scale => 10
-    t.point    "rough_centroid"
+    t.point    "rough_centroid",                                                    :srid => 0
     t.integer  "rough_zoom"
     t.integer  "rough_state"
     t.datetime "rectified_at"
@@ -142,7 +131,6 @@ ActiveRecord::Schema.define(:version => 30) do
   end
 
   add_index "mapscans", ["bbox_geom"], :name => "index_mapscans_on_bbox_geom", :spatial => true
-  add_index "mapscans", ["nypl_digital_id"], :name => "mapscans_nypl_digital_id_uidx", :unique => true
   add_index "mapscans", ["rough_centroid"], :name => "index_mapscans_on_rough_centroid", :spatial => true
 
   create_table "my_maps", :force => true do |t|
@@ -187,25 +175,11 @@ ActiveRecord::Schema.define(:version => 30) do
     t.datetime "updated_at"
   end
 
-  create_table "raw_metadata", :id => false, :force => true do |t|
-    t.string  "filename", :limit => 32, :null => false
-    t.integer "level",                  :null => false
-    t.string  "name",                   :null => false
-    t.text    "value"
-  end
-
-  add_index "raw_metadata", ["filename", "level", "name"], :name => "raw_metadata_key_idx"
-
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "updated_by"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "tables_changed", :id => false, :force => true do |t|
-    t.integer "revision",       :limit => 8, :null => false
-    t.integer "versionedtable",              :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -223,12 +197,6 @@ ActiveRecord::Schema.define(:version => 30) do
     t.boolean  "enabled",                                 :default => true
     t.integer  "updated_by"
     t.text     "description",                             :default => ""
-  end
-
-  create_table "versioned_tables", :force => true do |t|
-    t.string  "schema",    :limit => 63, :null => false
-    t.string  "name",      :limit => 63, :null => false
-    t.boolean "versioned",               :null => false
   end
 
 end
