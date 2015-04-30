@@ -5,6 +5,7 @@ APP_CONFIG = YAML.load_file(CONFIG_PATH)[Rails.env]
 #directories for maps and layer/mosaic tileindex shapefiles
 DST_MAPS_DIR = APP_CONFIG['dst_maps_dir'].blank? ? File.join(Rails.root, '/public/mapimages/dst/') : APP_CONFIG['dst_maps_dir']
 SRC_MAPS_DIR = APP_CONFIG['src_maps_dir'].blank? ? File.join(Rails.root, '/public/mapimages/src/') : APP_CONFIG['src_maps_dir']
+MASK_DIR = APP_CONFIG['mask_dir'].blank? ? File.join(Rails.root, '/public/mapimages/') : APP_CONFIG['mask_dir']
 TILEINDEX_DIR = APP_CONFIG['tileindex_dir'].blank? ? File.join(Rails.root, '/db/maptileindex') : APP_CONFIG['tileindex_dir']
 
 #if gdal is not on the normal path

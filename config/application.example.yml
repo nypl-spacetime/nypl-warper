@@ -5,7 +5,8 @@ defaults: &defaults
   google_analytics_code: 123
   google_analytics_cookie_path:  ""
   src_maps_dir: 
-  dst_maps_dir: 
+  dst_maps_dir:
+  mask_dir:
   yahoo_app_id: "ascas"
   host: "localhost:3000"
   site_name: "MapWarper"

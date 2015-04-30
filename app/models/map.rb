@@ -16,7 +16,6 @@ class Map < ActiveRecord::Base
   
   validates_presence_of :title
   validates_numericality_of :rough_lat, :rough_lon, :rough_zoom, :allow_nil => true
-  validates_numericality_of :metadata_lat, :metadata_lon, :allow_nil => true
 
   acts_as_commentable
   acts_as_enum :map_type, [:index, :is_map, :not_map ]
@@ -27,16 +26,14 @@ class Map < ActiveRecord::Base
   
   scope :warped,    -> { where({ :status => [Map.status(:warped), Map.status(:published)], :map_type => Map.map_type(:is_map)  }) }
   scope :published, -> { where({:status => Map.status(:published), :map_type => Map.map_type(:is_map)})}
-  scope :are_public, -> { where(public: true) }
+
   scope :real_maps, -> { where({:map_type => Map.map_type(:is_map)})}
   
   attr_accessor :error
-  attr_accessor :upload_url
+
   
   after_initialize :default_values
-  before_create :download_remote_image, :if => :upload_url_provided?
-  before_create :save_dimensions
-  after_create :setup_image
+
   after_destroy :delete_images
   after_destroy :delete_map, :update_counter_cache, :update_layers
   after_save :update_counter_cache
@@ -52,112 +49,6 @@ class Map < ActiveRecord::Base
     self.rough_state ||= :step_1  
   end
   
-  def upload_url_provided?
-    !self.upload_url.blank?
-  end
-  
-  def download_remote_image
-    img_upload = do_download_remote_image
-    unless img_upload
-      errors.add(:upload_url, "is invalid or inaccessible")
-      return false
-    end
-    self.upload = img_upload
-    self.source_uri = upload_url
-    
-    if Map.find_by_upload_file_name(upload.original_filename)
-      errors.add(:filename, "is already being used")
-      return false
-    end
-    
-  end
-  
-  def do_download_remote_image
-    begin
-      io = open(URI.parse(upload_url))
-      def io.original_filename; base_uri.path.split('/').last; end
-      io.original_filename.blank? ? nil : io
-    rescue => e
-      logger.debug "Error with URL upload"
-      logger.debug e
-      return false
-    end
-  end
-   
-  def save_dimensions
-    if ["image/jpeg", "image/tiff", "image/png", "image/gif", "image/bmp"].include?(upload.content_type.to_s)      
-      tempfile = upload.queued_for_write[:original]
-      unless tempfile.nil?
-        geometry = Paperclip::Geometry.from_file(tempfile)
-        self.width = geometry.width.to_i
-        self.height = geometry.height.to_i
-      end
-    end
-    self.status = :available
-  end
-  
-  #this gets the upload, detects what it is, and converts to a tif, if necessary.
-  #Although an uploaded tif with existing geo fields may confuse things
-  def setup_image
-    logger.info "setup_image "
-    self.filename = upload.original_filename
-    save!
-    if self.upload?
-      
-      if  defined?(MAX_DIMENSION) && (width > MAX_DIMENSION || height > MAX_DIMENSION)
-        logger.info "Image is too big, so going to resize "
-        if width > height
-          dest_width = MAX_DIMENSION
-          dest_height = (dest_width.to_f /  width.to_f) * height.to_f
-        else
-          dest_height = MAX_DIMENSION
-          dest_width = (dest_height.to_f /  height.to_f) * width.to_f
-        end
-        self.width = dest_width
-        self.height = dest_height
-        save!
-        outsize = "-outsize #{dest_width.to_i} #{dest_height.to_i}"
-      else
-        outsize = ""
-      end
-      
-      orig_ext = File.extname(self.upload_file_name).to_s.downcase
-      
-      tiffed_filename = (orig_ext == ".tif" || orig_ext == ".tiff")? self.upload_file_name : self.upload_file_name + ".tif"
-      tiffed_file_path = File.join(maps_dir , tiffed_filename)
-      
-      logger.info "We convert to tiff"
-      command  = "#{GDAL_PATH}gdal_translate #{self.upload.path} #{outsize} -co COMPRESS=DEFLATE  -co PHOTOMETRIC=RGB -co PROFILE=BASELINE #{tiffed_file_path}"
-      logger.info command
-      ti_stdin, ti_stdout, ti_stderr =  Open3::popen3( command )
-      logger.info ti_stdout.readlines.to_s
-      logger.info ti_stderr.readlines.to_s
-      
-      command = "#{GDAL_PATH}gdaladdo -r average #{tiffed_file_path} 2 4 8 16 32 64"
-      o_stdin, o_stdout, o_stderr = Open3::popen3(command)
-      logger.info command
-      
-      o_out = o_stdout.readlines.to_s
-      o_err = o_stderr.readlines.to_s
-      if o_stderr.readlines.empty? && o_err.size > 0
-        logger.error "Error gdal overview script" + o_err.inspect
-        logger.error "output = "+o_out
-      end
-      
-      self.filename = tiffed_filename
-      
-      #now delete the original
-      logger.debug "Deleting uploaded file, now it's a usable tif"
-      if File.exists?(self.upload.path)
-        logger.debug "deleted uploaded file"
-        File.delete(self.upload.path)
-      end
-      
-    end
-    self.map_type = :is_map
-    self.rough_state = :step_1
-    save!
-  end
   
   #paperclip plugin deletes the images when model is destroyed
   def delete_images
@@ -181,7 +72,7 @@ class Map < ActiveRecord::Base
   end
   
   def delete_map
-    logger.info "Deleting mapfile"
+    #logger.info "Deleting mapfile"
   end
   
   def update_layer
@@ -291,13 +182,6 @@ class Map < ActiveRecord::Base
     warped_png + ".aux.xml"
   end
 
-  def public_warped_tif_url
-    "mapimages/dst/"+id.to_s + ".tif"
-  end
-  
-  def public_warped_png_url
-    public_warped_tif_url + ".png"
-  end
 
   def mask_file_format
     "gml"
@@ -308,13 +192,17 @@ class Map < ActiveRecord::Base
     File.join(warped_dir, id.to_s) + "_temp"
   end
 
+  def mask_dir
+    
+  end
+  
   def masking_file_gml
-    File.join(Rails.root, "/public/mapimages/",  self.id.to_s) + ".gml"
+    File.join(MASK_DIR,  self.id.to_s) + ".gml"
   end
 
   #file made when rasterizing
   def masking_file_gfs
-    File.join(Rails.root, "/public/mapimages/",  self.id.to_s) + ".gfs"
+    File.join(MASK_DIR,  self.id.to_s) + ".gfs"
   end
 
   def masked_src_filename
@@ -502,6 +390,60 @@ class Map < ActiveRecord::Base
     gcps
   end
 
+     def fetch_from_image_server(force = false)
+      return if available? and not force
+      if not available?
+         self.height       = 0
+         self.width        = 0
+         self.filename     = ''
+         self.status       = :loading
+         logger.debug "saving if not available"
+         self.save!
+      end
+      
+      #to work with new nypl repo / digital archive
+      bibl_id = self.bibl_uuid 
+      uuid = self.uuid
+
+      repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
+      url = repo_client.get_highreslink(bibl_id, self.nypl_digital_id)
+      if url.nil?
+        url = repo_client.get_highreslink(bibl_id, self.nypl_digital_id.upcase)
+      end
+      #id = self.nypl_digital_id
+      #command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"
+      command = "#{RAILS_ROOT}/bin/fetch_repo.sh #{uuid} #{url} #{maps_dir}"
+      logger.debug command
+      
+      if url
+        f_in, f_out, f_err = Open3::popen3(command)
+
+        logger.info "fetch exit status etc ="+ $?.inspect
+        f_err_msg = f_err.readlines.to_s
+        logger.debug "err msg: "+ f_err_msg
+      end
+
+
+      if url && $?.exitstatus == 0 && !f_err_msg.include?("ERROR")
+         filename = File.join(maps_dir, uuid) + ".tif"
+         img = Magick::Image.ping(filename)
+         self.height       = img[0].rows
+         self.width        = img[0].columns
+         self.filename     = filename
+         self.status       = :available if not available?
+      elsif not available?
+        if f_err_msg
+         logger.error "fetch std error =" + f_err_msg
+        end
+         self.status       = :unloaded
+      end
+      #logger.debug [self.height, self.width, self.filename, self.status]
+      logger.debug "now saving after"
+      self.save!
+      
+      return $?.exitstatus == 0 ? true : false
+   end
+  
   def mask!
     require 'fileutils'
     
