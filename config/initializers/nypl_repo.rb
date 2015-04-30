@@ -1,5 +1,5 @@
 #Loads in the authentication token per rails env
-require "#{ Rails.root }/lib/misc/nypl_repo.rb"
+require "#{ Rails.root }/lib/nypl/nypl_repo.rb"
 
 if File.exist?(File.join(Rails.root, "/config/nypl_repo.yml"))
   config_file = YAML.load_file("#{ Rails.root }/config/nypl_repo.yml")
