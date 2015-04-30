@@ -3,8 +3,8 @@ class AddFieldsForPlacingStepsToMap < ActiveRecord::Migration
     add_column :mapscans, :rough_lat, :decimal, :precision => 15, :scale => 10
     add_column :mapscans,  :rough_lon, :decimal, :precision => 15, :scale => 10
 
-    add_column :mapscans, :rough_centroid, :point
-    add_index :mapscans, :rough_centroid, :spatial => true
+    add_column :mapscans, :rough_centroid, :st_point, :srid => 4326
+    add_index :mapscans, :rough_centroid, :using => :gist
 
     add_column :mapscans, :rough_zoom, :integer
     add_column :mapscans, :rough_state, :integer

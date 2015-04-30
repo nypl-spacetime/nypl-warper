@@ -4,7 +4,7 @@ class AddCounterCachesToLayer < ActiveRecord::Migration
     Layer.reset_column_information
     def Layer.readonly_attributes; nil end #evil hack
 
-    Layer.find(:all).each do |l|
+    Layer.all.each do |l|
       l.mapscans_count = l.mapscans.count
       l.save!
     end
@@ -12,7 +12,7 @@ class AddCounterCachesToLayer < ActiveRecord::Migration
     add_column :layers, :rectified_mapscans_count, :integer, :default=> 0
     Layer.reset_column_information
     def Layer.readonly_attributes; nil end #evil hack
-    Layer.find(:all).each do |l|
+    Layer.all.each do |l|
       l.rectified_mapscans_count = l.mapscans.count(:conditions => ["status = 4"])
       l.save!
     end

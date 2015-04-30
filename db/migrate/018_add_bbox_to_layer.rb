@@ -4,7 +4,7 @@ class AddBboxToLayer < ActiveRecord::Migration
     Layer.reset_column_information
     
     #now update bbox info
-    Layer.find(:all).each do |l|
+    Layer.all.each do |l|
       l.set_bounds
       l.save!
     end

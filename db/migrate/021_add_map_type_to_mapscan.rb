@@ -4,10 +4,10 @@ class AddMapTypeToMapscan < ActiveRecord::Migration
 
     # 0  = index , 1 = map 2 = not a map (see Mapscan model)
     # is_map
-    Map.update_all("map_type = 1", "map = true")
+   # Map.where('map = true').update_all(:map => true)
     
-    #not map
-    Map.update_all("map_type = 2", "map = false")
+     #not map
+   # Map.where('map_type = 2').update_all(:map => false)
 
   end
 

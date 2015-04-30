@@ -1,7 +1,7 @@
 class AddMapBooleanToMapscan < ActiveRecord::Migration
   def self.up
     add_column :mapscans, :map, :boolean, :default => true
-    Map.update_all(:map => true)
+    #Map.update_all(:map => true)
   end
 
   def self.down
