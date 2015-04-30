@@ -316,7 +316,7 @@ class MapsController < ApplicationController
     # Not Logged in users
     #
     if !user_signed_in?
-      @disabled_tabs = ["warp", "edit", "clip", "align", "activity"]
+      @disabled_tabs = ["warp", "clip", "align", "activity"]
       
       if @map.status.nil? or @map.status == :unloaded or @map.status == :loading
         @disabled_tabs += ["warped"]
@@ -328,12 +328,12 @@ class MapsController < ApplicationController
       
       if request.xhr?
         @xhr_flag = "xhr"
-        render :layout => "tab_container"
+        render :action => "preview", :layout => "tab_container"
       else
         respond_to do |format|
-          format.html 
+          format.html {render :action => "preview"}
           format.kml {render :action => "show_kml", :layout => false}
-          #format.rss {render :action=> 'show'}
+          format.rss {render :action=> 'show'}
           # format.xml {render :xml => @map.to_xml(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]) }
           format.json {render :json =>{:stat => "ok", :items => @map}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]), :callback => params[:callback] }
         end
@@ -348,18 +348,35 @@ class MapsController < ApplicationController
     #
     # Logged in users
     #
-    unless user_signed_in? and (current_user.own_this_map?(params[:id])  or current_user.has_role?("editor"))
-      @disabled_tabs += ["edit"]  #don't allow anyone else to edit it, unless you are an editor
+    unless user_signed_in? and current_user.has_role?("adminstrator")
       if @map.published?
         @disabled_tabs += ["warp", "clip", "align"]  #dont show any others unless you're an editor
       end
     end
+    
+     #note, trying to view an image that hasnt been requested, will cause it to be requested
+     if @map.status.nil? or @map.status == :unloaded
+       @disabled_tabs = ["warp", "clip", "align", "warped", "preview","activity", "export"]
+       @title = "Viewing unwarped map."
+       logger.debug("starting spawn fetch iamge")
+       Spawnling.new do
+         logger.info "starting fetch from image server"
+         @map.fetch_from_image_server
+         logger.info "finished fetch from image server. Status  = "+@map.status.to_s
+       end
+       return
+     end
 
+     @title = "Viewing original map. "
+
+     if !@map.warped_or_published?
+       @title += "This map has not been warped yet."
+     end
     
     choose_layout_if_ajax
 
     respond_to do |format|
-      format.html
+       format.html
        format.kml {render :action => "show_kml", :layout => false}
       # format.xml {render :xml => @map.to_xml(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid])  }
         format.json {render :json =>{:stat => "ok", :items => @map}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]), :callback => params[:callback] }
