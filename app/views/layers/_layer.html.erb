@@ -16,9 +16,7 @@
       <%if layer.depicts_year%>Depicts : <%= layer.depicts_year %> <%end%>
     </span>
     <span class="map_links">
-      <%- if layer.source_uri -%>
-        Links: <%= link_to 'Source / Biblio Ref',layer.source_uri  %>
-      <%- end -%>
+
     </span>
     <!--<br />-->
     <% if admin_authorized? -%>

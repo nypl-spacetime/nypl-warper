@@ -129,67 +129,60 @@ class MapsController < ApplicationController
     
     @query = params[:query]
     
-    @field = %w(tags title description status publisher authors).detect{|f| f == (params[:field])}
+    @field = %w(title description status catnyp nypl_digital_id uuid).detect{|f| f == (params[:field])}
     
-    unless @field == "tags"
-      
-      @field = "title" if @field.nil?
-      
-      #we'll use POSIX regular expression for searches    ~*'( |^)robinson([^A-z]|$)' and to strip out brakets etc  ~*'(:punct:|^|)plate 6([^A-z]|$)';
-      if @query && @query.strip.length > 0 && @field
-        conditions = ["#{@field}  ~* ?", '(:punct:|^|)'+@query+'([^A-z]|$)']
-      else
-        conditions = nil
-      end
-      
-      if params[:sort_order] && params[:sort_order] == "desc"
-        sort_nulls = " NULLS LAST"
-      else
-        sort_nulls = " NULLS FIRST"
-      end
-      @per_page = params[:per_page] || 10
-      paginate_params = {
-        :page => params[:page],
-        :per_page => @per_page
-      }
-      order_options = sort_clause + sort_nulls
-      where_options = conditions
-      #order('name').where('name LIKE ?', "%#{search}%").paginate(page: page, per_page: 10)
-
-      if @show_warped == "1"
-        @maps = Map.warped.are_public.where(where_options).order(order_options).paginate(paginate_params)
-      elsif @show_warped == "1" && (user_signed_in? and current_user.has_role?("editor"))
-        @maps = Map.warped.where(where_options).order(order_options).paginate(paginate_params)
-      elsif  @show_warped != "1" && (user_signed_in? and current_user.has_role?("editor"))
-        @maps = Map.where(where_options).order(order_options).paginate(paginate_params)
-      else
-        @maps = Map.are_public.where(where_options).order(order_options).paginate(paginate_params)
-      end
-      
-      @html_title = "Browse Maps"
-      if request.xhr?
-        render :action => 'index.rjs'
-      else
-        respond_to do |format|
-          format.html{ render :layout =>'application' }  # index.html.erb
-          format.xml  { render :xml => @maps.to_xml(:root => "maps", :except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]) {|xml|
-              xml.tag!'stat', "ok"
-              xml.tag!'total-entries', @maps.total_entries
-              xml.tag!'per-page', @maps.per_page
-              xml.tag!'current-page',@maps.current_page} }
-          
-          format.json { render :json => {:stat => "ok",
-              :current_page => @maps.current_page,
-              :per_page => @maps.per_page,
-              :total_entries => @maps.total_entries,
-              :total_pages => @maps.total_pages,
-              :items => @maps.to_a}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid], :methods => :depicts_year) , :callback => params[:callback]
-          }
-        end
-      end
+    
+    @field = "title" if @field.nil?
+    
+    #we'll use POSIX regular expression for searches    ~*'( |^)robinson([^A-z]|$)' and to strip out brakets etc  ~*'(:punct:|^|)plate 6([^A-z]|$)';
+    if @query && @query.strip.length > 0 && @field
+      conditions = ["#{@field}  ~* ?", '(:punct:|^|)'+@query+'([^A-z]|$)']
     else
-      redirect_to :action => 'tag', :id => @query
+      conditions = nil
     end
+    
+    if params[:sort_order] && params[:sort_order] == "desc"
+      sort_nulls = " NULLS LAST"
+    else
+      sort_nulls = " NULLS FIRST"
+    end
+    @per_page = params[:per_page] || 10
+    paginate_params = {
+      :page => params[:page],
+      :per_page => @per_page
+    }
+    order_options = sort_clause + sort_nulls
+    where_options = conditions
+    #order('name').where('name LIKE ?', "%#{search}%").paginate(page: page, per_page: 10)
+    
+    if @show_warped == "1"
+      @maps = Map.warped.where(where_options).order(order_options).paginate(paginate_params)
+    else
+      @maps = Map.where(where_options).order(order_options).paginate(paginate_params)
+    end
+    
+    @html_title = "Browse Maps"
+    if request.xhr?
+      render :action => 'index.rjs'
+    else
+      respond_to do |format|
+        format.html{ render :layout =>'application' }  # index.html.erb
+        format.xml  { render :xml => @maps.to_xml(:root => "maps", :except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]) {|xml|
+            xml.tag!'stat', "ok"
+            xml.tag!'total-entries', @maps.total_entries
+            xml.tag!'per-page', @maps.per_page
+            xml.tag!'current-page',@maps.current_page} }
+        
+        format.json { render :json => {:stat => "ok",
+            :current_page => @maps.current_page,
+            :per_page => @maps.per_page,
+            :total_entries => @maps.total_entries,
+            :total_pages => @maps.total_pages,
+            :items => @maps.to_a}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid], :methods => :depicts_year) , :callback => params[:callback]
+        }
+      end
+    end
+    
   end
   
     

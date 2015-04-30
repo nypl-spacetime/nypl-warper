@@ -25,14 +25,9 @@ class Layer < ActiveRecord::Base
 
   def tileindex_path;  File.join(tileindex_dir, tileindex_filename) ;  end
   
-  def thumb
-    if self.maps.first.nil?
-      '/assets/missing.png'
-    elsif !self.maps.first.public?
-      '/assets/private.png'
-    else
-      self.maps.first.upload.url(:thumb)
-    end
+  def thumb    
+    id = self.maps.first ? self.maps.first.nypl_digital_id : 0
+    "http://images.nypl.org/?t=t&id="+id
   end
   
   def update_layer

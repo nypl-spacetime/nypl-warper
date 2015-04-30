@@ -4,9 +4,8 @@ class HomeController < ApplicationController
   
   def index
     @html_title =  "Home - "
-
-    @tags = Map.where(:public => true).tag_counts(:limit => 100)
-    @maps = Map.where(:public => true, :status => [2,3,4]).order(:updated_at =>  :desc).limit(3).includes(:gcps)
+    
+    @maps = Map.where(:status => 4).order(:updated_at =>  :desc).limit(3).includes(:gcps)
     
     @layers = Layer.all.order(:updated_at => :desc).limit(3).includes(:maps)
     get_news_feeds

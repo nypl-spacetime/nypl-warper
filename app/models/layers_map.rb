@@ -1,4 +1,7 @@
 class LayersMap < ActiveRecord::Base
+  def self.table_name()
+ "map_layers"
+end
   belongs_to :layer
   belongs_to :map
 

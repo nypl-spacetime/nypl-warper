@@ -13,19 +13,15 @@
 
 ActiveRecord::Schema.define(version: 20150424134733) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "postgis"
-
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
-    t.string   "auditable_type"
+    t.string   "auditable_type",   limit: 255
     t.integer  "user_id"
-    t.string   "user_type"
-    t.string   "username"
-    t.string   "action"
+    t.string   "user_type",        limit: 255
+    t.string   "username",         limit: 255
+    t.string   "action",           limit: 255
     t.text     "audited_changes"
-    t.integer  "version",          default: 0
+    t.integer  "version",                      default: 0
     t.datetime "created_at"
     t.string   "comment"
     t.string   "remote_address"
@@ -38,10 +34,10 @@ ActiveRecord::Schema.define(version: 20150424134733) do
   add_index "audits", ["user_id", "user_type"], name: "user_index", using: :btree
 
   create_table "client_applications", force: :cascade do |t|
-    t.string   "name"
-    t.string   "url"
-    t.string   "support_url"
-    t.string   "callback_url"
+    t.string   "name",         limit: 255
+    t.string   "url",          limit: 255
+    t.string   "support_url",  limit: 255
+    t.string   "callback_url", limit: 255
     t.string   "key",          limit: 20
     t.string   "secret",       limit: 40
     t.integer  "user_id"
@@ -52,10 +48,10 @@ ActiveRecord::Schema.define(version: 20150424134733) do
   add_index "client_applications", ["key"], name: "index_client_applications_on_key", unique: true, using: :btree
 
   create_table "comments", force: :cascade do |t|
-    t.string   "title",            limit: 50, default: ""
-    t.text     "comment",                     default: ""
+    t.string   "title",            limit: 50,  default: ""
+    t.text     "comment",                      default: ""
     t.integer  "commentable_id"
-    t.string   "commentable_type"
+    t.string   "commentable_type", limit: 255
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -69,137 +65,79 @@ ActiveRecord::Schema.define(version: 20150424134733) do
     t.integer  "map_id"
     t.float    "x"
     t.float    "y"
-    t.decimal  "lat",        precision: 15, scale: 10
-    t.decimal  "lon",        precision: 15, scale: 10
+    t.decimal  "lat",                    precision: 15, scale: 10
+    t.decimal  "lon",                    precision: 15, scale: 10
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "soft",                                 default: false
-    t.string   "name"
+    t.boolean  "soft",                                             default: false
+    t.string   "name",       limit: 255
   end
 
   add_index "gcps", ["soft"], name: "index_gcps_on_soft", using: :btree
 
-  create_table "groups", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "creator_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "groups_maps", force: :cascade do |t|
-    t.integer  "group_id"
-    t.integer  "map_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "groups_maps", ["map_id", "group_id"], name: "index_groups_maps_on_map_id_and_group_id", unique: true, using: :btree
-  add_index "groups_maps", ["map_id"], name: "index_groups_maps_on_map_id", using: :btree
-
-  create_table "imports", force: :cascade do |t|
-    t.string   "path"
-    t.string   "name"
-    t.string   "layer_title"
-    t.string   "map_title_suffix"
-    t.string   "map_description"
-    t.string   "map_publisher"
-    t.string   "map_author"
-    t.string   "state"
-    t.integer  "layer_id"
-    t.integer  "uploader_user_id"
-    t.integer  "user_id"
-    t.integer  "file_count"
-    t.integer  "imported_count"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "layer_properties", force: :cascade do |t|
+    t.integer "layer_id"
+    t.string  "name",     limit: 255
+    t.text    "value"
+    t.integer "level"
   end
 
   create_table "layers", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",                 limit: 255
     t.text     "description"
-    t.string   "bbox"
-    t.integer  "owner"
+    t.string   "catnyp",               limit: 255
+    t.string   "uuid",                 limit: 255
+    t.string   "parent_uuid",          limit: 255
+    t.boolean  "is_visible",                                                default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id"
-    t.string   "depicts_year",         limit: 4,                               default: ""
-    t.integer  "maps_count",                                                   default: 0
-    t.integer  "rectified_maps_count",                                         default: 0
-    t.boolean  "is_visible",                                                   default: true
-    t.string   "source_uri"
-    t.geometry "bbox_geom",            limit: {:srid=>4326, :type=>"polygon"}
+    t.integer  "maps_count",                                                default: 0
+    t.integer  "rectified_maps_count",                                      default: 0
+    t.string   "bbox",                 limit: 255
+    t.string   "depicts_year",         limit: 4,                            default: ""
+    t.geometry "bbox_geom",            limit: {:srid=>0, :type=>"polygon"}
   end
 
   add_index "layers", ["bbox_geom"], name: "index_layers_on_bbox_geom", using: :gist
 
-  create_table "layers_maps", force: :cascade do |t|
-    t.integer  "layer_id"
-    t.integer  "map_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "map_layers", force: :cascade do |t|
+    t.integer "map_id"
+    t.integer "layer_id"
   end
 
-  add_index "layers_maps", ["layer_id"], name: "index_layers_maps_on_layer_id", using: :btree
-  add_index "layers_maps", ["map_id"], name: "index_layers_maps_on_map_id", using: :btree
-
   create_table "maps", force: :cascade do |t|
-    t.string   "title"
+    t.string   "title",           limit: 255
     t.text     "description"
-    t.string   "filename"
-    t.integer  "width"
-    t.integer  "height"
-    t.integer  "status"
-    t.integer  "mask_status"
+    t.string   "filename",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "upload_file_name"
-    t.string   "upload_content_type"
-    t.integer  "upload_file_size"
-    t.datetime "upload_file_updated_at"
-    t.string   "bbox"
-    t.string   "publisher"
-    t.string   "authors"
-    t.string   "scale"
-    t.datetime "published_date"
-    t.datetime "reprint_date"
-    t.integer  "owner_id"
-    t.boolean  "public",                                                                                   default: true
-    t.boolean  "downloadable",                                                                             default: true
-    t.string   "cached_tag_list"
-    t.integer  "map_type",                                                                                 default: 1
-    t.string   "source_uri"
-    t.geometry "bbox_geom",              limit: {:srid=>4236, :type=>"polygon"}
-    t.decimal  "rough_lat",                                                      precision: 15, scale: 10
-    t.decimal  "rough_lon",                                                      precision: 15, scale: 10
-    t.geometry "rough_centroid",         limit: {:srid=>4326, :type=>"point"}
+    t.string   "content_type",    limit: 255
+    t.string   "thumbnail",       limit: 255
+    t.integer  "size"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "parent_id"
+    t.string   "nypl_digital_id", limit: 255
+    t.string   "catnyp",          limit: 255
+    t.string   "uuid",            limit: 255
+    t.string   "parent_uuid",     limit: 255
+    t.integer  "status"
+    t.integer  "mask_status"
+    t.boolean  "map",                                                                            default: true
+    t.string   "bbox",            limit: 255
+    t.integer  "map_type"
+    t.geometry "bbox_geom",       limit: {:srid=>0, :type=>"polygon"}
+    t.decimal  "rough_lat",                                            precision: 15, scale: 10
+    t.decimal  "rough_lon",                                            precision: 15, scale: 10
+    t.geometry "rough_centroid",  limit: {:srid=>0, :type=>"point"}
     t.integer  "rough_zoom"
     t.integer  "rough_state"
-    t.integer  "import_id"
-    t.string   "publication_place"
-    t.string   "subject_area"
-    t.string   "unique_id"
-    t.string   "metadata_projection"
-    t.decimal  "metadata_lat",                                                   precision: 15, scale: 10
-    t.decimal  "metadata_lon",                                                   precision: 15, scale: 10
-    t.string   "date_depicted",          limit: 4,                                                         default: ""
-    t.string   "call_number"
     t.datetime "rectified_at"
     t.datetime "gcp_touched_at"
   end
 
-  add_index "maps", ["bbox_geom"], name: "index_maps_on_bbox_geom", using: :gist
-  add_index "maps", ["rough_centroid"], name: "index_maps_on_rough_centroid", using: :gist
-
-  create_table "memberships", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "memberships", ["user_id", "group_id"], name: "index_memberships_on_user_id_and_group_id", unique: true, using: :btree
-  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+  add_index "maps", ["bbox_geom"], name: "index_mapscans_on_bbox_geom", using: :gist
+  add_index "maps", ["rough_centroid"], name: "index_mapscans_on_rough_centroid", using: :gist
 
   create_table "my_maps", force: :cascade do |t|
     t.integer  "map_id"
@@ -208,11 +146,11 @@ ActiveRecord::Schema.define(version: 20150424134733) do
     t.datetime "updated_at"
   end
 
-  add_index "my_maps", ["map_id", "user_id"], name: "index_my_maps_on_map_id_and_user_id", unique: true, using: :btree
-  add_index "my_maps", ["map_id"], name: "index_my_maps_on_map_id", using: :btree
+  add_index "my_maps", ["map_id", "user_id"], name: "index_my_maps_on_mapscan_id_and_user_id", unique: true, using: :btree
+  add_index "my_maps", ["map_id"], name: "index_my_maps_on_mapscan_id", using: :btree
 
   create_table "oauth_nonces", force: :cascade do |t|
-    t.string   "nonce"
+    t.string   "nonce",      limit: 255
     t.integer  "timestamp"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -226,7 +164,7 @@ ActiveRecord::Schema.define(version: 20150424134733) do
     t.integer  "client_application_id"
     t.string   "token",                 limit: 20
     t.string   "secret",                limit: 40
-    t.string   "callback_url"
+    t.string   "callback_url",          limit: 255
     t.string   "verifier",              limit: 20
     t.datetime "authorized_at"
     t.datetime "invalidated_at"
@@ -244,38 +182,20 @@ ActiveRecord::Schema.define(version: 20150424134733) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       limit: 255
     t.integer  "updated_by"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "taggings", force: :cascade do |t|
-    t.integer  "tag_id"
-    t.integer  "taggable_id"
-    t.string   "taggable_type"
-    t.datetime "created_at"
-    t.string   "context",       limit: 128
-    t.integer  "tagger_id"
-    t.string   "tagger_type"
-  end
-
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type"], name: "index_taggings_on_taggable_id_and_taggable_type", using: :btree
-
-  create_table "tags", force: :cascade do |t|
-    t.string  "name"
-    t.integer "taggings_count", default: 0
-  end
-
   create_table "users", force: :cascade do |t|
-    t.string   "login"
-    t.string   "email"
+    t.string   "login",                     limit: 255
+    t.string   "email",                     limit: 255
     t.string   "encrypted_password",        limit: 128, default: "",   null: false
     t.string   "password_salt",                         default: "",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "remember_token"
+    t.string   "remember_token",            limit: 255
     t.datetime "remember_token_expires_at"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"

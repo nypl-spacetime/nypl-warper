@@ -3,25 +3,21 @@ require "error_calculator"
 include ErrorCalculator
 class Map < ActiveRecord::Base
   
+  alias_attribute :bibl_uuid, :parent_uuid
+  alias_attribute :mods_uuid, :uuid
+  
   has_many :gcps,  :dependent => :destroy
   has_many :layers_maps,  :dependent => :destroy
   has_many :layers, :through => :layers_maps # ,:after_add, :after_remove
   has_many :my_maps, :dependent => :destroy
   has_many :users, :through => :my_maps
   belongs_to :owner, :class_name => "User"
-  
-  has_attached_file :upload, :styles => {:thumb => ["100x100>", :png]} ,
-    :url => '/:attachment/:id/:style/:basename.:extension',
-    :default_url => "/assets/missing.png"
-  validates_attachment_size(:upload, :less_than => MAX_ATTACHMENT_SIZE) if defined?(MAX_ATTACHMENT_SIZE)
-  #attr_protected :upload_file_name, :upload_content_type, :upload_size
-  validates_attachment_content_type :upload, :content_type => ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/tiff"]
+ 
   
   validates_presence_of :title
   validates_numericality_of :rough_lat, :rough_lon, :rough_zoom, :allow_nil => true
   validates_numericality_of :metadata_lat, :metadata_lon, :allow_nil => true
 
-  acts_as_taggable
   acts_as_commentable
   acts_as_enum :map_type, [:index, :is_map, :not_map ]
   acts_as_enum :status, [:unloaded, :loading, :available, :warping, :warped, :published]
@@ -325,6 +321,9 @@ class Map < ActiveRecord::Base
     self.unwarped_filename + "_masked";
   end
   
+  def thumb
+    "http://images.nypl.org/?t=t&id="+self.nypl_digital_id
+  end
   
   #############################################
   #INSTANCE METHODS
