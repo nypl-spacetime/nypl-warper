@@ -59,6 +59,8 @@ gem 'georuby'
 gem 'geoplanet'
 gem 'yql', '0.0.2'
 
+gem "rmagick"
+
 group :development do
    gem 'web-console', '~> 2.0'
    gem 'spring'
