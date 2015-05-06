@@ -1,0 +1,7 @@
+user1: 
+  id: 1
+  login: user1
+  email: user1@example.com
+  encrypted_password: "password"
+  password_salt: "salt"
+  confirmed_at: <%= Time.now %>
