@@ -105,7 +105,7 @@ namespace :map do
           if Layer.exists?(:uuid => layer.uuid)
             #the layer exists
             layer = Layer.find_by_uuid(layer.uuid)
-            unless MapLayer.exists?(:map_id => map.id, :layer_id => layer.id) 
+            unless LayersMap.exists?(:map_id => map.id, :layer_id => layer.id) 
               #layer exists, but the map is not in the relationship
               assign_layers << layer
             end
