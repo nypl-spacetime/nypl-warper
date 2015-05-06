@@ -2,10 +2,9 @@
   Search  
   <select id="field" name="field">
     <%= options_for_select([ ["Title", "title"], 
-        ["Description", "description"], 
-        ["Publisher", "publisher"],
-        ["Author", "authors"],
-        ["Tags", "tags"]], @field)-%>
+                           ["Description", "description"], 
+                           ["Digital Gallery Id", "nypl_digital_id"],
+                           ["Repo UUID", "uuid"]], @field)-%>
   </select>
   for 
   <%= text_field_tag 'query', @query -%>

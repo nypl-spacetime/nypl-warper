@@ -16,8 +16,11 @@
   <%else-%>
     <body>
   <%end%>
+      
+    <%= render :partial => 'shared/nypl_stripe' %>
+      
     <div id="headerDiv" class="headerDiv">
-      <h1><%= link_to "Map Warper", root_path %></h1>
+      <h1><%= link_to "NYPL Map Warper", root_path %></h1>
       <%= render :partial => 'shared/header' %>
       <%= render :partial => 'shared/nav' %>
     </div>
@@ -30,7 +33,8 @@
     </div>
 
     <div id="footer">
-      <%= render :partial => 'shared/footer' %>
+        New York Public Library
+        <%= render :partial => 'shared/legal' %>
     </div>
 
     <%= render :partial => 'shared/analytics' %>

@@ -121,7 +121,7 @@ class LayersController < ApplicationController
     session[@sort_name] = nil  #remove the session sort as we have percent
     sort_update
     @query = params[:query]
-    @field = %w(name description).detect{|f| f== (params[:field])}
+    @field = %w(name description catnyp uuid).detect{|f| f== (params[:field])}
     @field = "name" if @field.nil?
     if @query && @query != "null" #null will be set by pagless js if theres no query
       conditions =   ["#{@field}  ~* ?", '(:punct:|^|)'+@query+'([^A-z]|$)']
@@ -153,11 +153,11 @@ class LayersController < ApplicationController
     if !map.nil?
       @map = Map.find(map)
       @layers = @map.layers.select(select).where(conditions).order(order_options).paginate(paginate_params)
-      @html_title = "Mosaic List for Map #{@map.id}"
+      @html_title = "Layer List for Map #{@map.id}"
       @page = "for_map"
     else
       @layers = Layer.select(select).where(conditions).order(sort_clause + sort_nulls).paginate(paginate_params)
-      @html_title = "Browse Mosaic List"
+      @html_title = "Browse Layer List"
     end
    
     if request.xhr?

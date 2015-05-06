@@ -4,3 +4,5 @@ development:
 production:
   token: nypl_repo_token
 
+test:
+  token: nypl_repo_token

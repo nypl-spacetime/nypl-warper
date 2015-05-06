@@ -1,6 +1,6 @@
 require "open3"
 require "error_calculator"
-require 'RMagick'
+require 'rmagick'
 
 include ErrorCalculator
 class Map < ActiveRecord::Base
