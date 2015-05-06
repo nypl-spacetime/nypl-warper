@@ -1,0 +1,52 @@
+#nypl_bar {
+  background: asset_url("nypl-bar-logo.png") no-repeat scroll 10px 50% #000000;
+  color: #AAAAAA;
+  font-size: 14px;
+  padding: 4px 18px 4px 60px;
+  position: relative;
+  font-family: "Kievit","Myriad Pro","Lucida Grande","Calibri","verdana","arial","helvetica","sans-serif";     }
+
+#nypl_bar {
+  color: #AAAAAA;
+  font-size: 14px; }
+
+#nypl_bar a, #nypl_bar a:link, #nypl_bar a:visited {
+  color: #FFFFFF;     }
+
+#nypl_bar form {
+  display: inline;
+  margin-left: 20px;
+}
+
+ul#legal-links {
+  list-style:none;
+  color:#534D45 !important;font-size:85%;
+  text-transform: capitalize;
+  text-align: center;
+}
+ul#legal-links a:visited, ul#legal-links a:link {
+  color: #534D45;
+}
+
+ul#legal-links a:hover, ul#legal-links a:active {
+  color: #908B85;
+}
+
+ul#legal-links li {
+  margin: 0 0.15em;
+  display: inline;
+}
+
+.awards {
+  float: left;
+  clear: both;
+  margin: 4em;
+  margin-top: 4em;
+  text-align:center;
+  text-size:smaller;
+  color: gray;
+}
+
+#right-col{
+  margin-left: 386px;
+}
