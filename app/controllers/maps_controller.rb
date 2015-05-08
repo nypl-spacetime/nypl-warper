@@ -372,14 +372,15 @@ class MapsController < ApplicationController
      if !@map.warped_or_published?
        @title += "This map has not been warped yet."
      end
-    
-    choose_layout_if_ajax
-
-    respond_to do |format|
-       format.html
-       format.kml {render :action => "show_kml", :layout => false}
-      # format.xml {render :xml => @map.to_xml(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid])  }
+     
+     if request.xhr?
+      choose_layout_if_ajax
+    else
+      respond_to do |format|
+        format.html
+        format.kml {render :action => "show_kml", :layout => false}
         format.json {render :json =>{:stat => "ok", :items => @map}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]), :callback => params[:callback] }
+      end
     end
     
     
@@ -494,7 +495,8 @@ class MapsController < ApplicationController
   
   def thumb
     map = Map.find(params[:id])
-    thumb = map.upload.url(:thumb)
+    thumb = "http://images.nypl.org/?t=t&id=#{map.nypl_digital_id}"
+    
     redirect_to thumb
   end
   
@@ -674,10 +676,10 @@ class MapsController < ApplicationController
         destmap.align_with_warped(params[:srcmap], align, append )
       end
       flash.now[:notice] = "Map aligned. You can now rectify it!"
-      redirect_to :action => "warp", :id => destmap.id
+      redirect_to :action => "show", :id => destmap.id, :anchor => "Rectify_tab"
     else
       flash.now[:notice] = "Sorry, only horizontal and vertical alignment are available at the moment."
-      redirect_to :action => "align", :id=> params[:srcmap]
+      redirect_to :action => "align", :id=> params[:srcmap], :anchor => "Align_tab"
     end
   end
 
