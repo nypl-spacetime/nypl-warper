@@ -4,12 +4,12 @@ class MapsController < ApplicationController
   
   before_filter :store_location, :only => [:warp, :align, :clip, :export, :edit, :comments ]
   
-  before_filter :authenticate_user!, :only => [:new, :create, :edit, :update, :destroy, :delete, :warp, :rectify, :clip, :align, :warp_align, :mask_map, :delete_mask, :save_mask, :save_mask_and_warp, :set_rough_state, :set_rough_centroid, :publish, :trace, :id]
+  before_filter :authenticate_user!, :only => [:new, :create, :edit, :update, :destroy, :delete, :warp, :rectify, :clip, :align, :warp_align, :mask_map, :delete_mask, :save_mask, :save_mask_and_warp, :set_rough_state, :set_rough_centroid, :publish, :trace, :id, :map_type]
  
-  before_filter :check_administrator_role, :only => [:publish]
+  before_filter :check_administrator_role, :only => [:publish, :map_type]
  
   before_filter :find_map_if_available,
-    :except => [:show, :index, :wms, :tile, :mapserver_wms, :warp_aligned, :status, :new, :create, :update, :edit, :tag, :geosearch]
+    :except => [:show, :index, :wms, :tile, :mapserver_wms, :warp_aligned, :status, :new, :create, :update, :edit, :tag, :geosearch, :map_type]
 
   before_filter :check_link_back, :only => [:show, :warp, :clip, :align, :warped, :export, :activity]
   before_filter :check_if_map_is_editable, :only => [:edit, :update]
@@ -511,14 +511,14 @@ class MapsController < ApplicationController
     if Map::MAP_TYPE.include? map_type.to_sym
       @map.update_map_type(map_type)
     end
+    
     if Layer.exists?(params[:layerid].to_i)
       @layer = Layer.find(params[:layerid].to_i)
       @maps = @layer.maps.paginate(:per_page => 30, :page => 1, :order => :map_type)
     end
-    unless request.xhr?
-      render :text => "Map has changed. Map type: "+@map.map_type.to_s
+    
+       render :text => "Map has changed. Map type: "+@map.map_type.to_s
     end
-  end
 
   #pass in soft true to get soft gcps
   def gcps
