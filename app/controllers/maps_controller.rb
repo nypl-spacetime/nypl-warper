@@ -400,17 +400,21 @@ class MapsController < ApplicationController
   
   def export
     @current_tab = "export"
-    @selected_tab = 6
+    @selected_tab = 5
     @html_title = "Export Map" + @map.id.to_s
-    unless @map.warped_or_published? && @map.map_type == :is_map
-      flash.now[:notice] = "Map needs to be rectified before being able to be exported"
-    end
+    
     choose_layout_if_ajax
+    if params[:unwarped]
+      tif_filename = @map.filename
+    else
+      tif_filename =  @map.warped_filename
+    end
+    
     respond_to do | format |
       format.html {}
-      format.tif     { send_file @map.warped_filename, :x_sendfile => (Rails.env != "development") }
-      format.png     { send_file @map.warped_png, :x_sendfile => (Rails.env != "development") }
-      format.aux_xml { send_file @map.warped_png_aux_xml,:x_sendfile => (Rails.env != "development") }
+      format.tif {  send_file tif_filename, :x_sendfile => true }
+      format.png  { send_file @map.warped_png, :x_sendfile => true }
+      format.aux_xml { send_file @map.warped_png_aux_xml, :x_sendfile => true }
     end
   end
   
