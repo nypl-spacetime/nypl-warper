@@ -12,3 +12,5 @@ tmp
 secret
 *.*.swp
 *.*~
+db/maptileindex/*
+
