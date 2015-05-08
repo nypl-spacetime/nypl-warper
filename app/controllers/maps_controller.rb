@@ -918,8 +918,6 @@ class MapsController < ApplicationController
 
     if @map.status.nil? or @map.status == :unloaded or @map.status == :loading 
       redirect_to map_path
-    elsif  (!@map.public? and !user_signed_in?) or((!@map.public? and user_signed_in?) and !(current_user.own_this_map?(params[:id])  or current_user.has_role?("editor")) )
-      redirect_to maps_path
     end
   end
 

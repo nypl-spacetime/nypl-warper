@@ -155,7 +155,7 @@ class Map < ActiveRecord::Base
 
   def unwarped_filename
     if self.filename
-      File.join(maps_dir, self.filename) 
+      self.filename 
     else
       ""
     end
