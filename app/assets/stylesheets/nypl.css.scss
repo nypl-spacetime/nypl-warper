@@ -50,3 +50,15 @@ ul#legal-links li {
 #right-col{
   margin-left: 386px;
 }
+
+.progress-label{
+  position: absolute;
+  left: 50%;
+  font-weight: bold;
+  text-shadow: 1px 1px 0px #FFF; 
+}
+
+.ui-progressbar-value {
+  transition: width 0.5s;
+  -webkit-transition: width 0.5s;
+}
