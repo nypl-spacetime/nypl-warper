@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   
   devise_for :users, :path => 'u',:controllers => { :sessions => "sessions", :omniauth_callbacks => "omniauth_callbacks" }
   
-  resources :users do
+  resources :users, :except => [:new, :create] do
     member do
       put 'enable'
       put 'disable'
@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   
   get '/maps/activity' => 'audits#for_map_model', :as => "maps_activity"
   
-  resources :maps  do
+  resources :maps,:except => [:edit, :uodate, :destroy, :new, :create]  do
     member do
       post 'map_type'
       get 'export'
@@ -31,7 +31,6 @@ Rails.application.routes.draw do
       get 'warped'
       get 'metadata'
       get 'comments'
-      get 'delete'
       get 'status'
       get 'publish'
       get 'unpublish'
@@ -70,7 +69,7 @@ Rails.application.routes.draw do
   get '/layers/wms/:id' => "layers#wms", :as => "wms_layer"
   get '/layers/tile/:id/:z/:x/:y' => "layers#tile", :as => 'tile_layer'
   
-  resources :layers do
+  resources :layers, :except => [:edit, :uodate, :destroy, :new, :create] do
     member do
       get 'comments'
       get 'merge'
