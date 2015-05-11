@@ -39,16 +39,15 @@
       </script>
        
         <%= link_to("Toggle Visibility", toggle_visibility_layer_path(layer), :id => "toggle-visibility", :remote => true)%>
-        <%# link_to_remote("Toggle Visibility", :update => "vis-text-#{layer.id}", :url => { :action => "toggle_visibility", :id => layer})%> |
+        <%# link_to_remote("Toggle Visibility", :update => "vis-text-#{layer.id}", :url => { :action => "toggle_visibility", :id => layer})%>
       <% end  %>
-      <% if user_signed_in? && (admin_authorized? or current_user.own_this_layer?(layer.id)) -%>
-        <%= link_to "Edit Mosaic", layer_path(:id=>layer, :anchor=>"Edit_tab") -%> |
-      <% end -%>
-      <% if admin_authorized? -%>
-        <%= link_to("Merge", :controller => "layers", :action=> "merge", :id => layer) %> |
-       <!-- <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer)%> | -->
-      <%end -%>
 
+      <% if admin_authorized? -%>
+      <!--  <%= link_to("Merge", :controller => "layers", :action=> "merge", :id => layer) %> |
+       <!--     <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer)%> | 
+       -->
+      <%end -%>
+       
       <% if layer.is_visible && layer.rectified_maps_count > 0 %>
         <%= link_to("Download KML", layer_url(:id => layer, :format=>:kml), :class => "fontSmall") %>
       <% end %>

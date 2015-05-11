@@ -27,7 +27,7 @@ class Layer < ActiveRecord::Base
   
   def thumb    
     id = self.maps.first ? self.maps.first.nypl_digital_id : 0
-    "http://images.nypl.org/?t=t&id="+id
+    "http://images.nypl.org/?t=t&id="+id.to_s
   end
   
   def update_layer
@@ -41,9 +41,9 @@ class Layer < ActiveRecord::Base
     update_attribute(:rectified_maps_count, self.maps.warped.count)
   end
 
-  def rectified_maps_count
-    self.maps.warped.count #4 = rectified
-  end
+#  def rectified_maps_count
+#    self.maps.warped.count #4 = rectified
+#  end
 
 
   def rectified_percent

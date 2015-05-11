@@ -40,7 +40,6 @@
         <% unless @layer -%>
           <ul>
             <li> <%= link_to(image_tag("KML-logo-20x25.png")+"Download KML file",  map_url(:id => @map, :format => :kml)) %>  </li>
-            <li><%= link_to(image_tag("google_maps-20x25.png")+"View KML in Google Maps", "http://maps.google.com?q="+map_url(:id => @map, :format => :kml), :target => "_blank") %> </li>
             <li><%= link_to(image_tag("wms-20x25.png")+"WMS Capabilities URL",url_for(wms_map_url(:id=>@map, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1")) )%> </li>
             <li>
               <% tile_url = url_for(:controller => "maps", :action => "tile", :id => @map, :x => "x", :y => "y", :z => "z", :only_path => false) %>
@@ -59,7 +58,6 @@
   <%#layer%>
           <ul>
             <li> <%= link_to(image_tag("KML-logo-20x25.png")+"Download KML file",  layer_url(:id => @layer, :format => :kml)) %>  </li>
-            <li><%= link_to(image_tag("google_maps-20x25.png")+"View KML in Google Maps", "http://maps.google.com?q="+layer_url(:id => @layer, :format => :kml), :target => "_blank") %> </li>
             <li><%= link_to(image_tag("wms-20x25.png")+"WMS Capabilities", :action=>"wms", :id=>@layer, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1" )%> </li>
             <li>
               <% tile_url = url_for(:controller => "layers", :action => "tile", :x => "x", :y => "y", :z => "z", :only_path => false) %>
@@ -77,7 +75,7 @@
         <div style="clear:both;"></div>
       </div>
       <div id="export_window_foot" style="display: block;">
-        MapWarper
+        NYPL Map Warper
       </div>
     </div>
   </div>

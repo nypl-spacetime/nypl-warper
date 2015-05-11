@@ -33,7 +33,7 @@ class MyMapsController < ApplicationController
 
   #we shouldnt be able to remove a map we uploaded
   def destroy
-    if (@user == current_user and !current_user.own_this_map?(params[:map_id]))
+    if @user == current_user 
 
       my_map = @user.my_maps.find_by_map_id(params[:map_id])
 
@@ -43,13 +43,7 @@ class MyMapsController < ApplicationController
         flash[:notice] = "Map coudn't be removed from list"
       end
     else
-      if current_user.own_this_map?(params[:map_id])
-        flash[:notice]= "Sorry, you cannot remove maps you have uploaded, from the list"
-      else
-        flash[:notice]= "Map coudn't be removed from list"
-      end
-
-   
+     flash[:notice] = "You cannot remove other people's maps!"
 
     end
     redirect_to my_maps_path
@@ -57,16 +51,11 @@ class MyMapsController < ApplicationController
 
   private
   def get_user
-    @user = User.find(params[:user_id])
-
-    if user_signed_in?
-      if  @user == current_user or  current_user.has_role?("editor")
-        @user
-      else
-        return redirect_to user_path(current_user)
-      end
+    if User.exists?(params[:user_id])
+      @user = User.find(params[:user_id])
     else
-      return redirect_to maps_path
+
+      redirect_to users_path
     end
 
   end

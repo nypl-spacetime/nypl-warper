@@ -1,7 +1,7 @@
 class LayersController < ApplicationController
   layout 'layerdetail', :only => [:show,  :edit, :export, :metadata]
   before_filter :authenticate_user! , :except => [:wms, :wms2, :show_kml, :show, :index, :metadata, :maps, :thumb, :geosearch, :comments, :tile, :trace, :id]
-  before_filter :check_administrator_role, :only => [:publish, :toggle_visibility, :merge, :trace, :id] 
+  before_filter :check_administrator_role, :only => [:publish, :toggle_visibility, :merge, :trace, :id, :remove_map, :update_year] 
   
   before_filter :find_layer, :only => [:show, :export, :metadata, :toggle_visibility, :update_year, :publish, :remove_map, :merge, :maps, :thumb, :comments, :trace, :id]
   before_filter :check_if_layer_is_editable, :only => [:edit, :update, :remove_map, :update_year, :update, :destroy]
@@ -147,12 +147,15 @@ class LayersController < ApplicationController
       :per_page => @per_page
     }
     
-    order_options = "layers."+ sort_clause  + sort_nulls
-    
+    order_options =  sort_clause  + sort_nulls
+   
     map = params[:map_id]
     if !map.nil?
       @map = Map.find(map)
-      @layers = @map.layers.select(select).where(conditions).order(order_options).paginate(paginate_params)
+      
+      layer_ids = @map.layers.map(&:id)
+      @layers = Layer.where(id: layer_ids).select('*, round(rectified_maps_count::float / maps_count::float * 100) as percent').where(conditions).order(order_options).paginate(paginate_params)
+      
       @html_title = "Layer List for Map #{@map.id}"
       @page = "for_map"
     else
@@ -213,16 +216,12 @@ class LayersController < ApplicationController
     @selected_tab = 0
     @disabled_tabs =  []
     unless @layer.rectified_maps_count > 0 #i.e. if the layer has no maps, then dont let people  export
-      @disabled_tabs = ["export"]
+      @disabled_tabs = ["trace", "export"]
     end
 
-    if  user_signed_in? and (current_user.own_this_layer?(params[:id]) or current_user.has_role?("editor"))
-      @maps = @layer.maps.order(:map_type).paginate(:page => params[:page], :per_page => 30)
-    else
-      @disabled_tabs += ["edit"]
-      @maps = @layer.maps.are_public.order(:map_type).paginate(:page => params[:page], :per_page => 30)
-    end
-    @html_title = "Mosaic "+ @layer.id.to_s + " " + @layer.name.to_s
+    @maps = @layer.maps.order(:map_type).paginate(:page => params[:page], :per_page => 30)
+
+    @html_title = "Layer "+ @layer.id.to_s + " " + @layer.name.to_s
 
     if request.xhr?
       unless params[:page]
@@ -236,113 +235,113 @@ class LayersController < ApplicationController
         format.html {render :layout => "layerdetail"}# show.html.erb
         #format.json {render :json => @layer.to_json(:except => [:uuid, :parent_uuid, :description])}
         format.json {render :json => {:stat => "ok", :items => @layer}.to_json(:except => [:uuid, :parent_uuid, :description]), :callback => params[:callback] }
-        format.xml {render :xml => @layer.to_xml(:except => [:uuid, :parent_uuid, :description])}
+        
         format.kml {render :action => "show_kml", :layout => false}
       end
     end
   end
 
 
-  def new
-    #assume that the user is logged in
-    @html_title = "Make new mosaic -"
-    @layer = Layer.new
-    @maps = current_user.maps
-    respond_to do |format|
-      format.html {render :layout => "application"}# show.html.erb
-    end
-  end
+#  def new
+#    #assume that the user is logged in
+#    @html_title = "Make new mosaic -"
+#    @layer = Layer.new
+#    @maps = current_user.maps
+#    respond_to do |format|
+#      format.html {render :layout => "application"}# show.html.erb
+#    end
+#  end
+#
+#  def create
+#    @layer = Layer.new(layer_params)
+#    #@maps = current_user.maps.warped
+#    @layer.user = current_user
+#
+#    #@layer.maps = Map.find(params[:map_ids]) if params[:map_ids]
+#    if params[:map_ids]
+#      selected_maps = Map.find(params[:map_ids])
+#      selected_maps.each {|map| @layer.maps << map}
+#    end
+#
+#    if @layer.save
+#      @layer.update_layer
+#      @layer.update_counts
+#      flash[:notice] = "Mosaic was successfully created."
+#      redirect_to layer_url(@layer)
+#    else
+#      redirect_to new_layer_url
+#    end
+#  end
 
-  def create
-    @layer = Layer.new(layer_params)
-    #@maps = current_user.maps.warped
-    @layer.user = current_user
+#  def edit
+#    @layer = Layer.find(params[:id])
+#    @selected_tab = 1
+#    @current_tab = "edit"
+#    @html_title = "Editing Mosaic #{@layer.id} on"
+#    if (!current_user.own_this_layer?(params[:id]) and current_user.has_role?("editor"))
+#      @maps = @layer.user.maps
+#    else
+#      @maps = current_user.maps  #current_user.maps.warped
+#    end
+#
+#    if request.xhr?
+#      @xhr_flag = "xhr"
+#      render :action => "edit", :layout => "layer_tab_container"
+#    else
+#      respond_to do |format|
+#        format.html {render :layout => "layerdetail"}# show.html.erb
+#      end
+#    end
+#  end
 
-    #@layer.maps = Map.find(params[:map_ids]) if params[:map_ids]
-    if params[:map_ids]
-      selected_maps = Map.find(params[:map_ids])
-      selected_maps.each {|map| @layer.maps << map}
-    end
-
-    if @layer.save
-      @layer.update_layer
-      @layer.update_counts
-      flash[:notice] = "Mosaic was successfully created."
-      redirect_to layer_url(@layer)
-    else
-      redirect_to new_layer_url
-    end
-  end
-
-  def edit
-    @layer = Layer.find(params[:id])
-    @selected_tab = 1
-    @current_tab = "edit"
-    @html_title = "Editing Mosaic #{@layer.id} on"
-    if (!current_user.own_this_layer?(params[:id]) and current_user.has_role?("editor"))
-      @maps = @layer.user.maps
-    else
-      @maps = current_user.maps  #current_user.maps.warped
-    end
-
-    if request.xhr?
-      @xhr_flag = "xhr"
-      render :action => "edit", :layout => "layer_tab_container"
-    else
-      respond_to do |format|
-        format.html {render :layout => "layerdetail"}# show.html.erb
-      end
-    end
-  end
-
-  def update
-    @layer = Layer.find(params[:id])
-    @maps = current_user.maps
-    @layer.maps = Map.find(params[:map_ids]) if params[:map_ids]
-    if @layer.update_attributes(layer_params)
-      @layer.update_layer
-      @layer.update_counts
-      flash.now[:notice] = "Mosaic was successfully updated."
-      #redirect_to layer_url(@layer)
-    else
-    flash.now[:error] = "The mosaic was not able to be updated"
-
-    end
-    if request.xhr?
-      @xhr_flag = "xhr"
-      render :action => "edit", :layout => "layer_tab_container"
-    else
-      respond_to do |format|
-        format.html { render :action => "edit",:layout => "layerdetail" }
-      end
-    end
-  end
-
-  def delete
-    @layer = Layer.find(params[:id])
-    respond_to do |format|
-      format.html {render :layout => "application"}
-    end
-  end
-  
-  def destroy
-    if user_signed_in? and (current_user.own_this_layer?(params[:id])  or current_user.has_role?("editor"))
-      @layer = Layer.find(params[:id])
-    else
-      flash[:notice] = "Sorry, you cannot delete other people's mosaics!"
-      redirect_to layers_path
-    end
-
-    if @layer.destroy
-      flash[:notice] = "Mosaic deleted!"
-    else
-      flash[:notice] = "Mosaic wasnt deleted"
-    end
-    respond_to do |format|
-      format.html { redirect_to(layers_url) }
-      format.xml  { head :ok }
-    end
-  end
+#  def update
+#    @layer = Layer.find(params[:id])
+#    @maps = current_user.maps
+#    @layer.maps = Map.find(params[:map_ids]) if params[:map_ids]
+#    if @layer.update_attributes(layer_params)
+#      @layer.update_layer
+#      @layer.update_counts
+#      flash.now[:notice] = "Mosaic was successfully updated."
+#      #redirect_to layer_url(@layer)
+#    else
+#    flash.now[:error] = "The mosaic was not able to be updated"
+#
+#    end
+#    if request.xhr?
+#      @xhr_flag = "xhr"
+#      render :action => "edit", :layout => "layer_tab_container"
+#    else
+#      respond_to do |format|
+#        format.html { render :action => "edit",:layout => "layerdetail" }
+#      end
+#    end
+#  end
+#
+#  def delete
+#    @layer = Layer.find(params[:id])
+#    respond_to do |format|
+#      format.html {render :layout => "application"}
+#    end
+#  end
+#  
+#  def destroy
+#    if user_signed_in? and (current_user.own_this_layer?(params[:id])  or current_user.has_role?("editor"))
+#      @layer = Layer.find(params[:id])
+#    else
+#      flash[:notice] = "Sorry, you cannot delete other people's mosaics!"
+#      redirect_to layers_path
+#    end
+#
+#    if @layer.destroy
+#      flash[:notice] = "Mosaic deleted!"
+#    else
+#      flash[:notice] = "Mosaic wasnt deleted"
+#    end
+#    respond_to do |format|
+#      format.html { redirect_to(layers_url) }
+#      format.xml  { head :ok }
+#    end
+#  end
 
   def export
     @current_tab = "export"
@@ -381,7 +380,7 @@ class LayersController < ApplicationController
   end
 
   def update_year
-    @layer.update_attributes(params[:layer])
+    @layer.update_attributes(params[:layer].permit(:depicts_year))
     render :json => {:message => "Depicts : " + @layer.depicts_year.to_s }
   end
 
@@ -393,8 +392,8 @@ class LayersController < ApplicationController
       render :layout => 'application'
     elsif request.put?
       @dest_layer = Layer.find(params[:dest_id])
-      
-      @layer.merge(@dest_layer.id)
+      #TODO uncomment following line to enable this
+      #@layer.merge(@dest_layer.id)
       render :text  => "Mosaic has been merged into new layer - all maps copied across! (functionality disabled at the moment)"
     end
   end
@@ -623,7 +622,7 @@ class LayersController < ApplicationController
   private
 
   def check_if_layer_is_editable
-    if user_signed_in? and (current_user.own_this_layer?(params[:id])  or current_user.has_role?("editor"))
+    if user_signed_in? and  current_user.has_role?("administrator")
       @layer = Layer.find(params[:id])
     else
       flash[:notice] = "Sorry, you cannot edit another person's Mosaic"

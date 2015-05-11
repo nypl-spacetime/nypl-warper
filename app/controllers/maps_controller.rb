@@ -63,55 +63,55 @@ class MapsController < ApplicationController
     end
   end
   
-  def edit
-    @current_tab = :edit
-    @selected_tab = 1
-    @html_title = "Editing Map #{@map.title} on"
-    choose_layout_if_ajax
-    respond_to do |format|
-      format.html {} #{ render :layout =>'application' }  # new.html.erb
-      format.xml  { render :xml => @map }
-    end
-  end
-  
-  def update
-   
-    if @map.update_attributes(map_params)
-      flash.now[:notice] = 'Map was successfully updated.'
-    else
-      flash.now[:error] = 'There was an error updating the map' 
-    end
-    
-    if request.xhr?
-      @xhr_flag = "xhr"
-      render :action => "edit", :layout => "tab_container"
-    else
-      respond_to do |format|
-        format.html { redirect_to map_path }
-        format.xml  { render :xml => @map.errors, :status => :unprocessable_entity }
-      end
-    end
-    
-  end
-  
-  def delete
-    respond_to do |format|
-      format.html {render :layout => 'application'}
-    end
-  end
-  
-  #only editors or owners of maps
-  def destroy
-    if @map.destroy
-      flash[:notice] = "Map deleted!"
-    else
-      flash[:notice] = "Map wasnt deleted"
-    end
-    respond_to do |format|
-      format.html { redirect_to(maps_url) }
-      format.xml  { head :ok }
-    end
-  end
+#  def edit
+#    @current_tab = :edit
+#    @selected_tab = 1
+#    @html_title = "Editing Map #{@map.title} on"
+#    choose_layout_if_ajax
+#    respond_to do |format|
+#      format.html {} #{ render :layout =>'application' }  # new.html.erb
+#      format.xml  { render :xml => @map }
+#    end
+#  end
+#  
+#  def update
+#   
+#    if @map.update_attributes(map_params)
+#      flash.now[:notice] = 'Map was successfully updated.'
+#    else
+#      flash.now[:error] = 'There was an error updating the map' 
+#    end
+#    
+#    if request.xhr?
+#      @xhr_flag = "xhr"
+#      render :action => "edit", :layout => "tab_container"
+#    else
+#      respond_to do |format|
+#        format.html { redirect_to map_path }
+#        format.xml  { render :xml => @map.errors, :status => :unprocessable_entity }
+#      end
+#    end
+#    
+#  end
+#  
+#  def delete
+#    respond_to do |format|
+#      format.html {render :layout => 'application'}
+#    end
+#  end
+#  
+#  #only editors or owners of maps
+#  def destroy
+#    if @map.destroy
+#      flash[:notice] = "Map deleted!"
+#    else
+#      flash[:notice] = "Map wasnt deleted"
+#    end
+#    respond_to do |format|
+#      format.html { redirect_to(maps_url) }
+#      format.xml  { head :ok }
+#    end
+#  end
   
   ###############
   #
@@ -186,20 +186,20 @@ class MapsController < ApplicationController
   end
   
     
-  def tag
-    sort_init('updated_at', {:default_order => "desc"})
-    sort_update
-    @tags = params[:id] || @query
-    @html_title = "Maps tagged with #{@tags} on "
-    @maps = Map.are_public.order(sort_clause).tagged_with(@tags).paginate(
-      :page => params[:page],
-      :per_page => 20)
-    respond_to do |format|
-      format.html { render :layout =>'application' }  # index.html.erb
-      format.xml  { render :xml => @maps }
-      format.rss  { render  :layout => false }
-    end
-  end
+#  def tag
+#    sort_init('updated_at', {:default_order => "desc"})
+#    sort_update
+#    @tags = params[:id] || @query
+#    @html_title = "Maps tagged with #{@tags} on "
+#    @maps = Map.are_public.order(sort_clause).tagged_with(@tags).paginate(
+#      :page => params[:page],
+#      :per_page => 20)
+#    respond_to do |format|
+#      format.html { render :layout =>'application' }  # index.html.erb
+#      format.xml  { render :xml => @maps }
+#      format.rss  { render  :layout => false }
+#    end
+#  end
   
     
   def geosearch
