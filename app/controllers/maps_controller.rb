@@ -42,76 +42,7 @@ class MapsController < ApplicationController
       format.xml  { render :xml => @map }
     end
   end
-  
-  def create
-    @map = Map.new(map_params)
-
-    if user_signed_in?
-      @map.owner = current_user
-      @map.users << current_user
-    end
-
-    respond_to do |format|
-      if @map.save
-        flash[:notice] = 'Map was successfully created.'
-        format.html { redirect_to(@map) }
-        format.xml  { render :xml => @map, :status => :created, :location => @map }
-      else
-        format.html { render :action => "new", :layout =>'application' }
-        format.xml  { render :xml => @map.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-  
-#  def edit
-#    @current_tab = :edit
-#    @selected_tab = 1
-#    @html_title = "Editing Map #{@map.title} on"
-#    choose_layout_if_ajax
-#    respond_to do |format|
-#      format.html {} #{ render :layout =>'application' }  # new.html.erb
-#      format.xml  { render :xml => @map }
-#    end
-#  end
-#  
-#  def update
-#   
-#    if @map.update_attributes(map_params)
-#      flash.now[:notice] = 'Map was successfully updated.'
-#    else
-#      flash.now[:error] = 'There was an error updating the map' 
-#    end
-#    
-#    if request.xhr?
-#      @xhr_flag = "xhr"
-#      render :action => "edit", :layout => "tab_container"
-#    else
-#      respond_to do |format|
-#        format.html { redirect_to map_path }
-#        format.xml  { render :xml => @map.errors, :status => :unprocessable_entity }
-#      end
-#    end
-#    
-#  end
-#  
-#  def delete
-#    respond_to do |format|
-#      format.html {render :layout => 'application'}
-#    end
-#  end
-#  
-#  #only editors or owners of maps
-#  def destroy
-#    if @map.destroy
-#      flash[:notice] = "Map deleted!"
-#    else
-#      flash[:notice] = "Map wasnt deleted"
-#    end
-#    respond_to do |format|
-#      format.html { redirect_to(maps_url) }
-#      format.xml  { head :ok }
-#    end
-#  end
+ 
   
   ###############
   #
