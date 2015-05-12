@@ -12,36 +12,16 @@ class MapsController < ApplicationController
     :except => [:show, :index, :wms, :tile, :mapserver_wms, :warp_aligned, :status, :new, :create, :update, :edit, :tag, :geosearch, :map_type]
 
   before_filter :check_link_back, :only => [:show, :warp, :clip, :align, :warped, :export, :activity]
-  before_filter :check_if_map_is_editable, :only => [:edit, :update]
-  before_filter :check_if_map_can_be_deleted, :only => [:destroy, :delete]
-  #skip_before_filter :verify_authenticity_token, :only => [:save_mask, :delete_mask, :save_mask_and_warp, :mask_map, :rectify, :set_rough_state, :set_rough_centroid]
+  #before_filter :check_if_map_is_editable, :only => [:edit, :update]
+  #before_filter :check_if_map_can_be_deleted, :only => [:destroy, :delete]
+  
   
   rescue_from ActiveRecord::RecordNotFound, :with => :bad_record
 
   helper :sort
   include SortHelper
   
-  ###############
-  #
-  # CRUD
-  #
-  ###############
   
-  def new
-    @map = Map.new
-    @html_title = "Upload a new map to "
-    @max_size = Map.max_attachment_size
-    if Map.max_dimension
-      @upload_file_message  = " It may resize the image if it's too large (#{Map.max_dimension}x#{Map.max_dimension}) "
-    else
-      @upload_file_message = ""
-    end
-
-    respond_to do |format|
-      format.html{ render :layout =>'application' }  # new.html.erb
-      format.xml  { render :xml => @map }
-    end
-  end
  
   
   ###############
@@ -116,21 +96,6 @@ class MapsController < ApplicationController
     
   end
   
-    
-#  def tag
-#    sort_init('updated_at', {:default_order => "desc"})
-#    sort_update
-#    @tags = params[:id] || @query
-#    @html_title = "Maps tagged with #{@tags} on "
-#    @maps = Map.are_public.order(sort_clause).tagged_with(@tags).paginate(
-#      :page => params[:page],
-#      :per_page => 20)
-#    respond_to do |format|
-#      format.html { render :layout =>'application' }  # index.html.erb
-#      format.xml  { render :xml => @maps }
-#      format.rss  { render  :layout => false }
-#    end
-#  end
   
     
   def geosearch
@@ -838,16 +803,16 @@ class MapsController < ApplicationController
   end
 
   #only allow editing by a user if the user owns it, or if and editor tries to edit it
-  def check_if_map_is_editable
-    if user_signed_in? and (current_user.own_this_map?(params[:id])  or current_user.has_role?("editor"))
-      @map = Map.find(params[:id])
-    elsif Map.find(params[:id]).owner.nil?
-      @map = Map.find(params[:id])
-    else
-      flash[:notice] = "Sorry, you cannot edit other people's maps"
-      redirect_to map_path
-    end
-  end
+#  def check_if_map_is_editable
+#    if user_signed_in? and (current_user.own_this_map?(params[:id])  or current_user.has_role?("editor"))
+#      @map = Map.find(params[:id])
+#    elsif Map.find(params[:id]).owner.nil?
+#      @map = Map.find(params[:id])
+#    else
+#      flash[:notice] = "Sorry, you cannot edit other people's maps"
+#      redirect_to map_path
+#    end
+#  end
 
   def find_map_if_available
 

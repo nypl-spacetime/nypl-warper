@@ -9,7 +9,7 @@
     <br />
     <span class="layer_description">
       <%= layer.description %>
-      <%- if layer.user -%>Compiled by <%= link_to(layer.user.login, user_path(layer.user)) -%>.<%-end-%>
+      
       Last modified <%=h time_ago_in_words(layer.updated_at) -%> ago.
     </span>
     <span class="layer_year">

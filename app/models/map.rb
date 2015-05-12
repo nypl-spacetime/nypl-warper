@@ -13,7 +13,7 @@ class Map < ActiveRecord::Base
   has_many :layers, :through => :layers_maps # ,:after_add, :after_remove
   has_many :my_maps, :dependent => :destroy
   has_many :users, :through => :my_maps
-  belongs_to :owner, :class_name => "User"
+  #belongs_to :owner, :class_name => "User"
  
   
   validates_presence_of :title
