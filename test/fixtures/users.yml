@@ -5,3 +5,11 @@ user1:
   encrypted_password: "password"
   password_salt: "salt"
   confirmed_at: <%= Time.now %>
+  
+adminuser: 
+  id: 2
+  login: adminuser
+  email: admin@example.com
+  encrypted_password: "password"
+  password_salt: "salt"
+  confirmed_at: <%= Time.now %>

@@ -1,0 +1,15 @@
+map1:
+  id: 1
+  title: test title
+  description: test description
+  filename: "data/map.png"
+  width: 150
+  height: 105
+  nypl_digital_id: 123
+  catnyp: 123
+  uuid: 123
+  parent_uuid: 123
+  status: 4
+  mask_status: 0
+  map: true
+  map_type: 1
