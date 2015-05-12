@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   
   get '/maps/activity' => 'audits#for_map_model', :as => "maps_activity"
   
-  resources :maps,:except => [:edit, :uodate, :destroy, :new, :create]  do
+  resources :maps,:except => [:edit, :update, :destroy, :new, :create]  do
     member do
       post 'map_type'
       get 'export'
@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   get '/layers/wms/:id' => "layers#wms", :as => "wms_layer"
   get '/layers/tile/:id/:z/:x/:y' => "layers#tile", :as => 'tile_layer'
   
-  resources :layers, :except => [:edit, :uodate, :destroy, :new, :create] do
+  resources :layers, :except => [:edit, :update, :destroy, :new, :create] do
     member do
       get 'comments'
       get 'merge'
@@ -86,6 +86,7 @@ Rails.application.routes.draw do
       get 'id'
       get 'trace'
       get 'idland'
+      get 'digitize'
     end
     collection do 
       get 'geosearch'

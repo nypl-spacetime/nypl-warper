@@ -121,7 +121,10 @@
     <body>
     <%end%>
     <%= render :partial => 'shared/analyticstop' %>
-    <div id="headerDiv" class="headerDiv">
+    
+    <%= render :partial => 'shared/nypl_stripe' %>
+      
+      <div id="headerDiv" class="headerDiv">
       <h1><%= link_to "NYPL Map Warper", root_path %></h1>
       <%= render :partial => 'shared/header' %>
       <%= render :partial => 'shared/nav' %>
