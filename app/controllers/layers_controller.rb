@@ -3,7 +3,7 @@ class LayersController < ApplicationController
   before_filter :authenticate_user! , :except => [:wms, :wms2, :show_kml, :show, :index, :metadata, :maps, :thumb, :geosearch, :comments, :tile, :trace, :id]
   before_filter :check_administrator_role, :only => [:publish, :toggle_visibility, :merge, :trace, :id, :remove_map, :update_year] 
   
-  before_filter :find_layer, :only => [:show, :export, :metadata, :toggle_visibility, :update_year, :publish, :remove_map, :merge, :maps, :thumb, :comments, :trace, :id]
+  before_filter :find_layer, :only => [:show, :export, :metadata, :toggle_visibility, :update_year, :publish, :remove_map, :merge, :maps, :thumb, :comments, :trace, :id, :digitize]
   before_filter :check_if_layer_is_editable, :only => [:edit, :update, :remove_map, :update_year, :update, :destroy]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :bad_record
@@ -335,6 +335,26 @@ class LayersController < ApplicationController
     render "maps/idland", :layout => false
   end
 
+  
+  def digitize
+    @current_tab = "digitize"
+    @selected_tab = 1
+    @html_title = "Digitizing Layer "+ @layer.id.to_s
+    
+    if request.xhr?
+      @xhr_flag = "xhr"
+      render :action => "digitize", :layout => "tab_container"
+    else
+      if @layer.rectified_maps_count > 0
+        respond_to do |format|
+          format.html {render :layout => "layerdetail"}
+        end
+      else
+        redirect_to :action => 'show'
+      end
+    end
+    
+  end
 
   require 'mapscript'
   include Mapscript

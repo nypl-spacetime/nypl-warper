@@ -6,6 +6,9 @@ Rails.application.config.assets.version = '1.0'
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
  Rails.application.config.assets.precompile += %w(layer-maps.js geosearch.js geosearch-map.js geosearch-layer.js warped.js align.js clip.js warp.js openlayers/2.8/OpenLayers-2.8/OpenLayers.js )
+ 
+ Rails.application.config.assets.precompile += %w( dig/edit.js dig/MapFish.js dig/ext-base.js dig/ext-all.js dig/GeoExt.js)
+ Rails.application.config.assets.precompile += %w(dig/ext/resources/css/ext-all.css dig/mfbase/mapfish/mapfish.css dig/ext/resources/css/xtheme-gray.css)
 
 Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
 

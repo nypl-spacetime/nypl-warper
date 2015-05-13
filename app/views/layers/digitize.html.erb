@@ -1,0 +1,41 @@
+<% content_for :head do%>
+<%= javascript_include_tag "openlayers/2.8/OpenLayers-2.8/OpenLayers" %>
+  <%= javascript_tag "window._token = '#{form_authenticity_token}'" %>
+  <%= javascript_include_tag "dig/ext-base.js" %>
+  <%= javascript_include_tag "dig/ext-all.js" %>
+  <%= javascript_include_tag "dig/MapFish.js" %>
+ 
+
+  <%= stylesheet_link_tag "dig/ext/resources/css/ext-all.css" %>
+  <%= stylesheet_link_tag "dig/mfbase/mapfish/mapfish.css" %>
+  <%= stylesheet_link_tag "dig/ext/resources/css/xtheme-gray.css" %>
+
+
+  <script type="text/javascript">
+   
+    var refLayerID = "<%=@layer.id%>";
+    var refLayerYear = "<%=@layer.depicts_year%>";
+    var refLayerURL = "<%= url_for :controller => 'layers', :action => 'wms', :id => @layer -%>";
+    var refLayerBounds = new OpenLayers.Bounds(<%=@layer.get_bounds%>);
+    var editingUser = "<%if user_signed_in? -%><%= current_user.id -%><% else %>0000<% end -%>";
+    var subtypeURL = "<%= url_for :controller => 'digitize', :action => 'subtype' -%>";
+    var geoserverURL = '<%= "http://"+ request.host + "/geoserver/wfs" %>';
+
+var cssPath = "/assets/";
+var jsPath = "/assets/";
+
+    var browserIsIE6orBefore = false;
+
+  </script>
+
+  <%= javascript_include_tag "dig/edit" %>
+<% end %>
+
+<div id="dig-panel">
+  <div id="olmap"></div>
+  <div id="digitizer-slider"><div class="ui-slider-handle"></div></div>
+  <div id="tree"></div>
+</div>
+
+
+

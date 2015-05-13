@@ -74,3 +74,20 @@ if(typeof(G_SATELLITE_MAP) !== 'undefined'){
   var googleHybrid = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, 'sphericalMercator': true});
 }
 
+
+   var nyc = new OpenLayers.Layer.TMS("New York City (zoom in)", 
+     "http://tile1.maps.nypl.org/nyc_tiles/",
+     { type: 'png',
+       getURL: osm_getTileURL,
+       transitionEffect: 'resize',
+       displayOutsideMaxExtent: true,
+       wrapDateLine: true,
+       numZoomLevels: 20
+     });
+     
+     var ortho = new OpenLayers.Layer.WMS( "USGS Aerial Photos (2006)",
+    ["http://tile1.maps.nypl.org/tilecache",
+     "http://tile2.maps.nypl.org/tilecache",
+     "http://tile3.maps.nypl.org/tilecache",
+     "http://tile4.maps.nypl.org/tilecache" ],
+    {layers: 'ortho', sphericalMercator: true, numZoomLevels: 23} );
