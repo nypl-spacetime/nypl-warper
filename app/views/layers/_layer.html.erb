@@ -21,7 +21,7 @@
     <!--<br />-->
     <% if admin_authorized? -%>
       <span class="layer_visibility">
-        <br />
+       
         <span id="vis-text-<%=layer.id%>">
           <% if layer.is_visible -%>
             (Visible)
@@ -39,7 +39,7 @@
       </script>
        
         <%= link_to("Toggle Visibility", toggle_visibility_layer_path(layer), :id => "toggle-visibility", :remote => true)%>
-        <%# link_to_remote("Toggle Visibility", :update => "vis-text-#{layer.id}", :url => { :action => "toggle_visibility", :id => layer})%>
+        
       <% end  %>
 
       <% if admin_authorized? -%>
@@ -53,7 +53,10 @@
       <% end %>
 
     </span>
-
+    <span class="map_links">
+        Bibiliographic records:
+        <%= link_to 'Digital Collections', "http://digitalcollections.nypl.org/items/#{layer.uuid}" -%>
+    </span>
   </td>
   <td>
     <%if layer.depicts_year -%><%= layer.depicts_year -%> <%end-%>

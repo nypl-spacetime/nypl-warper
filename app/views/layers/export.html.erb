@@ -13,7 +13,7 @@
     KML: <%= link_to("Download KML", layer_url(:id => @layer, :format=>:kml)) %>
   </li>
   <li>
-    Bibliographic:  <%= link_to 'biblio record', "http://example.com" -%>
+    Bibliographic:  <%= link_to 'Digital Collections', "http://digitalcollections.nypl.org/items/#{@layer.uuid}" -%>
   </li>
 </ul>
 <br />
