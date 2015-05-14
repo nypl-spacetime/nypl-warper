@@ -9,8 +9,10 @@
     <%= javascript_include_tag "openlayers/2.8/OpenLayers-2.8/OpenLayers" %>
     <%= javascript_include_tag "application" %>
     <%= javascript_tag "jQuery.noConflict();" -%>
-
-
+     
+    <%= javascript_include_tag "dig/ext-base.js" %>
+    <%= javascript_include_tag "dig/ext-all.js" %>
+  
     <script type="text/javascript">
       var addthis_share = {templates: {twitter: '{{url}} (from @<%=APP_CONFIG['addthis_twitter_user']%>)'}};
       var addthis_config = {ui_click: true};
@@ -41,7 +43,19 @@
           selected: <%=@selected_tab||0 %>,
           select: function(event, ui) {
             return true;
-          } //select
+          },
+         beforeLoad: function( event, ui ) {
+          ui.jqXHR.fail(function() {
+            if (ui.jqXHR.status == 401){ 
+                <% flash  = "Sorry. You may need to <a class='unauthorized' href='#{url_for(new_user_session_path)}'>Log In</a> to view this." %>
+                var flash = "<%= flash.html_safe %>";
+                ui.panel.html(flash);
+            }else {
+                ui.panel.html("Something went wrong with this. Sorry! Please try again, or try logging in first.");
+            }
+          });
+        }
+        
         });
 
         jQuery("#wooTabs").bind("tabsselect", function(event, ui) {
@@ -62,7 +76,7 @@
           }
 
         });
-
+        
       });
 
     </script>
@@ -117,7 +131,7 @@
     <%= render :partial => 'shared/nypl_stripe' %>  
       
     <div id="headerDiv" class="headerDiv">
-      <h1><%= link_to "Map Warper", root_path %></h1>
+      <h1><%= link_to "NYPL Map Warper", root_path %></h1>
       <%= render :partial => 'shared/header' %>
       <%= render :partial => 'shared/nav' %>
     </div>
@@ -129,7 +143,7 @@
     </table>
 
     <% @tabs = [{:name=>"show",:divname=>"Show", :label=>"Show", :path=>layer_path(:id => @layer)},
-      {:name=>"edit",:divname=>"Digitize", :label=>"Digitize", :path=>digitize_layer_path(:id => @layer)},
+      {:name=>"digitize",:divname=>"Digitize", :label=>"Digitize", :path=>digitize_layer_path(:id => @layer)},
       {:name=>"export",:divname=>"Export", :label=>"Export", :path=>export_layer_path(:id => @layer)},
       {:name=>"metadata", :divname=>"Metadata", :label=>"Metadata", :path => metadata_layer_path(:id => @layer)},
       {:name=>"comments",:divname=>"Comments", :label=>"Comments", :count=>@layer.comments.size.to_s, :path=>comments_layer_path(:id => @layer)}
@@ -159,7 +173,7 @@
 
     <% if admin_authorized? %>
       <div id="year-dialog" class="hidden">
-        Add / edit year that this mosaic depicts: <br />
+        Add / edit year that this layer depicts: <br />
 
 
         <script type="text/javascript">

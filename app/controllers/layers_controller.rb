@@ -1,6 +1,6 @@
 class LayersController < ApplicationController
   layout 'layerdetail', :only => [:show,  :edit, :export, :metadata]
-  before_filter :authenticate_user! , :except => [:wms, :wms2, :show_kml, :show, :index, :metadata, :maps, :thumb, :geosearch, :comments, :tile, :trace, :id]
+  before_filter :authenticate_user! , :except => [:wms, :wms2, :show_kml, :show, :index, :metadata, :maps, :thumb, :geosearch, :comments, :tile]
   before_filter :check_administrator_role, :only => [:publish, :toggle_visibility, :merge, :trace, :id, :remove_map, :update_year] 
   
   before_filter :find_layer, :only => [:show, :export, :metadata, :toggle_visibility, :update_year, :publish, :remove_map, :merge, :maps, :thumb, :comments, :trace, :id, :digitize]
@@ -216,7 +216,7 @@ class LayersController < ApplicationController
     @selected_tab = 0
     @disabled_tabs =  []
     unless @layer.rectified_maps_count > 0 #i.e. if the layer has no maps, then dont let people  export
-      @disabled_tabs = ["trace", "export"]
+      @disabled_tabs = ["digitize", "export"]
     end
 
     @maps = @layer.maps.order(:map_type).paginate(:page => params[:page], :per_page => 30)
@@ -248,7 +248,7 @@ class LayersController < ApplicationController
     @current_tab = "export"
     @selected_tab = 3
 
-    @html_title = "Export Mosaic "+ @layer.id.to_s
+    @html_title = "Export Layer "+ @layer.id.to_s
     if request.xhr?
       @xhr_flag = "xhr"
       render :layout => "layer_tab_container"
@@ -262,7 +262,8 @@ class LayersController < ApplicationController
   def metadata
     @current_tab = "metadata"
     @selected_tab = 4
-    #@layer_properties = @layer.layer_properties
+    @layer_properties = @layer.layer_properties
+    
     choose_layout_if_ajax
   end
 
@@ -295,7 +296,7 @@ class LayersController < ApplicationController
       @dest_layer = Layer.find(params[:dest_id])
       #TODO uncomment following line to enable this
       #@layer.merge(@dest_layer.id)
-      render :text  => "Mosaic has been merged into new layer - all maps copied across! (functionality disabled at the moment)"
+      render :text  => "Layer has been merged into new layer - all maps copied across! (functionality disabled at the moment)"
     end
   end
 
@@ -304,16 +305,16 @@ class LayersController < ApplicationController
     @map = Map.find(params[:map_id])
     
     @layer.remove_map(@map.id)
-    render :text =>  "Dummy text - Map removed from this mosaic "
+    render :text =>  "Dummy text - Map removed from this layer "
   end
 
   def publish
     if @layer.rectified_percent < 100
-      render :text => "Mosaic has less than 100% of its maps rectified"
+      render :text => "Layer has less than 100% of its maps rectified"
       #redirect_to :action => 'index'
     else
       @layer.publish
-      render :text => "Mosaic will be published (this functionality is disabled at the moment)"
+      render :text => "Layer will be published (this functionality is disabled at the moment)"
     end
   end
 
@@ -546,7 +547,7 @@ class LayersController < ApplicationController
     if user_signed_in? and  current_user.has_role?("administrator")
       @layer = Layer.find(params[:id])
     else
-      flash[:notice] = "Sorry, you cannot edit another person's Mosaic"
+      flash[:notice] = "Sorry, you cannot edit another person's Layer"
       redirect_to layer_path
     end
   end
@@ -591,7 +592,7 @@ class LayersController < ApplicationController
     #logger.error("not found #{params[:id]}")
     respond_to do | format |
       format.html do
-        flash[:notice] = "Mosaic not found"
+        flash[:notice] = "Layer not found"
         redirect_to :action => :index
       end
       format.json {render :json => {:stat => "not found", :items =>[]}.to_json, :status => 404}

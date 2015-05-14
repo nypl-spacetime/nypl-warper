@@ -1,7 +1,7 @@
 class Layer < ActiveRecord::Base
   has_many :layers_maps, :dependent => :destroy
   has_many :maps,:through => :layers_maps
-  #belongs_to :user
+  has_many :layer_properties #could be has_one
   
   acts_as_commentable  
   

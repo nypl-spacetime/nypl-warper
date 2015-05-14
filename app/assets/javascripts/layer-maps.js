@@ -26,6 +26,9 @@ function init(){
   layerMap = new OpenLayers.Map("map",options);
   mapnik_lay1 = mapnik.clone();
 
+  nyc_lay1 = nyc.clone();
+  nyc_lay1.setIsBaseLayer(true);
+
   layerMap.addLayers([mapnik_lay1]);
 
   wmslayer =  new OpenLayers.Layer.WMS
