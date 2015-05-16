@@ -232,6 +232,26 @@ namespace :map do
 
       update_layer_counts
     end #task
-
+    
+    desc "Counts the number of items from the repository. Date to be in YYYY-MM-DD"
+    task(:count_latest => :environment) do
+      unless ENV["since"] && ENV["until"]
+        puts "usage: rake map:repo:count_latest since=date until=date"
+        break
+      end
+      since_date = ENV["since"] 
+      until_date = ENV["until"]
+      client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
+      
+      count = client.count_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
+      
+      if count == "0"
+        puts "No items found."
+      else
+        puts "#{count} items found."
+      end
+      
+    end
+    
   end
 end

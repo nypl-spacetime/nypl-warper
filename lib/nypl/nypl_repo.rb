@@ -35,6 +35,11 @@ module NyplRepo
       results
     end
 
+    def count_items_since(query, since_date, until_date)
+      url = 'http://api.repo.nypl.org/api/v1/items/search.json?q='+query+'&since='+since_date+'&until='+until_date+'&per_page=500'
+      json = self.get_json(url)
+      json["nyplAPI"]["response"]["numResults"]
+    end
 
     # Given a container uuid, or biblographic uuid, returns a
     # list of mods uuids. 
