@@ -48,7 +48,7 @@ namespace :map do
       title = (title.chars.to_a.size > 254 ? title.chars.to_a[0...251].join + "..." : title).to_s
 
       layer = Layer.new(:name => title, :uuid => uuid, :description => "")
-      #TODO - parse originInfo date issued keydate=yes
+      
       match_data = /1[3456789][0-9][0-9]/.match title
       if match_data
         layer.depicts_year = match_data[0]
