@@ -13,4 +13,4 @@ secret
 *.*.swp
 *.*~
 db/maptileindex/*
-
+db/*.dump
