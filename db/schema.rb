@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 20150516154110) do
     t.integer  "rough_state"
     t.datetime "rectified_at"
     t.datetime "gcp_touched_at"
-    t.integer  "origin_year"
+    t.integer  "issue_year"
   end
 
   add_index "maps", ["bbox_geom"], name: "index_mapscans_on_bbox_geom", using: :gist
