@@ -18,6 +18,8 @@ class Map < ActiveRecord::Base
   
   validates_presence_of :title
   validates_numericality_of :rough_lat, :rough_lon, :rough_zoom, :allow_nil => true
+  validates_length_of :origin_year, :maximum => 4,:allow_nil => true, :allow_blank => true
+  validates_numericality_of :origin_year, :if => Proc.new {|c| not c.origin_year.blank?}
 
   acts_as_commentable
   acts_as_enum :map_type, [:index, :is_map, :not_map ]
@@ -221,7 +223,7 @@ class Map < ActiveRecord::Base
   
   
   def depicts_year
-    self.layers.with_year.collect(&:depicts_year).compact.first
+    origin_year ||  self.layers.with_year.collect(&:depicts_year).compact.first
   end
   
   def warped?

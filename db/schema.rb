@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150424134733) do
+ActiveRecord::Schema.define(version: 20150516154110) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(version: 20150424134733) do
     t.integer  "rough_state"
     t.datetime "rectified_at"
     t.datetime "gcp_touched_at"
+    t.integer  "origin_year"
   end
 
   add_index "maps", ["bbox_geom"], name: "index_mapscans_on_bbox_geom", using: :gist
