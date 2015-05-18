@@ -164,8 +164,8 @@ namespace :map do
       end #transaction
 
     end
-
-
+    
+    
     desc "imports a map and any associated layer based on a uuid environment variable"
     task(:import_map => :environment) do
       unless ENV["uuid"]
@@ -289,6 +289,77 @@ namespace :map do
         puts "#{count} items found."
       end
       
+    end
+    
+    
+    desc "updates maps issue_year from the API if the map hasn't got one already."
+    task(:update_map_year => :environment) do
+      puts "[#{Time.now}] map:repo:update_map_year started. "
+      maps = Map.where("uuid <> '' AND issue_year is null") 
+      broken = []
+      not_found = []
+      client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
+      
+      maps.each do | map |
+        
+        map_item =  client.get_mods_item(map.uuid)
+        
+        if map_item.nil?
+          broken << {map.id => map.uuid}
+          next
+        end
+        
+        origin_info = map_item["originInfo"]
+        
+        if origin_info.class == Hash
+          origin_info = [origin_info]
+        end
+        
+        key_date = deep_find("keyDate", origin_info)
+        
+        issue_year = nil
+        
+        if key_date && key_date["$"]
+          issue_year = key_date["$"].to_i
+        end
+        
+        if issue_year.nil?
+          other_date = nil
+          ["dateIssued","dateCreated", "copyrightDate" , "dateModified"].each do | other_key |
+            other_date = deep_find(other_key, origin_info)
+            
+            if other_date
+              other_date_year = deep_find("$", other_date)
+              issue_year = other_date_year["$"].to_i
+              
+              break
+            end
+            
+          end 
+        end
+        
+        if issue_year.nil?
+          not_found << {map.id => map.uuid}
+        else
+          puts "Updating #{map.uuid}  : #{issue_year}"
+          map.update_attribute(:issue_year, issue_year)
+        end
+        
+      end
+      
+      
+      if broken.size > 0
+        puts "No repo API item found for these maps:  "
+        puts broken.inspect
+      end
+      
+      if not_found.size > 0
+        puts "No issue year found for these maps "
+        puts not_found.inspect
+      end
+      
+       puts "[#{Time.now}] map:repo:update_map_year finished. "
+       
     end
     
   end
