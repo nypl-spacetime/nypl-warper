@@ -1,6 +1,15 @@
 namespace :map do
   namespace :repo do
 
+    def deep_find(key, object=self, found=nil)
+      if object.respond_to?(:key?) && object.key?(key)
+        return object
+      elsif object.is_a? Enumerable
+        object.find { |*a| found = deep_find(key, a.last) }
+        return found
+      end
+    end
+    
     #creates a map object from an item
     #optionally pass in image_id if you know it
     def get_map(item, uuid, image_id=nil)
@@ -24,7 +33,35 @@ namespace :map do
       description = "From " + item["relatedItem"]["titleInfo"]["title"]["$"]
       description = (description.chars.to_a.size > 254 ? description.chars.to_a[0...251].join + "..." : description).to_s
 
+      origin_info = item["originInfo"]
+ 
+      if origin_info.class == Hash
+        origin_info = [origin_info]
+      end
       
+      key_date = deep_find("keyDate", origin_info)
+      
+      issue_year = nil
+      
+      if key_date && key_date["$"]
+        issue_year = key_date["$"].to_i
+      end
+
+      if issue_year.nil?
+        other_date = nil
+        ["dateIssued","dateCreated", "copyrightDate" , "dateModified"].each do | other_key |
+          other_date = deep_find(other_key, origin_info)
+          
+          if other_date
+            other_date_year = deep_find("$", other_date)
+            issue_year = other_date_year["$"].to_i
+
+            break
+          end
+          
+        end 
+      end
+
       #go into layers to find:
       client = NyplRepo::Client.new(REPO_CONFIG[:token])
       
@@ -33,6 +70,7 @@ namespace :map do
       map = Map.new(:title => title, :description => description,
                     :uuid => uuid, :parent_uuid => parent_uuid,
                     :nypl_digital_id => nypl_digital_id,
+                    :issue_year => issue_year,
                     :status => :unloaded, :map_type=>:is_map, :mask_status => :unmasked)
       
       map
