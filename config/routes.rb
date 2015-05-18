@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   end
   
   get '/maps/thumb/:id' => 'maps#thumb', :as =>'thumb_map'
+  get '/layers/thumb/:id' => 'layers#thumb', :as =>'thumb_layer'
   
   get '/gcps/' => 'gcp#index', :as => "gcps"
   get '/gcps/:id' => 'gcps#show', :as => "gcp"
