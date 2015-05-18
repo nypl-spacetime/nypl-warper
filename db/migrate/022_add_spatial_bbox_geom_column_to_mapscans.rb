@@ -1,6 +1,6 @@
 class AddSpatialBboxGeomColumnToMapscans < ActiveRecord::Migration
   def self.up
-    add_column :mapscans, :bbox_geom, :st_polygon, :srid => 4236
+    add_column :mapscans, :bbox_geom, :st_polygon, :srid => 4326
     add_index :mapscans, :bbox_geom, :using => :gist
   end
 
