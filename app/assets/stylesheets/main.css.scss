@@ -1033,6 +1033,14 @@ font-weight: bold;
 	color: #fff;
 }
 
+#map_table th a, #layer_table th a {
+	color: #fff;
+}
+#map_table th.year-sort, #layer_table th.year-sort {
+  min-width: 56px;
+}
+
+
 #map_table th:nth-child(odd), #layer_table th:nth-child(odd) {
 	background: #888;
 }

@@ -29,14 +29,7 @@
   </h2>
 
 <%end%>
-<div id="search-sort">
-  Sort:&nbsp;
-  <%= sort_header_tag('name', :title => "Title") %> |
-  <%= sort_header_tag('depicts_year', :title => "Year") %> |
-  <%= sort_header_tag('updated_at', :title => "Last Updated") %> |
-  <%= sort_header_tag('maps_count', :title=> "Number of Maps") %> |
-  <%= sort_header_tag('percent', :title => "Percent Complete") %> |
-</div>
+
 <div class="warper_pagination">
   <div id="search-pagination-top">
     <%= will_paginate @layers %>
@@ -48,10 +41,10 @@
     <thead>
       <tr>
         <th>Layer</th>
-        <th class="thWidth">Title</th>
-        <th>Year</th>
-        <th>Number of Maps</th>
-        <th>Percentage Complete</th>
+        <%= sort_header_tag('name', :title => "Title") %>
+        <%= sort_header_tag('depicts_year', :title => "Year", :class=>"year-sort") %> 
+        <%= sort_header_tag('maps_count', :title=> "Number of Maps") %>
+        <%= sort_header_tag('percent', :title => "Percent Complete") %>
       </tr>
     </thead>
     <tbody id="results">
