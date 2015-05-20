@@ -4,7 +4,7 @@ class MyMapsController < ApplicationController
 
   def list
     @mymaps = @user.maps.order("updated_at DESC").paginate(:page => params[:page],:per_page => 8)
-    @mylayers = @user.layers
+    
     @remove_from = true
     @html_title = "#{@user.login.capitalize}'s 'My Maps' on "
   end
