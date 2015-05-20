@@ -51,11 +51,13 @@ var osma = new OpenLayers.Layer.TMS(
         'buffer':1
     } );
 
-var mapnik = new OpenLayers.Layer.TMS("OSM Mapnik", "http://tile.openstreetmap.org/", {
-    type: 'png',
-    getURL: osm_getTileURL,
+
+
+var mapnik = new OpenLayers.Layer.OSM("OSM Mapnik", ["http://a.tile.openstreetmap.org/${z}/${x}/${y}.png", 
+  "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png", "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"],{
     displayOutsideMaxExtent: true,
     transitionEffect: 'resize',
+    numZoomLevels: 20,
     attribution: '&copy <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors'
 });
 
@@ -91,3 +93,20 @@ if(typeof(G_SATELLITE_MAP) !== 'undefined'){
      "http://tile3.maps.nypl.org/tilecache",
      "http://tile4.maps.nypl.org/tilecache" ],
     {layers: 'ortho', sphericalMercator: true, numZoomLevels: 23} );
+    
+    
+var ny_2014 = new OpenLayers.Layer.OSM("NYC 2014",
+        [
+          "https://a.tiles.mapbox.com/v3/examples.map-20v6611k/${z}/${x}/${y}.png",
+          "https://b.tiles.mapbox.com/v3/examples.map-20v6611k/${z}/${x}/${y}.png",
+          "https://c.tiles.mapbox.com/v3/examples.map-20v6611k/${z}/${x}/${y}.png"
+        ],
+        {
+          transitionEffect: 'resize',
+          displayOutsideMaxExtent: true,
+          wrapDateLine: true,
+          numZoomLevels: 22,
+          attribution: 'Map via <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://mapbox.com">Mapbox</a>'
+        }
+);
+            

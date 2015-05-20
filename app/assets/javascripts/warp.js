@@ -47,7 +47,7 @@ function init() {
     projection: new OpenLayers.Projection("EPSG:900913"),
     displayProjection: new OpenLayers.Projection("EPSG:4326"),
     units: "m",
-    numZoomLevels: 20,
+    numZoomLevels: 22,
     maxResolution: 156543.0339,
     maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
     controls: [new OpenLayers.Control.Attribution(), to_layer_switcher, new OpenLayers.Control.PanZoomBar()]
@@ -78,8 +78,8 @@ function init() {
   }
 
 
-  jpl_wms.setVisibility(false);
-  to_map.addLayer(jpl_wms);
+  ny_2014.setVisibility(false);
+  to_map.addLayer(ny_2014);
 
   if (map_has_bounds) {
     map_bounds_merc = new OpenLayers.Bounds();
@@ -184,6 +184,18 @@ function init() {
       jQuery("#warped-slider").show();
     } else {
       jQuery("#warped-slider").hide();
+    }
+  });
+  
+  to_map.events.register("zoomend", mapnik, function () {
+    if (this.map.getZoom() > 18 && this.visibility == true) {
+      this.map.setBaseLayer(ny_2014);
+    }
+  });
+  
+   to_map.events.register("zoomend", ny_2014, function () {
+    if (this.map.getZoom() < 15 && this.visibility == true) {
+      this.map.setBaseLayer(mapnik);
     }
   });
 

@@ -22,7 +22,7 @@ Ext.onReady(function() {
       projection: new OpenLayers.Projection("EPSG:900913"),
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
       units: "m",
-      numZoomLevels:20,
+      numZoomLevels:21,
       maxResolution: 156543.0339,
       maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
     };
@@ -40,14 +40,11 @@ Ext.onReady(function() {
     refLayer.visibility = true;
 
     var mapnik_d = mapnik.clone(); 
-    var nyc_d = nyc.clone();
+    var nyc_d = ny_2014.clone();
 
     nyc_d.setIsBaseLayer(true);
     nyc_d.setVisibility(false);
 
-    ortho_d = ortho.clone();
-    ortho_d.setIsBaseLayer(true);
-    ortho_d.setVisibility(false);
 
     map = new OpenLayers.Map(options);
 
@@ -56,7 +53,7 @@ Ext.onReady(function() {
 
     map.addLayer(mapnik_d);
     map.addLayer(nyc_d);
-    map.addLayer(ortho_d);
+ 
     map.addLayer(refLayer);
 
     map.events.register("zoomend", mapnik_d, function(){

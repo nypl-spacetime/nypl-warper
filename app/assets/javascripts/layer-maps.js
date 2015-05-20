@@ -11,7 +11,7 @@ function init(){
     projection: new OpenLayers.Projection("EPSG:900913"),
     displayProjection: new OpenLayers.Projection("EPSG:4326"),
     units: "m",
-    numZoomLevels:20,
+    numZoomLevels:22,
     maxResolution: 156543.0339,
     maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
       20037508, 20037508.34),
@@ -26,10 +26,11 @@ function init(){
   layerMap = new OpenLayers.Map("map",options);
   mapnik_lay1 = mapnik.clone();
 
-  nyc_lay1 = nyc.clone();
+
+  nyc_lay1 = ny_2014.clone();
   nyc_lay1.setIsBaseLayer(true);
 
-  layerMap.addLayers([mapnik_lay1]);
+  layerMap.addLayers([mapnik_lay1,nyc_lay1]);
 
   wmslayer =  new OpenLayers.Layer.WMS
   ( "Layer"+layer_id,
@@ -49,12 +50,18 @@ function init(){
   layerMap.zoomToExtent(bounds_merc);
   layerMap.updateSize();
   
-  layerMap.events.register("zoomend", mapnik_lay1, function(){
-      if (this.map.getZoom() > 18 && this.visibility == true){
-        this.map.setBaseLayer(nyc_lay1);
-        switcher.maximizeControl();
-      } 
-    });
+  layerMap.events.register("zoomend", mapnik_lay1, function () {
+    if (this.map.getZoom() > 18 && this.visibility == true) {
+      this.map.setBaseLayer(nyc_lay1);
+      switcher.maximizeControl();
+    }
+  });
+
+  layerMap.events.register("zoomend", nyc_lay1, function () {
+    if (this.map.getZoom() < 15 && this.visibility == true) {
+      this.map.setBaseLayer(mapnik_lay1);
+    }
+  });
   
   //set up the map index layer to help find individual maps
   var mapIndexLayerStyle = OpenLayers.Util.extend({strokeWidth: 3}, OpenLayers.Feature.Vector.style['default']);
