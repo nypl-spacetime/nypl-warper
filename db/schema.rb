@@ -11,17 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150516154110) do
+ActiveRecord::Schema.define(version: 20150521142529) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
-    t.string   "auditable_type",   limit: 255
+    t.string   "auditable_type"
     t.integer  "user_id"
-    t.string   "user_type",        limit: 255
-    t.string   "username",         limit: 255
-    t.string   "action",           limit: 255
+    t.string   "user_type"
+    t.string   "username"
+    t.string   "action"
     t.text     "audited_changes"
-    t.integer  "version",                      default: 0
+    t.integer  "version",          default: 0
     t.datetime "created_at"
     t.string   "comment"
     t.string   "remote_address"
@@ -34,10 +34,10 @@ ActiveRecord::Schema.define(version: 20150516154110) do
   add_index "audits", ["user_id", "user_type"], name: "user_index", using: :btree
 
   create_table "client_applications", force: :cascade do |t|
-    t.string   "name",         limit: 255
-    t.string   "url",          limit: 255
-    t.string   "support_url",  limit: 255
-    t.string   "callback_url", limit: 255
+    t.string   "name"
+    t.string   "url"
+    t.string   "support_url"
+    t.string   "callback_url"
     t.string   "key",          limit: 20
     t.string   "secret",       limit: 40
     t.integer  "user_id"
@@ -48,10 +48,10 @@ ActiveRecord::Schema.define(version: 20150516154110) do
   add_index "client_applications", ["key"], name: "index_client_applications_on_key", unique: true, using: :btree
 
   create_table "comments", force: :cascade do |t|
-    t.string   "title",            limit: 50,  default: ""
-    t.text     "comment",                      default: ""
+    t.string   "title",            limit: 50, default: ""
+    t.text     "comment",                     default: ""
     t.integer  "commentable_id"
-    t.string   "commentable_type", limit: 255
+    t.string   "commentable_type"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -65,37 +65,49 @@ ActiveRecord::Schema.define(version: 20150516154110) do
     t.integer  "map_id"
     t.float    "x"
     t.float    "y"
-    t.decimal  "lat",                    precision: 15, scale: 10
-    t.decimal  "lon",                    precision: 15, scale: 10
+    t.decimal  "lat",        precision: 15, scale: 10
+    t.decimal  "lon",        precision: 15, scale: 10
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "soft",                                             default: false
-    t.string   "name",       limit: 255
+    t.boolean  "soft",                                 default: false
+    t.string   "name"
   end
 
   add_index "gcps", ["soft"], name: "index_gcps_on_soft", using: :btree
 
+  create_table "imports", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "status"
+    t.integer  "import_type"
+    t.string   "uuid"
+    t.string   "since_date"
+    t.string   "until_date"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "finished_at"
+  end
+
   create_table "layer_properties", force: :cascade do |t|
     t.integer "layer_id"
-    t.string  "name",     limit: 255
+    t.string  "name"
     t.text    "value"
     t.integer "level"
   end
 
   create_table "layers", force: :cascade do |t|
-    t.string   "name",                 limit: 255
+    t.string   "name"
     t.text     "description"
-    t.string   "catnyp",               limit: 255
-    t.string   "uuid",                 limit: 255
-    t.string   "parent_uuid",          limit: 255
-    t.boolean  "is_visible",                                                default: true
+    t.string   "catnyp"
+    t.string   "uuid"
+    t.string   "parent_uuid"
+    t.boolean  "is_visible",                                                   default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "maps_count",                                                default: 0
-    t.integer  "rectified_maps_count",                                      default: 0
-    t.string   "bbox",                 limit: 255
-    t.string   "depicts_year",         limit: 4,                            default: ""
-    t.geometry "bbox_geom",            limit: {:srid=>0, :type=>"polygon"}
+    t.integer  "maps_count",                                                   default: 0
+    t.integer  "rectified_maps_count",                                         default: 0
+    t.string   "bbox"
+    t.string   "depicts_year",         limit: 4,                               default: ""
+    t.geometry "bbox_geom",            limit: {:srid=>4326, :type=>"polygon"}
   end
 
   add_index "layers", ["bbox_geom"], name: "index_layers_on_bbox_geom", using: :gist
@@ -106,30 +118,30 @@ ActiveRecord::Schema.define(version: 20150516154110) do
   end
 
   create_table "maps", force: :cascade do |t|
-    t.string   "title",           limit: 255
+    t.string   "title"
     t.text     "description"
-    t.string   "filename",        limit: 255
+    t.string   "filename"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "content_type",    limit: 255
-    t.string   "thumbnail",       limit: 255
+    t.string   "content_type"
+    t.string   "thumbnail"
     t.integer  "size"
     t.integer  "width"
     t.integer  "height"
     t.integer  "parent_id"
-    t.string   "nypl_digital_id", limit: 255
-    t.string   "catnyp",          limit: 255
-    t.string   "uuid",            limit: 255
-    t.string   "parent_uuid",     limit: 255
+    t.string   "nypl_digital_id"
+    t.string   "catnyp"
+    t.string   "uuid"
+    t.string   "parent_uuid"
     t.integer  "status"
     t.integer  "mask_status"
-    t.boolean  "map",                                                                            default: true
-    t.string   "bbox",            limit: 255
+    t.boolean  "map",                                                                               default: true
+    t.string   "bbox"
     t.integer  "map_type"
-    t.geometry "bbox_geom",       limit: {:srid=>0, :type=>"polygon"}
-    t.decimal  "rough_lat",                                            precision: 15, scale: 10
-    t.decimal  "rough_lon",                                            precision: 15, scale: 10
-    t.geometry "rough_centroid",  limit: {:srid=>0, :type=>"point"}
+    t.geometry "bbox_geom",       limit: {:srid=>4326, :type=>"polygon"}
+    t.decimal  "rough_lat",                                               precision: 15, scale: 10
+    t.decimal  "rough_lon",                                               precision: 15, scale: 10
+    t.geometry "rough_centroid",  limit: {:srid=>4326, :type=>"point"}
     t.integer  "rough_zoom"
     t.integer  "rough_state"
     t.datetime "rectified_at"
@@ -137,8 +149,8 @@ ActiveRecord::Schema.define(version: 20150516154110) do
     t.integer  "issue_year"
   end
 
-  add_index "maps", ["bbox_geom"], name: "index_mapscans_on_bbox_geom", using: :gist
-  add_index "maps", ["rough_centroid"], name: "index_mapscans_on_rough_centroid", using: :gist
+  add_index "maps", ["bbox_geom"], name: "index_maps_on_bbox_geom", using: :gist
+  add_index "maps", ["rough_centroid"], name: "index_maps_on_rough_centroid", using: :gist
 
   create_table "my_maps", force: :cascade do |t|
     t.integer  "map_id"
@@ -147,11 +159,11 @@ ActiveRecord::Schema.define(version: 20150516154110) do
     t.datetime "updated_at"
   end
 
-  add_index "my_maps", ["map_id", "user_id"], name: "index_my_maps_on_mapscan_id_and_user_id", unique: true, using: :btree
-  add_index "my_maps", ["map_id"], name: "index_my_maps_on_mapscan_id", using: :btree
+  add_index "my_maps", ["map_id", "user_id"], name: "index_my_maps_on_map_id_and_user_id", unique: true, using: :btree
+  add_index "my_maps", ["map_id"], name: "index_my_maps_on_map_id", using: :btree
 
   create_table "oauth_nonces", force: :cascade do |t|
-    t.string   "nonce",      limit: 255
+    t.string   "nonce"
     t.integer  "timestamp"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -165,7 +177,7 @@ ActiveRecord::Schema.define(version: 20150516154110) do
     t.integer  "client_application_id"
     t.string   "token",                 limit: 20
     t.string   "secret",                limit: 40
-    t.string   "callback_url",          limit: 255
+    t.string   "callback_url"
     t.string   "verifier",              limit: 20
     t.datetime "authorized_at"
     t.datetime "invalidated_at"
@@ -183,20 +195,20 @@ ActiveRecord::Schema.define(version: 20150516154110) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name"
     t.integer  "updated_by"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "login",                     limit: 255
-    t.string   "email",                     limit: 255
+    t.string   "login"
+    t.string   "email"
     t.string   "encrypted_password",        limit: 128, default: "",   null: false
     t.string   "password_salt",                         default: "",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "remember_token",            limit: 255
+    t.string   "remember_token"
     t.datetime "remember_token_expires_at"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
