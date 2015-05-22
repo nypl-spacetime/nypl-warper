@@ -14,4 +14,4 @@ secret
 *.*~
 db/maptileindex/*
 db/*.dump
-test/fixtures/vcr_cassettes/*.yml
+fixtures/vcr_cassettes/*.yml
