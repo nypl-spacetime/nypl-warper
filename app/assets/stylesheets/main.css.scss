@@ -418,10 +418,7 @@ color:#447a05;
 }
 
 
-h1 {
-	background: asset_url('header_logo.png') 0 50% scroll no-repeat; 
-  padding: 10px 1em; 
-}
+
 
 h1 a, h1 a:link, h1 a:visited {
 	color: #000;
@@ -1437,7 +1434,7 @@ div.olControlMousePosition
 
 	margin-left:20px;
 	line-height: 1;
-    padding: 8px 0 7px 60px !important;
+  padding: 8px 0 7px 0px !important;
 }
 
 .breadCrumb {
