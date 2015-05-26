@@ -8,7 +8,6 @@ class HomeController < ApplicationController
     @maps = Map.where(:status => 4).order(:updated_at =>  :desc).limit(3).includes(:gcps)
     
     @layers = Layer.all.order(:updated_at => :desc).limit(3).includes(:maps)
-    get_news_feeds
     
     if user_signed_in?
       @my_maps = current_user.maps.order(:updated_at => :desc).limit(3)
@@ -16,15 +15,6 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @maps }
-    end
-  end
-
-  private
-  
-  def get_news_feeds
-    cache("news_feeds", :expires_in => 1.day.from_now) do 
-      @feeds = RssParser.run("https://thinkwhere.wordpress.com/tag/mapwarper/feed/")
-      @feeds = @feeds[:items][0..1]
     end
   end
 
