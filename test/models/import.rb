@@ -9,7 +9,14 @@ end
 
 class ImportTest < ActiveSupport::TestCase
 
-
+  def teardown
+    Import.all.each do | import | 
+      if File.exist? "log/#{import.logfile}"
+        puts "deleting test log #{import.logfile}"
+        File.delete "log/#{import.logfile}"
+      end
+    end
+  end
 
   test "should not save import without a param" do
     import = Import.new

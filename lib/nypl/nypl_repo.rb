@@ -5,11 +5,20 @@ module NyplRepo
    require 'net/http'
    require 'json'
    
-    def initialize(token, debug=false)
+    def initialize(token, debug=false, logger=nil)
       @token = token
       @debug = debug
+      @logger = logger
     end
- 
+
+    def log(msg)
+      if @logger
+        @logger.info msg
+      else
+        puts msg
+      end
+    end
+
     #date format: YYYY-MM-DD
     #physical_location  i.e "Map%20Division"&field=physicalLocation
     def get_items_since(query, since_date, until_date)
@@ -21,9 +30,9 @@ module NyplRepo
       totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
       
       if totalPages >= 2
-        puts "total pages " + totalPages.to_s if @debug
+        log "total pages " + totalPages.to_s if @debug
         (2..totalPages).each do | page |
-          puts "page: "+page.to_s if @debug
+          log "page: "+page.to_s if @debug
           newurl = url + "&page=#{page}"
           json = self.get_json(newurl)
           newresult = json["nyplAPI"]["response"]["result"]
@@ -52,9 +61,9 @@ module NyplRepo
 
       totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
       if totalPages >= 2
-        puts "total pages " + totalPages.to_s if @debug
+        log "total pages " + totalPages.to_s if @debug
         (2..totalPages).each do | page |
-          puts "page: "+page.to_s if @debug
+          log "page: "+page.to_s if @debug
           newurl = url + "&page=#{page}"
           json = self.get_json(newurl)
           newcapture = json["nyplAPI"]["response"]["capture"]
@@ -142,9 +151,9 @@ module NyplRepo
       totalPages = json["nyplAPI"]["request"]["totalPages"].to_i
 
       if totalPages >= 2
-        puts "total pages " + totalPages.to_s if @debug
+        log "total pages " + totalPages.to_s if @debug
         (2..totalPages).each do | page |
-          puts "page: "+page.to_s if @debug
+          log "page: "+page.to_s if @debug
           newurl = url + "&page=#{page}"
           json = self.get_json(newurl)
           newcapture = json["nyplAPI"]["response"]["capture"]
@@ -177,7 +186,7 @@ module NyplRepo
  
 
     def get_json(url)
-      puts "Calling URL: " + url if @debug
+      log "Calling URL: " + url if @debug
 
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)

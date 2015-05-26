@@ -22,21 +22,39 @@ class Import < ActiveRecord::Base
       errors.add :base, 'You need to add a uuid for map and layer types'
     end
     if import_type == :latest && (since_date.nil? || until_date.nil?)
-
       errors.add :base, 'You need to add since_date and until_date for latest import type'
     end
   end
 
   def default_values
     self.status ||= :ready
-    self.import_type ||= :map
+    self.import_type ||= :map 
   end
   
-  def import!
+  def logfile
+    "import-#{import_type}-#{id}-#{Time.new.strftime('%Y-%m-%d-%H%M%S')}.log"
+  end
+
+  def import_logger
+    @import_logger ||= Logger.new("#{Rails.root}/log/#{log_filename}")
+  end
+
+  def prepare_run
+    self.update_attribute(:status, :running)
+    self.update_attribute(:log_filename, logfile)
+  end
+
+  def import!(async=false)
 
     if valid?
-      self.update_attribute(:status, :running)
-    
+      
+      unless async
+        prepare_run
+      end
+      
+      puts "Starting import. Logging in log/#{log_filename}" 
+      import_logger.info "Stared import #{Time.now}"
+
       if import_type == :map
         import_map
         finish_import
@@ -47,7 +65,7 @@ class Import < ActiveRecord::Base
         import_latest
         finish_import
       end
-
+      
       self.status
 
     end
@@ -57,15 +75,17 @@ class Import < ActiveRecord::Base
     self.status = :finished
     self.finished_at = Time.now
     self.save
+
+    import_logger.info "Finished import #{Time.now}"
   end
 
   def import_map
     if Map.exists?(:uuid => uuid)
       map = Map.find_by_uuid(uuid)
-      puts "Map #{map.id.to_s} with uuid #{uuid} exists."
+      import_logger.warn "Map #{map.id.to_s} with uuid #{uuid} exists."
     else
 
-      client = NyplRepo::Client.new(REPO_CONFIG[:token])
+      client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
       item = client.get_mods_item(uuid)
       
       map = get_map(item, uuid)
@@ -80,12 +100,12 @@ class Import < ActiveRecord::Base
 
 
   def import_layer
-    client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
+    client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
     map_items = client.get_capture_items(uuid)
     # the above call only gets the items with image AND highreslink (true, true)
     map_items.each do | map_item |
       if map_item["imageID"].nil? || map_item["highResLink"].nil?
-        puts "Missing ImageID or highResLink: "+ map_item["uuid"]
+        import_logger.warn "Missing ImageID or highResLink: "+ map_item["uuid"]
         next
       end
 
@@ -106,7 +126,7 @@ class Import < ActiveRecord::Base
   end
 
   def count_latest
-    client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
+    client = NyplRepo::Client.new(REPO_CONFIG[:token])
       
     count = client.count_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
       
@@ -115,11 +135,11 @@ class Import < ActiveRecord::Base
 
 
   def import_latest
-    client = NyplRepo::Client.new(REPO_CONFIG[:token], true)
+    client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
     map_items = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
-      
+    
     if map_items == [nil]
-      puts "No items found!"
+      import_logger.warn "No items found!"
     end
 
     map_items.each do | map_item |
@@ -150,9 +170,6 @@ class Import < ActiveRecord::Base
   end
 
 
-  def logfile
-    "import-#{import_type}-#{id}-#{Time.new.strftime('%Y-%m-%d-%H%M%S')}.log"
-  end
 
   private
   def deep_find(key, object=self, found=nil)
@@ -168,7 +185,7 @@ class Import < ActiveRecord::Base
   #creates a map object from an item
   #optionally pass in image_id if you know it
   def get_map(item, uuid, image_id=nil)
-    puts "get map"
+    import_logger.info "get map"
     title = item["titleInfo"].select{|a|a["usage"]=="primary"}.last["title"]["$"] if item["titleInfo"].class == Array
     title = item["titleInfo"]["title"]["$"] if item["titleInfo"].class == Hash
     extra = item["note"].detect{|a| a["type"]=="statement of responsibility"} if item["note"] && item["note"].class == Array
@@ -219,7 +236,7 @@ class Import < ActiveRecord::Base
     end
 
     #go into layers to find:
-    client = NyplRepo::Client.new(REPO_CONFIG[:token])
+    client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
       
     nypl_digital_id = image_id || client.get_image_id(parent_uuid, uuid)
 
@@ -261,7 +278,7 @@ class Import < ActiveRecord::Base
   end
 
   def update_layer_counts
-    puts "Updating layer counts...."
+    import_logger.info "Updating layer counts...."
     Layer.all.each do | layer |
       layer.update_counts
     end
@@ -282,14 +299,15 @@ class Import < ActiveRecord::Base
             existing_map.uuid = map.uuid
             existing_map.parent_uuid = map.parent_uuid
             existing_map.save
-            puts "Updated existing map: "+ existing_map.inspect
+            import_logger.info "Updated existing map: "+ existing_map.inspect
+
           end
           map = existing_map
 
         else #map  is really new now
           
           map.save
-          puts "Saved new Map: " + map.inspect
+          import_logger.info "Saved new Map: " + map.inspect
         
         end #already exists?
       end #new record
@@ -309,7 +327,7 @@ class Import < ActiveRecord::Base
           #the layer does not exist, create is as  new Layer
           if layer.new_record?
             layer.save
-            puts "Saved new Layer: "+ layer.inspect
+            import_logger.info "Saved new Layer: "+ layer.inspect
           end
           assign_layers << layer
         end

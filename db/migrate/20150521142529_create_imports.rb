@@ -7,6 +7,7 @@ class CreateImports < ActiveRecord::Migration
       t.string   :uuid
       t.string   :since_date
       t.string   :until_date
+      t.string   :log_filename
       t.timestamps null: false
       t.datetime :finished_at
     end

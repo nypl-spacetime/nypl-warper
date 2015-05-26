@@ -49,6 +49,30 @@ table {
 
 /* end reset */
 
+textarea.import_log { 
+  width:auto;
+  height: auto; 
+}
+
+input.date-field{
+  width:100px;
+}
+
+input.uuid-field{
+  width:400px;
+}
+div#import_count{
+ font-weight: bold;
+ font-size: larger;
+ text-decoration: underline;
+}
+
+p.import-blurb{
+  padding-left:2em;
+  padding-right:2em;
+  padding-bottom:1em;
+}
+
 tr.import-maps textarea{
     margin-left:4.5em;
 }
@@ -77,9 +101,7 @@ tr.import-maps label.import-delete-map{
     text-align: center;
     width: auto;
 }
-form.new_import input {
-    width:35em;
-}
+
 
 div.comment {
   padding-bottom: 5px;

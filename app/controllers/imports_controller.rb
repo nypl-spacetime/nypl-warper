@@ -14,19 +14,17 @@ class ImportsController < ApplicationController
 
   def new
     @import = Import.new
-    @import.uploader_user_id = current_user.id
   end
 
   def create
     @import = Import.new(import_params)
     @import.user = current_user
-    @import.state = "ready"
     if @import.save
       flash[:notice] = "New Import Created!"
       redirect_to import_url(@import)
     else
       flash[:error] = "Something went wrong creating the import"
-      render :action => 'new'
+      render :new
     end
   end
 
@@ -35,10 +33,15 @@ class ImportsController < ApplicationController
   end
 
   def show
+    @logtext = @import.status == :ready ? "" : File.open("log/#{@import.log_filename}").read 
+     @count = nil
+    if @import.status == :ready && @import.import_type == :latest
+      @count = @import.count_latest()
+    end
   end
 
   def destroy
-    if @import.destroy
+    if  @import.destroy
       flash[:notice] = "Import deleted!"
     else
       flash[:notice] = "Import couldn't be deleted."
@@ -57,25 +60,21 @@ class ImportsController < ApplicationController
   end
 
   def start
-    Spawnling.new do
-      @import.start_importing
+    
+    if @import.import_type == :latest
+      @import.prepare_run
+      Spawnling.new do
+        @import.import!(true)
+      end
+    else
+      @import.import!
     end
+    
+    redirect_to @import
   end
 
   def status
     render :text => @import.status
-  end
-
-  def maps
-    @upload_user = User.find(@import.uploader_user_id)
-    if @import.layer_id == -99
-      @layer = @import.maps.first.layers.first
-    elsif @import.layer_id != nil
-      @layer = Layer.find(@import.layer_id)
-    end
-    
-
-    #show finished import, or alter show?
   end
 
   private
@@ -85,8 +84,8 @@ class ImportsController < ApplicationController
   end
 
   def check_imported
-    if @import.state == "imported"
-      flash[:notice] = "Sorry, can't be done, this import has already been imported."
+    if @import.status != :ready
+      flash[:notice] = "Sorry, this import is either running or finished."
       redirect_to imports_path
     end
   end
@@ -102,8 +101,7 @@ class ImportsController < ApplicationController
   end
   
   def import_params
-      params.require(:import).permit(:name,:path, :map_title_suffix, :map_description, :map_publisher, :map_author, :layer_id, :layer_title,  :uploader_user_id, 
-        :maps_attributes => [:title, :description, :publisher, :authors, :source_uri, :id, "_destroy"] )
+    params.require(:import).permit(:uuid, :import_type, :since_date, :until_date)
   end
 
 end
