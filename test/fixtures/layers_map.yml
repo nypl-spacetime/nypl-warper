@@ -1,0 +1,8 @@
+map1_layer1:
+  layer_id: 1
+  map_id:   1
+
+map1_layer2:
+  layer_id: 2
+  map_id:   1
+  

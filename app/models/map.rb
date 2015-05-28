@@ -14,6 +14,8 @@ class Map < ActiveRecord::Base
   has_many :my_maps, :dependent => :destroy
   has_many :users, :through => :my_maps
   #belongs_to :owner, :class_name => "User"
+  belongs_to :parent, :class_name => "Map", :foreign_key => "parent_id"
+  has_many :inset_maps, :class_name => "Map",:foreign_key => "parent_id"
  
   
   validates_presence_of :title
@@ -709,6 +711,25 @@ class Map < ActiveRecord::Base
     doc.write(gmlfile)
     gmlfile.close
     message = "Map clipping mask saved (gml)"
+  end
+  
+  
+  def create_inset
+    inset_map = nil
+    if [:available, :warping, :warped, :published].include?(self.status)
+      inset_map = self.dup
+      unique_id = "inset-#{self.id}-#{Time.new.strftime('%m-%d-%H%M%S-%L')}"
+      inset_map.filename = File.join(maps_dir, unique_id) + ".tif"
+      FileUtils.copy(self.filename, inset_map.filename)
+      
+      inset_map.layers = self.layers
+      
+      inset_map.uuid = unique_id
+      
+      inset_map.parent_id = self.id
+    end
+    
+    inset_map
   end
   
  

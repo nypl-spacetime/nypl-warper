@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   
   resources :maps,:except => [:edit, :update, :destroy, :new, :create]  do
     member do
+      get 'inset_maps'
+      post 'create_inset'
       post 'map_type'
       get 'export'
       get 'warp'

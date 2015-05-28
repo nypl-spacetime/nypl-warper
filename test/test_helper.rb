@@ -8,3 +8,11 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 end
+
+
+module FixtureFileHelpers
+  def map_filename(path)
+    File.join(Rails.root.join('test/data', path))
+  end
+end
+ActiveRecord::FixtureSet.context_class.send :include, FixtureFileHelpers

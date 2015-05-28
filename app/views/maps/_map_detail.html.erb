@@ -32,7 +32,13 @@
       <%end-%>
     </span>
 
-
+    <div class="inset_info">
+      <% if map.parent || map.inset_maps.nil? %>
+        This is an inset map. <%= link_to "View original map", map.parent %>
+      <% elsif !map.inset_maps.empty?  %>
+        This map has <%= link_to pluralize(map.inset_maps.size, "inset map"), inset_maps_map_path %>.
+      <% end %>
+    </div>
     <span class="map_links">
       <% if user_signed_in? %>
         <% current_user_maps = current_user.maps %>
@@ -41,11 +47,14 @@
             destroy_my_map_path(:user_id => current_user, :map_id => map), :method => :post, :data => {:confirm => "really remove this map from your list?"} ) -%>  |
         <% else %>
           <%= link_to('Save to My Maps',
-            add_my_map_path(:user_id => current_user, :map_id => map), :method => :post) -%>  |
+            add_my_map_path(:user_id => current_user, :map_id => map), :method => :post) -%> | 
         <% end -%>
       <% end -%>
 
-      <%= link_to 'View on Digital Collections', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
+      <% if map.parent && map.inset_maps.empty? %>
+      <%else %>
+        <%= link_to 'View on Digital Collections', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
+      <% end %>
 
       <% if !admin_authorized? && map.published? %>
         | <strong>Published [<a href="#" title="This map has been published by an admin and no further editing is possible.">?</a>]</strong>
@@ -56,6 +65,13 @@
         <% elsif map.published? %>
           | <%= link_to("UnPublish",publish_map_path(:id => map, :to => "unpublish"), :data => {:confirm => "Really un publish this map? This will mean that the map can be edited now"} ) -%>
         <% end %>
+  
+        <% if [:available, :warping, :warped, :published].include?(map.status) %>
+          | <%= link_to("Create Inset", create_inset_map_path(:id => map), :method => :post, :data => {:confirm => "Really create a new inset map?"}) %>
+    
+        <% end %>
+  
+  
       <% end -%>
 
       <%if map.warped_or_published? %> |

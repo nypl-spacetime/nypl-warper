@@ -1,0 +1,13 @@
+layer1:
+  id: 1
+  name: Layer One
+  description: First layer
+  catnyp: 
+  uuid: 789
+
+layer2:
+  id: 2
+  name: Layer Two
+  description: Second layer
+  catnyp: 
+  uuid: 213

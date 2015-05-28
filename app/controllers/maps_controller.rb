@@ -4,12 +4,12 @@ class MapsController < ApplicationController
   
   before_filter :store_location, :only => [:warp, :align, :clip, :export, :edit, :comments ]
   
-  before_filter :authenticate_user!, :only => [:new, :create, :edit, :update, :destroy, :delete, :warp, :rectify, :clip, :align, :warp_align, :mask_map, :delete_mask, :save_mask, :save_mask_and_warp, :set_rough_state, :set_rough_centroid, :publish, :trace, :id, :map_type]
+  before_filter :authenticate_user!, :only => [:new, :create, :edit, :update, :destroy, :delete, :warp, :rectify, :clip, :align, :warp_align, :mask_map, :delete_mask, :save_mask, :save_mask_and_warp, :set_rough_state, :set_rough_centroid, :publish, :trace, :id, :map_type, :create_inset]
  
-  before_filter :check_administrator_role, :only => [:publish, :map_type]
+  before_filter :check_administrator_role, :only => [:publish, :map_type, :create_inset]
  
   before_filter :find_map_if_available,
-    :except => [:show, :index, :wms, :tile, :mapserver_wms, :warp_aligned, :status, :new, :create, :update, :edit, :tag, :geosearch, :map_type]
+    :except => [:show, :index, :wms, :tile, :mapserver_wms, :warp_aligned, :status, :new, :create, :update, :edit, :tag, :geosearch, :map_type, :create_inset]
 
   before_filter :check_link_back, :only => [:show, :warp, :clip, :align, :warped, :export, :activity]
   #before_filter :check_if_map_is_editable, :only => [:edit, :update]
@@ -386,13 +386,47 @@ class MapsController < ApplicationController
   def idland
     render "idland", :layout => false
   end
+
+  #view the inset maps from a given map
+  def inset_maps
+    @html_title = "Inset Maps for "+ @map.id.to_s
+    @inset_maps = @map.inset_maps
+    if @inset_maps.empty? 
+      flash[:notice] = "No inset maps found for this map"
+      redirect_to @map and return
+    end
+    
+  end
   
   ###############
   #
   # Other / API actions 
   #
   ###############
-  
+ 
+  # post create inset, admin only
+  def create_inset
+    
+    @map = Map.find(params[:id])
+    unless [:available, :warping, :warped, :published].include?(@map.status)
+      
+      flash[:error] = "Sorry, this map is not ready to create an inset map from. It's status is "+ @map.status.to_s
+      
+      redirect_to map_path(@map) and return 
+    else
+      
+      @inset_map = @map.create_inset
+      if @inset_map && @inset_map.save
+        flash[:notice] = "Successfully created inset map!"
+        redirect_to map_path(@inset_map) and return
+      else
+        flash[:error] = "Sorry, there was a problem creating this inset map"
+      end
+      
+    end
+    
+  end
+
   def thumb
     map = Map.find(params[:id])
     thumb = "http://images.nypl.org/?t=t&id=#{map.nypl_digital_id}"

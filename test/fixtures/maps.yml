@@ -1,15 +1,31 @@
 map1:
   id: 1
-  title: test title
+  title: warped map
   description: test description
-  filename: "data/map.png"
+  filename: <%= map_filename "map.png" %> 
   width: 150
   height: 105
   nypl_digital_id: 123
-  catnyp: 123
-  uuid: 123
-  parent_uuid: 123
+  catnyp: 456
+  uuid: 789
+  parent_uuid: 01112
   status: 4
+  mask_status: 0
+  map: true
+  map_type: 1
+  
+unloaded:
+  id: 2
+  title: unwarped and unretrieved map
+  description: Second description
+  filename: 
+  width: 
+  height:
+  nypl_digital_id: 2222
+  catnyp: 23223
+  uuid: 23434
+  parent_uuid: 12321
+  status: 0
   mask_status: 0
   map: true
   map_type: 1
