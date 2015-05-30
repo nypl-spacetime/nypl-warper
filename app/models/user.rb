@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
     :recoverable, :rememberable, :trackable, :validatable, :encryptable, 
-    :omniauthable, :omniauth_providers => [ :osm, :mediawiki, :github]
+    :omniauthable, :omniauth_providers => [ :osm,:twitter, :github,  :google_oauth2, :facebook]
   has_many :permissions
   has_many :roles, :through => :permissions
   
@@ -132,6 +132,41 @@ class User < ActiveRecord::Base
     user
   end
   
+  def self.find_for_google_oauth(auth, signed_in_resource=nil)
+    user = User.where(:provider => auth.provider, :uid => auth.uid.to_s).first
+    
+    unless user
+      user = User.new(
+        login: auth.info.name,
+        provider: auth.provider,
+        uid: auth.uid,
+        email: "warper_g_"+auth.info["email"], # make sure this is unique
+        password: Devise.friendly_token[0,20]
+      )
+      user.skip_confirmation!
+      user.save!
+    end
+    
+    user
+  end
+  
+  def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
+    user = User.where(:provider => auth.provider, :uid => auth.uid.to_s).first
+    logger.debug auth.info.inspect 
+    unless user
+      user = User.new(
+        login: auth.info.name,
+        provider: auth.provider,
+        uid: auth.uid,
+        email: "warper_fb_"+auth.info["email"], # make sure this is unique
+        password: Devise.friendly_token[0,20]
+      )
+      user.skip_confirmation!
+      user.save!
+    end
+    
+    user
+  end
 
   #called after the user has been destroyed
   #delete all user maps

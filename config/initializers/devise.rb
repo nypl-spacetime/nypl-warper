@@ -239,6 +239,10 @@ Devise.setup do |config|
   config.omniauth :mediawiki,  APP_CONFIG["omniauth_mediawiki_key"], APP_CONFIG["omniauth_mediawiki_secret"], {:client_options => {:site => APP_CONFIG["omniauth_mediawiki_site"] }}
   
   config.omniauth :github, APP_CONFIG["omniauth_github_key"], APP_CONFIG["omniauth_github_secret"]
+  
+  config.omniauth :google_oauth2, APP_CONFIG["omniauth_google_key"], APP_CONFIG["omniauth_google_secret"]
+  
+  config.omniauth :facebook, APP_CONFIG["omniauth_facebook_key"], APP_CONFIG["omniauth_facebook_secret"]
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

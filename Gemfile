@@ -40,6 +40,8 @@ gem 'omniauth-twitter'
 gem 'omniauth-osm'
 gem 'omniauth-github'
 gem "omniauth-mediawiki"
+gem "omniauth-google-oauth2"
+gem "omniauth-facebook"
 
 gem 'pg'
 #gem 'activerecord-postgis-adapter'

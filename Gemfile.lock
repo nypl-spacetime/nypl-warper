@@ -151,8 +151,13 @@ GEM
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
+    omniauth-facebook (2.0.1)
+      omniauth-oauth2 (~> 1.2)
     omniauth-github (1.1.2)
       omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.1)
+    omniauth-google-oauth2 (0.2.6)
+      omniauth (> 1.0)
       omniauth-oauth2 (~> 1.1)
     omniauth-mediawiki (0.0.2)
       jwt (~> 1.0)
@@ -297,7 +302,9 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jquery-ui-rails (= 3.0.1)
+  omniauth-facebook
   omniauth-github
+  omniauth-google-oauth2
   omniauth-mediawiki
   omniauth-osm
   omniauth-twitter

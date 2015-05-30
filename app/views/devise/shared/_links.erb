@@ -33,8 +33,15 @@
   <span class="github">
     <%= link_to "#{image_tag("github_logo.png", width: '25', height: '25')} GitHub".html_safe, omniauth_authorize_path(resource_name, "github"), :class=>"github" %>
   </span>
-  <span class="commons">
-    <%= link_to "#{image_tag("commons_logo.png", width: '25', height: '25')} Wikimedia Commons".html_safe, omniauth_authorize_path(resource_name, "mediawiki"), :class=>"osm" %>
+  <span class="twitter">
+    <%= link_to "#{image_tag("twitter_logo.png", width: '25', height: '25')} Twitter".html_safe, omniauth_authorize_path(resource_name, "twitter"), :class=>"twitter" %>
+  </span>
+  <span class="google">
+    <%= link_to "#{image_tag("google_oauth2_logo.png",width: '25', height: '25')} Google".html_safe, omniauth_authorize_path(resource_name, "google_oauth2"), :class => "google" %>
+  </span>
+
+  <span class="facebook">
+    <%= link_to "#{image_tag("facebook_logo.png",width: '25', height: '25')} Facebook".html_safe, omniauth_authorize_path(resource_name, "facebook"), :class => "facebook" %>
   </span>
 </div>
 <% end -%>
