@@ -51,5 +51,8 @@ class MapTest < ActiveSupport::TestCase
     assert_equal @inset_map, @map.inset_maps[0]
   end
   
+  test "cannot create inset map of an inset map" do
+    assert_nil @inset_map.create_inset
+  end
   
 end

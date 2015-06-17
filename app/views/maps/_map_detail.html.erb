@@ -66,7 +66,7 @@
           | <%= link_to("UnPublish",publish_map_path(:id => map, :to => "unpublish"), :data => {:confirm => "Really un publish this map? This will mean that the map can be edited now"} ) -%>
         <% end %>
   
-        <% if [:available, :warping, :warped, :published].include?(map.status) %>
+        <% if [:available, :warping, :warped, :published].include?(map.status) && map.parent.nil? %>
           | <%= link_to("Create Inset", create_inset_map_path(:id => map), :method => :post, :data => {:confirm => "Really create a new inset map?"}) %>
     
         <% end %>

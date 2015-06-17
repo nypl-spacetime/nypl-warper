@@ -716,7 +716,7 @@ class Map < ActiveRecord::Base
   
   def create_inset
     inset_map = nil
-    if [:available, :warping, :warped, :published].include?(self.status)
+    if [:available, :warping, :warped, :published].include?(self.status) && self.parent.nil?
       inset_map = self.dup
       unique_id = "inset-#{self.id}-#{Time.new.strftime('%m-%d-%H%M%S-%L')}"
       inset_map.filename = File.join(maps_dir, unique_id) + ".tif"
