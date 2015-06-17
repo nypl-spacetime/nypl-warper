@@ -5,8 +5,10 @@
   </td>
   <td>
     <div class="maplist_title">
+      <% if map.parent && map.inset_maps.empty? %>
+        Inset of: 
+      <% end %>
       <%=link_to(strip_brackets(h(map.title)), map) %>
-
     </div>
 
     <div class="map_description"><span><%=strip_brackets(h(map.description)) -%>
@@ -55,7 +57,11 @@
     </div>
     <div class="map_links">
         Bibiliographic records:
-        <%= link_to 'Digital Collections', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
+        <% if map.parent && map.inset_maps.empty? %>
+          <%= link_to 'Digital Collections', "http://digitalcollections.nypl.org/items/#{map.parent.mods_uuid}" -%>
+        <% else %>
+          <%= link_to 'Digital Collections', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
+        <% end %>        
     </div>
 
   </td>

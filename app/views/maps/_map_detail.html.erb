@@ -7,6 +7,9 @@
   </td>
   <td class="<%= cl %>">
     <span class="maplist_title">
+      <% if map.parent && map.inset_maps.empty? %>
+        Inset of: 
+      <% end %>
       <%=strip_brackets(h(map.title)) %>
     </span>
 
@@ -52,6 +55,7 @@
       <% end -%>
 
       <% if map.parent && map.inset_maps.empty? %>
+        <%= link_to 'View on Digital Collections', "http://digitalcollections.nypl.org/items/#{map.parent.mods_uuid}" -%>
       <%else %>
         <%= link_to 'View on Digital Collections', "http://digitalcollections.nypl.org/items/#{map.mods_uuid}" -%>
       <% end %>
