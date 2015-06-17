@@ -1,8 +1,7 @@
 <%= form_tag url_for(:controller => "maps"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
   Search  
   <select id="field" name="field">
-    <%= options_for_select([ ["Title", "title"], 
-                           ["Description", "description"], 
+    <%= options_for_select([ ["Text", "text"], 
                            ["Image Id", "nypl_digital_id"],
                            ["Collections Id", "uuid"]], @field)-%>
   </select>

@@ -99,5 +99,33 @@ class MapsControllerTest < ActionController::TestCase
     assert_template :inset_maps
   end
 
+  
+  test "search for map via title" do
+    get :index, :field => "title", :query => "unwarped"
+    index_maps = assigns(:maps)
+    assert index_maps.include? maps(:unloaded)
+  end
+  
+  test "search for map via description" do
+    get :index, :field => "description", :query => "second"
+    index_maps = assigns(:maps)
+    assert index_maps.include? maps(:unloaded)
+    
+    get :index, :field => "description", :query => "unwarped"
+    index_maps = assigns(:maps)
+    assert_equal false, index_maps.include?(maps(:unloaded))
+    
+  end
+  
+  test "search for map via text" do
+    get :index, :field => "text", :query => "second"
+    index_maps = assigns(:maps)
+    assert index_maps.include? maps(:unloaded)
+    
+    get :index, :field => "text", :query => "unwarped"
+    index_maps = assigns(:maps)
+    assert index_maps.include? maps(:unloaded)
+  end
+
 
 end

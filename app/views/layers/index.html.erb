@@ -11,8 +11,7 @@
     <%= form_tag url_for(:controller => "layers"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
       Search
       <select id="field" name="field">
-      <%= options_for_select([ ["Title", "name"], 
-                             ["Description", "description"],
+      <%= options_for_select([ ["Text", "text"], 
                              ["Collections Id", "uuid"]], @field)-%>
       </select>
       for

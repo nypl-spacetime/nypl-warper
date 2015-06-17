@@ -40,14 +40,19 @@ class MapsController < ApplicationController
     
     @query = params[:query]
     
-    @field = %w(title description status catnyp nypl_digital_id uuid).detect{|f| f == (params[:field])}
+    @field = %w(text title description status catnyp nypl_digital_id uuid).detect{|f| f == (params[:field])}
     
     
-    @field = "title" if @field.nil?
+    @field = "text" if @field.nil?
+    where_col = @field
+    
+    if  @field == "text"
+      where_col  = "(title || ' ' || description)"
+    end
     
     #we'll use POSIX regular expression for searches    ~*'( |^)robinson([^A-z]|$)' and to strip out brakets etc  ~*'(:punct:|^|)plate 6([^A-z]|$)';
     if @query && @query.strip.length > 0 && @field
-      conditions = ["#{@field}  ~* ?", '(:punct:|^|)'+@query+'([^A-z]|$)']
+      conditions = ["#{where_col}  ~* ?", '(:punct:|^|)'+@query+'([^A-z]|$)']
     else
       conditions = nil
     end
