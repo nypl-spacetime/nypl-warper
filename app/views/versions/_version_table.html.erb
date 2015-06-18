@@ -1,0 +1,18 @@
+<table class="activity-table">
+  <tr>
+    <th>Time</th>
+    <th>User</th>
+
+    <% if admin_authorized? %>
+      <th>Ip Address</th>
+      <th>User Agent</th>
+    <% end %>
+      
+    <th>Object</th>
+    <th>Activity Summary</th>
+    <th>Version</th>
+
+    <th></th>
+  </tr>
+  <%= render :partial => "version", :collection => @versions unless @versions.nil? %>
+</table>

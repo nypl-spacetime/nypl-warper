@@ -28,7 +28,8 @@ class Map < ActiveRecord::Base
   acts_as_enum :status, [:unloaded, :loading, :available, :warping, :warped, :published]
   acts_as_enum :mask_status, [:unmasked, :masking, :masked]
   acts_as_enum :rough_state, [:step_1, :step_2, :step_3, :step_4]
-  audited :allow_mass_assignment => true
+
+  has_paper_trail :ignore => [:bbox, :bbox_geom]
   
   scope :warped,    -> { where({ :status => [Map.status(:warped), Map.status(:published)], :map_type => Map.map_type(:is_map)  }) }
   scope :published, -> { where({:status => Map.status(:published), :map_type => Map.map_type(:is_map)})}
@@ -112,14 +113,18 @@ class Map < ActiveRecord::Base
   #method to publish the map
   #sets status to published
   def publish
+    self.paper_trail_event = 'published'
     self.status = :published
     self.save
+    self.paper_trail_event = nil
   end
   
   #unpublishes a map, sets it's status to warped
   def unpublish
+    self.paper_trail_event = 'unpublished'
     self.status = :warped
     self.save
+    self.paper_trail_event = nil
   end
   
   #############################################
@@ -411,7 +416,9 @@ class Map < ActiveRecord::Base
          self.filename     = ''
          self.status       = :loading
          logger.debug "saving if not available"
+         self.paper_trail_event = 'loading'
          self.save!
+         self.paper_trail_event = nil
       end
       
       #to work with new nypl repo / digital archive
@@ -419,7 +426,7 @@ class Map < ActiveRecord::Base
       uuid = self.uuid
 
       repo_client = NyplRepo::Client.new(REPO_CONFIG[:token])
-      logger.debug repo_client.inspect
+      
       url = repo_client.get_highreslink(bibl_id, self.nypl_digital_id)
       if url.nil?
         url = repo_client.get_highreslink(bibl_id, self.nypl_digital_id.upcase)
@@ -455,14 +462,15 @@ class Map < ActiveRecord::Base
       end
       #logger.debug [self.height, self.width, self.filename, self.status]
       logger.debug "now saving after"
+      self.paper_trail_event = 'load_finished'
       self.save!
-      
+      self.paper_trail_event = nil
       return status.exitstatus == 0 ? true : false
    end
   
   def mask!
     require 'fileutils'
-    
+    self.paper_trail_event = 'masking'
     self.mask_status = :masking
     save!
     format = self.mask_file_format
@@ -501,8 +509,11 @@ class Map < ActiveRecord::Base
       r_out = "Success! Map was cropped!"
     end
     
+    self.paper_trail_event = 'masked'
     self.mask_status = :masked
     save!
+    self.paper_trail_event = nil
+    
     r_out
   end
   
@@ -516,8 +527,10 @@ class Map < ActiveRecord::Base
   #Main warp method
   def warp!(resample_option, transform_option, use_mask="false")
     prior_status = self.status
-    #self.status = :warping
+    self.status = :warping
+    self.paper_trail_event = 'warping'
     save!
+    self.paper_trail_event = nil
     
     gcp_array = self.gcps.hard
     
@@ -616,7 +629,10 @@ class Map < ActiveRecord::Base
     else
       self.status = :available
     end
+    self.paper_trail_event = 'warped'
     save!
+    self.paper_trail_event = nil
+    
     update_layers
     update_bbox
     output = "Step 1: Translate: "+ trans_output + "<br />Step 2: Warp: " + warp_output + \
@@ -661,7 +677,10 @@ class Map < ActiveRecord::Base
     end
     
     self.mask_status = :unmasked
+    self.paper_trail_event = 'mask_deleted'
     save!
+    self.paper_trail_event = nil
+    
     "mask deleted"
   end
   

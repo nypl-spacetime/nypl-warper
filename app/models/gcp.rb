@@ -1,6 +1,7 @@
 class Gcp < ActiveRecord::Base
   belongs_to :map
-  audited :allow_mass_assignment => true
+ 
+  has_paper_trail
   
   validates_numericality_of :x, :y, :lat, :lon
   validates_presence_of :x, :y, :lat, :lon, :map_id
@@ -10,19 +11,25 @@ class Gcp < ActiveRecord::Base
   
   attr_accessor :error
   
-  after_save :update_map_timestamp
-  after_destroy :update_map_timestamp
+  after_update  {|gcp| gcp.map.paper_trail_event = 'gcp_update'  }
+  after_create  {|gcp| gcp.map.paper_trail_event = 'gcp_create'  }
+  
+  after_save :touch_map
+  
+  after_destroy {|gcp| gcp.map.paper_trail_event = 'gcp_delete'  }
+  after_destroy :touch_map
+  
   
   def gdal_string
 	
     gdal_string = " -gcp " + x.to_s + ", " + y.to_s + ", " + lon.to_s + ", " + lat.to_s
 
   end
-
   
-  private
-  def update_map_timestamp
-    self.map.update_gcp_touched_at
+ private
+  def touch_map
+    self.map.touch_with_version(:gcp_touched_at)
   end
   
+
 end

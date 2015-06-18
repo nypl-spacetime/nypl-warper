@@ -1,0 +1,38 @@
+<%= link_to "&lt; Back".html_safe, :back -%>
+
+<h2>Activity Detail</h2>
+<table class="activity-table">
+  <tr>
+    <th>Time</th>
+    <th>User</th>
+    <% if admin_authorized? %>
+      <th>Ip Address</th>
+      <th>User Agent</th>
+    <% end %>
+    <th>Object</th>
+    <th>Activity Summary</th>
+    <th>Version</th>
+
+    <%= render :partial => 'version', :object => @version, :locals => {:page => 'detail'} %>
+    <th></th>
+  </tr>
+</table>
+
+<h3>Details</h3>
+<table  class="activity-details">
+  <thead>
+  <th>Item&nbsp;</th>
+  <th>Value</th>
+</thead>
+<% @version.changeset.each do |key, value| -%>
+  <tr>
+    <td><%= key-%> </td>
+    <% if value.class == Array %>
+      <td><%="#{value[0] || "nil"} -> #{value[1]}" %></td>
+    <% else %>
+      <td><%= value -%> </td>
+    <% end %>
+  </tr>
+<% end if @version.changeset -%>
+
+</table>

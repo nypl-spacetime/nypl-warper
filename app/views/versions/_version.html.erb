@@ -1,0 +1,53 @@
+<tr>
+  <% cl = cycle('table0', 'table1') %>
+
+  <td class="<%= cl %>">
+    <%= version.created_at.to_s(:uk) %>
+
+  </td>
+
+  <% if version.item_type.downcase == "map"
+    typename = "Map"
+    controller_name = "map"
+    elsif version.item_type.downcase == "gcp"
+    typename = "Control Point"
+    controller_name = "gcp"
+    end %>
+
+  <td class="<%= cl %>">
+    <% user = User.find_by_id(version.whodunnit.to_i)
+    if user -%>
+      <%= link_to user.login, :controller=>"users",:action=>"show", :id=>user.id-%>
+    <% else -%>
+      &mdash;
+    <%end%>
+  </td>
+  
+  <% if admin_authorized? %>
+    <td class="<%= cl %>">
+      <%= version.ip %>
+    </td>
+    <td class="<%= cl %> smaller">
+       <%= version.user_agent %>
+    </td>
+  <% end %>
+    
+  <td class="<%= cl %>">
+    <%= link_to typename + ' ' + version.item_id.to_s, activity_details_path(version.item_id) -%>
+  </td>
+
+  <td class="<%= cl %>">
+    <%= formatted_action(version.event) %>
+  </td>
+
+  <td class="<%= cl %>">
+    <%=  version.index %>
+  </td>
+
+  <td class="<%=cl %>">
+
+    <%-unless defined?(page) && page =~ /detail/ -%>
+      <%= link_to "Further details", activity_details_url(:id => version) %>
+    <%-end-%>
+  </td>
+</tr>

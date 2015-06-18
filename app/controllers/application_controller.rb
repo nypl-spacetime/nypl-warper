@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
 
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
+  def info_for_paper_trail
+    { :ip => request.remote_ip, :user_agent => request.user_agent }
+  end
+    
   def check_super_user_role
     check_role('super user')
   end
