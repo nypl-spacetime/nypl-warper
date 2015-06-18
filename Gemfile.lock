@@ -1,14 +1,3 @@
-GIT
-  remote: git://github.com/timwaters/audited.git
-  revision: 5d945c1b3fa5bf99a2a9df512d1a58a90c67e5cd
-  branch: rails4
-  specs:
-    audited (3.0.0)
-      rails-observers (~> 0.1.2)
-    audited-activerecord (3.0.0)
-      activerecord (~> 4.0)
-      audited (= 3.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -207,8 +196,6 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
-    rails-observers (0.1.2)
-      activemodel (~> 4.0)
     railties (4.2.1)
       actionpack (= 4.2.1)
       activesupport (= 4.2.1)
@@ -294,7 +281,6 @@ DEPENDENCIES
   activerecord-postgis-adapter (= 3.0.0.beta2)
   acts-as-taggable-on (~> 3.3.0)
   acts_as_commentable
-  audited-activerecord!
   capistrano (~> 3.2.1)
   capistrano-bundler
   capistrano-rails

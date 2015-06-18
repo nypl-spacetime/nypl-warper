@@ -53,8 +53,6 @@ gem 'acts_as_commentable'
 gem 'will_paginate', '~> 3.0'
 gem 'spawnling', '~>2.1'
 
-#Rails 4 support for the audited (acts_as_audited gem) is not quite rails4 worthy - see #https://github.com/collectiveidea/audited/pull/166
-gem 'audited-activerecord', github: 'timwaters/audited', branch: 'rails4'
 
 gem 'paper_trail', '~>4.0.0.rc1'
 
