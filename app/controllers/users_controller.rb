@@ -16,23 +16,16 @@ class UsersController < ApplicationController
 
     @html_title = "Users Stats"
 
-    the_sql = "select user_id, username, COUNT(user_id) as total_count,
-      COUNT(case when auditable_type='Gcp' then 1 end) as gcp_count,
-
-      COUNT(case when auditable_type='Map' or auditable_type='Mapscan' then 1 end) as map_count,
-
-      COUNT(case when action='update' and auditable_type='Gcp' then 1 end) as gcp_update_count,
-
-      COUNT(case when action='create' and auditable_type='Gcp' then 1 end) as gcp_create_count,
-
-      COUNT(case when action='destroy' and auditable_type='Gcp' then 1 end) as gcp_destroy_count
-
-      from audits group by user_id, username ORDER BY #{sort_clause}"
-
-
-    @users_activity = Audited::Adapters::ActiveRecord::Audit.paginate_by_sql(the_sql,
-                                               :page => params[:page],
-                                               :per_page => 30)
+    the_sql = "select whodunnit, COUNT(whodunnit) as total_count,
+      COUNT(case when item_type='Gcp' then 1 end) as gcp_count,
+      COUNT(case when item_type='Map' or item_type='Mapscan' then 1 end) as map_count,
+      COUNT(case when event='update' and item_type='Gcp' then 1 end) as gcp_update_count,
+      COUNT(case when event='create' and item_type='Gcp' then 1 end) as gcp_create_count,
+      COUNT(case when event='destroy' and item_type='Gcp' then 1 end) as gcp_destroy_count 
+      from versions group by whodunnit ORDER BY #{sort_clause}"
+    
+    @users_activity  = PaperTrail::Version.paginate_by_sql(the_sql,:page => params[:page], :per_page => 30)
+ 
   end
 
 
