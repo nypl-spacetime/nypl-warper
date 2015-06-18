@@ -1,5 +1,7 @@
 class VersionsController < ApplicationController
   layout "application"
+  
+  before_filter :authenticate_user!, :only => [ :revert_map, :revert_gcp]
 
   def show
     @version  =  PaperTrail::Version.find(params[:id])
@@ -66,6 +68,35 @@ class VersionsController < ApplicationController
 
     @title = "Recent Activity for All Maps"
     render :action => 'index'
+  end
+  
+  def revert_map
+    @version = PaperTrail::Version.find(params[:id])
+    if @version.item_type != "Map"
+      flash[:error] = "Sorry this is not a map"
+      return redirect_to :activity_details
+    else
+      map = Map.find(@version.item_id)
+      reified_map = @version.reify(:has_many => true)
+      new_gcps = reified_map.gcps.to_a
+      map.gcps = new_gcps
+      flash[:notice] = "Map reverted!"
+      return redirect_to :activity_details
+    end
+  end
+  
+  def revert_gcp
+    @version = PaperTrail::Version.find(params[:id])
+    if @version.item_type != "Gcp"
+      flash[:error] = "Sorry this is not a GCP"
+      rreturn redirect_to :activity_details
+    else
+      gcp = @version.reify
+      gcp.save 
+      flash[:notice] = "GCP Reverted!"
+      return redirect_to :activity_details
+    end
+    
   end
 
 end

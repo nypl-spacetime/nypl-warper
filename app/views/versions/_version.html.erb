@@ -50,4 +50,13 @@
       <%= link_to "Further details", activity_details_url(:id => version) %>
     <%-end-%>
   </td>
+  <% if admin_authorized? %>
+  <td class="<%=cl %>">
+    <% if version.item_type == "Map" %>
+      <%= link_to "Revert All Gcps in Map", revert_map_url(:id => version), :method => :put, :data => {:confirm => "Really revert all GCPS in the map?"}, :class=>"buttonWarper" %>
+    <% elsif version.item_type == "Gcp" %>
+      <%= link_to "Revert", revert_gcp_url(:id => version), :method => :put, :data => {:confirm => "Really revert this GCP?"}, :class=>"buttonWarper"%>
+    <% end %>
+  </td>
+  <% end %>
 </tr>

@@ -7,12 +7,15 @@
       <th>Ip Address</th>
       <th>User Agent</th>
     <% end %> 
-      
+
     <th>Object</th>
     <th>Activity Summary</th>
     <th>Version</th>
 
     <th></th>
+    <% if admin_authorized? %>
+      <th></th>
+    <% end %>
   </tr>
   <%= render :partial => "version", :collection => @versions unless @versions.nil? %>
 </table>

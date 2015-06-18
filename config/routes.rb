@@ -109,6 +109,8 @@ Rails.application.routes.draw do
   get '/maps/acitvity.:format' => 'versions#for_map_model', :as => "formatted_maps_activity"
   get '/maps/:id/activity' => 'versions#for_map', :as => "map_activity"
   get '/maps/:id/activity.:format' => 'versions#for_map', :as => "formatted_map_activity"
+  put '/versions/:id/revert_map' => 'versions#revert_map', :as => "revert_map"
+  put '/versions/:id/revert_gcp' => 'versions#revert_gcp', :as => "revert_gcp"
 
   get '/activity' => 'versions#index', :as => "activity"
   get '/activity/:id' => 'versions#show', :as => "activity_details"
