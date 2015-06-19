@@ -319,12 +319,12 @@ class LayersController < ApplicationController
 
   def publish
     if @layer.rectified_percent < 100
-      render :text => "Layer has less than 100% of its maps rectified"
-      #redirect_to :action => 'index'
+       flash[:notice] =  "Layer has less than 100% of its maps rectified, and cannot be published."
     else
       @layer.publish
-      render :text => "Layer will be published (this functionality is disabled at the moment)"
+      flash[:notice] = "Layer will be published and tiles transfered via tilestache. Please wait."
     end
+    redirect_to @layer
   end
 
 

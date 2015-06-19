@@ -47,9 +47,8 @@
         <%= link_to("Toggle Visibility", toggle_visibility_layer_path(:id=>layer.id, :format=>"json"), :id => "toggle-vis-#{layer.id}", :remote => true)%>
       <% end  %>
       <% if admin_authorized? -%>
-       <!--  <%= link_to("Merge", :controller => "layers", :action=> "merge", :id => layer) %> |
-            <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer)%> | 
-       -->
+       |  <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer, 
+            :data => {:confirm => "Really publish this layer? Component maps can still be edited, but the tiles will be created"})%> |
       <%end -%>
       <span class="map_links">
         <%= link_to 'View on Digital Collections', "http://digitalcollections.nypl.org/items/#{@layer.uuid}" -%>

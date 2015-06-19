@@ -43,9 +43,9 @@
       <% end  %>
 
       <% if admin_authorized? -%>
-      <!--  <%= link_to("Merge", :controller => "layers", :action=> "merge", :id => layer) %> |
-       <!--     <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer)%> | 
-       -->
+        |  <%= link_to("Publish", :controller => "layers", :action=> "publish", :id=>layer,
+          :data => {:confirm => "Really publish this layer? Component maps can still be edited, but the tiles will be created"})%> | 
+      
       <%end -%>
        
       <% if layer.is_visible && layer.rectified_maps_count > 0 %>

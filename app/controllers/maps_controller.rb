@@ -526,13 +526,18 @@ class MapsController < ApplicationController
   
   #should check for admin only
   def publish
+    if @map.status == :publishing
+      flash[:notice] = "Map currently publishing. Please try again later."
+      return redirect_to @map
+    end
     if params[:to] == "publish" && @map.status == :warped
       @map.publish
+      flash[:notice] = "Map publishing. Please wait as the map will be published and tiles transfered via tilestache. Status: " + @map.status.to_s
     elsif params[:to] == "unpublish" && @map.status == :published
       @map.unpublish
+      flash[:notice] = "Map unpublished. Status: " + @map.status.to_s
     end
 
-    flash[:notice] = "Map changed. New Status: " + @map.status.to_s
     redirect_to @map
   end
 

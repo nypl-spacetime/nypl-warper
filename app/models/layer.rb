@@ -1,4 +1,6 @@
 class Layer < ActiveRecord::Base
+  include Tilestache
+  
   has_many :layers_maps, :dependent => :destroy
   has_many :maps,:through => :layers_maps
   has_many :layer_properties #could be has_one
@@ -50,9 +52,15 @@ class Layer < ActiveRecord::Base
     percent = ((self.rectified_maps_count.to_f / self.maps_count.to_f) * 100).to_f
     percent.nan? ? 0 : percent
   end
-
+  
   def publish
-    #empty method for publish action of layer
+    Spawnling.new(:nice => 7) do
+      if self.tilestache_seed  #in tilestache concern
+        logger.debug "Layer Tilestache process finished"
+      else
+        logger.error "Layer Tilestache process failed!!"
+      end
+    end
   end
 
   def merge(destination_layer_id)
