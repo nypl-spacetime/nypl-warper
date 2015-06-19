@@ -6,7 +6,7 @@
     {:controller=>"groups", :action =>"destroy", :id => @group},  :method => :delete, :data => {:confirm => "Are you sure?"} %>
 <% end %>
 
-<p>Created: <%= @group.created_at.to_s(:long) %> by <%= link_to(( h @group.creator.login), user_path(@group.creator.id), :method => :get)  -%></p>
+<p>Created: <%= @group.created_at.to_s(:long) %> by <%= link_to(( @group.creator.login), user_path(@group.creator.id), :method => :get)  -%></p>
 <h3>Description:</h3>
 <p><%= (h @group.description).gsub("\n","<br/>") %></p>
 <p><%= pluralize(@group.maps.count, 'map') %>

@@ -7,7 +7,7 @@ This cannot be undone!
 <table>
   <tr>
     <td><%= image_tag(@layer.thumb) %></td>
-    <td>Layer <%=@layer.id%> : <%= link_to h(@layer.name),  layer_path(@layer) -%>
+    <td>Layer <%=@layer.id%> : <%= link_to (@layer.name),  layer_path(@layer) -%>
     </td>
   </tr>
 </table>

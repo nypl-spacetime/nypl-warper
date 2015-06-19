@@ -10,12 +10,12 @@
       <% if map.parent && map.inset_maps.empty? %>
         Inset of: 
       <% end %>
-      <%=strip_brackets(h(map.title)) %>
+      <%=strip_brackets(map.title) %>
     </span>
 
     <br />
     <span class="map_description">
-      <%=strip_brackets(h(map.description)) -%>
+      <%=strip_brackets(map.description) -%>
     </span>
     <span class="map_summary">
       

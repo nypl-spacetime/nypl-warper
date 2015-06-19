@@ -4,7 +4,7 @@
   <h2>Import: <%=h @import.id %></h2>
   <p>Created: <%= @import.created_at.to_s(:long) %>
     <% if @import.user -%>
-      by <%= link_to(( h @import.user.login), user_path(@import.user.id))  -%></p>
+      by <%= link_to(( @import.user.login), user_path(@import.user.id))  -%></p>
   <% end %>
   <p>Status: <span class="mapstatus"><%= @import.status %> </span></p>
   <p>Import Type:  
