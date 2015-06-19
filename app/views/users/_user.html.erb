@@ -1,4 +1,5 @@
 <tr class="<%= cycle('table0', 'table1') -%>">
+  <td><%= time_ago_in_words(user.created_at) -%> ago.</td>
   <td><%= link_to(( h user.login), user_path(user.id), :method => :get)  -%></td>
   <% if admin_authorized? %>
     <td><%=h user.provider -%></td>
