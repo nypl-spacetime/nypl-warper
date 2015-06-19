@@ -22,9 +22,9 @@ namespace :warper do
   task :s3_backup_db => :environment do
     puts "[#{Time.now}] warper:s3_backup_db started. "
     
-    secret = ENV['s3_secret_access_key'] || APP_CONFIG['s3_secret_access_key'] 
-    key_id = ENV['s3_access_key_id'] || APP_CONFIG['s3_access_key_id'] 
-    bucket_name = ENV['s3_bucket_name'] || APP_CONFIG['s3_bucket_name']
+    secret = ENV['s3_db_secret_access_key'] || APP_CONFIG['s3_db_secret_access_key'] 
+    key_id = ENV['s3_db_access_key_id'] || APP_CONFIG['s3_db_access_key_id'] 
+    bucket_name = ENV['s3_db_bucket_name'] || APP_CONFIG['s3_db_bucket_name']
       
     dump_name = dump_database
     

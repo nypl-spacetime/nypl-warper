@@ -25,9 +25,13 @@ defaults: &defaults
   omniauth_facebook_secret: "ABC"
   id_key: ""
   id_secret: ""
-  s3_access_key_id: ""
-  s3_secret_access_key: ""
-  s3_bucket_name: ""
+  s3_db_access_key_id: ""
+  s3_db_secret_access_key: ""
+  s3_db_bucket_name: ""
+  s3_tiles_access_key_id: ""
+  s3_tiles_secret_access_key: ""
+  s3_tiles_bucket_name: ""
+  tilestache_path: ""
   
 
 development:
