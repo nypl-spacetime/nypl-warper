@@ -1,4 +1,19 @@
 <h2>User Statistics</h2>
+<div>
+  | <%=  link_to "Total", stats_users_url(:period=>"total"),    :class=>"buttonWarper" %> 
+  | <%=  link_to "Hour",  stats_users_url(:period=>"hour"),:class=>"buttonWarper" %> 
+  | <%=  link_to "Day",   stats_users_url(:period=>"day"), :class=>"buttonWarper" %> 
+  | <%=  link_to "Week",  stats_users_url(:period=>"week"),:class=>"buttonWarper" %> 
+  | <%=  link_to "Month",  stats_users_url(:period=>"month"),:class=>"buttonWarper" %> 
+  |
+</div>
+<div class="period">
+  <% if @period == "total" %>
+  Showing stats from <span class="period">all time</span>.
+  <% else %>
+  Showing stats for <span class="period">last <%= @period %>.</span>
+  <% end %>
+</div>
 
 <%= will_paginate @users_activity %>
 <table class="usertable">

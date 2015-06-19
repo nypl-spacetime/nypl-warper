@@ -680,6 +680,12 @@ border: dashed;
 width: 100%;
 }
 
+div.period {
+  text-transform:uppercase;
+}
+div.period span.period{
+   font-weight: bold;
+}
 .browse{
   margine: 0 1em;
 }

@@ -13,16 +13,32 @@ class UsersController < ApplicationController
   def stats
     sort_init "total_count"
     sort_update
-
+    
     @html_title = "Users Stats"
 
+    @period = params[:period]
+    period_where_clause = ""
+
+    if @period == "hour"
+      period_where_clause = "where created_at > '#{1.hour.ago.to_s(:db)}'"
+    elsif @period == "day"
+      period_where_clause = "where created_at > '#{1.day.ago.to_s(:db)}'"
+    elsif @period == "week"
+      period_where_clause = "where created_at > '#{1.week.ago.to_s(:db)}'"
+    elsif @period == "month"
+      period_where_clause = "where created_at > '#{1.month.ago.to_s(:db)}'"
+    else
+      @period = "total"
+      period_where_clause = "" 
+    end
+    
     the_sql = "select whodunnit, COUNT(whodunnit) as total_count,
       COUNT(case when item_type='Gcp' then 1 end) as gcp_count,
       COUNT(case when item_type='Map' or item_type='Mapscan' then 1 end) as map_count,
       COUNT(case when event='update' and item_type='Gcp' then 1 end) as gcp_update_count,
       COUNT(case when event='create' and item_type='Gcp' then 1 end) as gcp_create_count,
       COUNT(case when event='destroy' and item_type='Gcp' then 1 end) as gcp_destroy_count 
-      from versions group by whodunnit ORDER BY #{sort_clause}"
+      from versions #{period_where_clause} group by whodunnit ORDER BY #{sort_clause}"
     
     @users_activity  = PaperTrail::Version.paginate_by_sql(the_sql,:page => params[:page], :per_page => 30)
  
