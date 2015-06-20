@@ -119,22 +119,22 @@ class Map < ActiveRecord::Base
     self.save
     
     Spawnling.new(:nice => 7) do
-      
-      if self.tilestache_seed  #in tilestache concern
-        self.paper_trail_event = 'published'
-        self.status = :published
-        self.save
-      else
+      begin
+        if self.tilestache_seed  #in tilestache concern
+          self.paper_trail_event = 'published'
+          self.status = :published
+          self.save
+        else
+          self.paper_trail_event = 'fail_publish'
+          self.status = :warped
+          self.save
+        end
+      rescue Exception => e
+        logger.error e.inspect
         self.paper_trail_event = 'fail_publish'
         self.status = :warped
         self.save
       end
-      
-      if self.status == :publishing
-        self.status = :warped
-        self.save
-      end
-      
       self.paper_trail_event = nil
       
     end #spawnling fork

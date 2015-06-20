@@ -28,9 +28,12 @@ defaults: &defaults
   s3_db_access_key_id: ""
   s3_db_secret_access_key: ""
   s3_db_bucket_name: ""
+  s3_db_bucket_path: ""
   s3_tiles_access_key_id: ""
   s3_tiles_secret_access_key: ""
   s3_tiles_bucket_name: ""
+  s3_tiles_bucket_path: ""
+  s3_tiles_max_zoom: "21"
   tilestache_path: ""
   
 

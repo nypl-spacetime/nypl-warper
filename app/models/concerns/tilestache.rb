@@ -6,17 +6,25 @@ module Tilestache
     secret = ENV['s3_tiles_secret_access_key'] || APP_CONFIG['s3_tiles_secret_access_key'] 
     key_id = ENV['s3_tiles_access_key_id'] || APP_CONFIG['s3_tiles_access_key_id'] 
     bucket_name = ENV['s3_tiles_bucket_name'] || APP_CONFIG['s3_tiles_bucket_name']
+    bucket_path = ENV['s3_tiles_bucket_path'] || APP_CONFIG['s3_tiles_bucket_path']
+    max_zoom = ENV['s3_tiles_max_zoom'] || APP_CONFIG['s3_tiles_max_zoom'] #i.e. 21
+    
+    if max_zoom == "" || max_zoom.to_i > 25
+      max_zoom = 21
+    end
     
     item_type  = self.class.to_s.downcase
-    item_id =    self.id
+    item_id =  self.id
     
     options = {
       :item_type => item_type, 
       :item_id => item_id, 
       :secret => secret, 
       :access => key_id, 
-      :bucket => bucket_name}
-    
+      :bucket => bucket_name,
+      :path => bucket_path
+      }
+   
     config_json = tilestache_config_json(options)
     
     config_file = File.join(Rails.root, 'tmp', "#{options[:item_type]}_#{options[:item_id]}_tilestache.json")
@@ -29,17 +37,15 @@ module Tilestache
     tile_bbox_str = tile_bbox.join(" ")
     
     command = "cd #{APP_CONFIG['tilestache_path']}; python scripts/tilestache-seed.py -c #{config_file}" +
-      " -l #{self.id} -b #{tile_bbox_str} --enable-retries -x 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21" # 13 14 15 16 17 18 19 20 21
+      " -l #{self.id} -b #{tile_bbox_str} --enable-retries -x #{(1..max_zoom.to_i).to_a.join(' ')}"
     
     puts command
-    logger.debug command
     
     t_stdout, t_stderr, t_status = Open3.capture3( command )
 
     unless t_status.success?
       
       puts t_stderr
-      logger.error t_stderr
 
       return nil
     else
@@ -55,13 +61,14 @@ module Tilestache
   def tilestache_config_json(options)
     
     url = "http://#{APP_CONFIG['host']}/#{options[:item_type]}s/tile/#{options[:item_id]}/{Z}/{X}/{Y}.png"
-    
+        
     config = {
       "cache" => {
         "name" => "S3",
         "bucket" => options[:bucket],
         "access" => options[:access],
-        "secret" => options[:secret]
+        "secret" => options[:secret],
+        "path" => options[:path]
       },
       "layers" => {
         options[:item_id] => {       
