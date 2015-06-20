@@ -25,8 +25,15 @@ namespace :warper do
     secret = ENV['s3_db_secret_access_key'] || APP_CONFIG['s3_db_secret_access_key'] 
     key_id = ENV['s3_db_access_key_id'] || APP_CONFIG['s3_db_access_key_id'] 
     bucket_name = ENV['s3_db_bucket_name'] || APP_CONFIG['s3_db_bucket_name']
-      
+    bucket_path = ENV['s3_db_bucket_path'] || APP_CONFIG['s3_db_bucket_path']
+    
     dump_name = dump_database
+    
+    if bucket_path.blank?
+      s3_dump_name = dump_name
+    else
+      s3_dump_name = bucket_path + "/"+ dump_name
+    end
     
     puts "[#{Time.now}] dump finished. db/#{dump_name} created"
     puts "[#{Time.now}] backing up dump to S3."
@@ -36,7 +43,7 @@ namespace :warper do
     service = S3::Service.new(:access_key_id =>key_id, :secret_access_key => secret)
     bucket = service.buckets.find(bucket_name)
     
-    new_object = bucket.objects.build(dump_name)
+    new_object = bucket.objects.build(s3_dump_name)
     new_object.acl = :private
     new_object.content = open("db/#{dump_name}")
     new_object.save
