@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     resources :roles
   end
   
+  get '/admin/' => 'admins#index', :as => "admin"
+  
   get '/maps/activity' => 'versions#for_map_model', :as => "maps_activity"
   
   resources :maps,:except => [:edit, :update, :destroy, :new, :create]  do

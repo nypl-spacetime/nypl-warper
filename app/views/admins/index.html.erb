@@ -1,0 +1,29 @@
+<h1>Admin Page</h1>
+
+<div class="admin-panel">
+  <ul>
+    <li>
+      <%= link_to "All Maps", maps_path, :class => "buttonWarper" %>
+    </li>
+    <li>
+      <%= link_to "All Layers", layers_path, :class => "buttonWarper" %>
+    </li>
+    <li>
+      <%= link_to "All Activity", activity_path, :class => "buttonWarper" %>
+    </li>
+    <li>
+      <%= link_to "All Comments", comments_path, :class => "buttonWarper" %>
+    </li>  
+    <li>
+      <%= link_to "Imports", imports_path, :class => "buttonWarper" %>
+    </li>
+    <li>
+      <%= link_to "User Stats", stats_users_path, :class => "buttonWarper" %>
+    </li>
+    <li>
+      <%= link_to "Administer Users", users_path, :class => "buttonWarper" %>
+    </li>
+
+  </ul>
+
+</div>

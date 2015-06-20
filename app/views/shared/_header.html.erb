@@ -17,13 +17,8 @@
   <% if user_signed_in? %>
     <% if current_user.has_role?("administrator") || current_user.has_role?("super user") %>
       <br />
-      <%= link_to "All Maps", maps_path %>
-      <%= link_to "All Layers", layers_path %>
-      <%= link_to "All Activity", activity_path %>
-      <%= link_to "All Comments", comments_path %>
-      <%= link_to "Imports", imports_path %>
-      <%= link_to "User Stats", stats_users_path %>
-      <%= link_to "Administer Users", users_path %>
+      <%= link_to "Admin", admin_path, :class => "admin-header-button" %>
+ 
     <% end %>
   <% end %>
 </div>
