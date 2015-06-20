@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
   
   
   def check_site_read_only
-    if APP_CONFIG['status'] == :read_only
+    if APP_CONFIG['status'] == :read_only || (Setting.last && Setting.last.site_status == "read_only")
       unless user_signed_in? && @current_user.has_role?("administrator")
         if request.xhr?
           response.headers["Error"] =  "Site readonly"

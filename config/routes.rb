@@ -21,7 +21,9 @@ Rails.application.routes.draw do
   end
   
   get '/admin/' => 'admins#index', :as => "admin"
-  
+  get '/admin/read_only' => 'admins#read_only', :as => 'read_only'
+  post '/admin/change_site_status' =>'admins#change_site_status', :as => 'change_site_status'
+
   get '/maps/activity' => 'versions#for_map_model', :as => "maps_activity"
   
   resources :maps,:except => [:edit, :update, :destroy, :new, :create]  do

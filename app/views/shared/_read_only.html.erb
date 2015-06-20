@@ -1,8 +1,12 @@
 <div id="read-only">
-  <% if APP_CONFIG["read_only_text"].blank? %>
-    The site is in read only mode.
-  <% else %>
-    <%=  APP_CONFIG["read_only_text"] %>
-  <% end %>
+  <% banner_text = "The site is in read only mode."  
+  if  (Setting.last && Setting.last.banner_text.blank?).nil? && !APP_CONFIG["read_only_text"].blank? 
+    banner_text = APP_CONFIG["read_only_text"]
+    elsif Setting.last && !Setting.last.banner_text.blank?
+    banner_text = Setting.last.banner_text
+    end
+%>
+
+  <%= banner_text %>
 
 </div>

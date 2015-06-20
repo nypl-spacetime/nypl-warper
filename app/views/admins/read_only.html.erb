@@ -1,0 +1,24 @@
+<h1>Read Only / Site Status</h1>
+
+<div class="admin-panel">
+  Current site setting status: <span class="current_status"><%= @site_setting.site_status %> </span>
+  <% if APP_CONFIG['status'] == :read_only %>
+
+    <div>
+      <span class="current_status"> Site in read only mode from application configuration variable!</span> A site admin cannot change this. Please change it on the server
+    </div>
+
+  <% else %>
+    <%= error_messages_for @site_setting %>
+    <%= form_tag(change_site_status_url, :class=>"site_status_form") do %>
+      <fieldset>
+        <legend>Change Site Status</legend>
+        <%= hidden_field_tag("setting_id", @site_setting.id) if  @site_setting.id  %>
+        <div><%= label_tag 'site_status', 'Site Status' %> <%= select_tag "site_status", options_for_select([ "online", "read_only"],  @site_setting.site_status)%></div>
+        <div><%= label_tag 'banner_text', 'Read Only Banner Text' %>  <%= text_area_tag 'banner_text',  @site_setting.banner_text, rows: 3, cols: 70 %></div>
+        <div><%= submit_tag 'Save' %></div>
+      </fieldset>
+    <% end %>
+
+  <% end %>
+</div>

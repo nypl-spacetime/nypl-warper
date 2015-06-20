@@ -132,7 +132,7 @@
     <%= render :partial => 'shared/analyticstop' %>
     
     <%= render :partial => 'shared/nypl_stripe' %>
-    <% if APP_CONFIG['status'] == :read_only  %>
+    <% if read_only_mode %>
       <%= render :partial => 'shared/read_only' %>
     <% end %>
       

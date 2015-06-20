@@ -1536,3 +1536,27 @@ fieldset#control_panel_fieldset a {
   font-size: larger;
   font-weight: bold;
 }
+
+span.current_status{
+  font-weight: bold;
+}
+.site_status_form{
+   width:400px;
+}
+.site_status_form div{
+
+   margin: 0.7em;
+}
+.site_status_form fieldset {
+  padding: 0.2em 0.5em;
+  border:1px solid green;
+  color:green;
+  font-size:90%;
+  margin-left: 1em;
+}
+
+.site_status_form legend {
+  border:1px solid green;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+}

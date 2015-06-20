@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617202438) do
+ActiveRecord::Schema.define(version: 20150620215347) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -200,6 +200,11 @@ ActiveRecord::Schema.define(version: 20150617202438) do
     t.integer  "updated_by"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.string "site_status"
+    t.text   "banner_text"
   end
 
   create_table "users", force: :cascade do |t|
