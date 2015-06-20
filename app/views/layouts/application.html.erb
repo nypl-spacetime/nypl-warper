@@ -19,6 +19,9 @@
   <%end%>
       
     <%= render :partial => 'shared/nypl_stripe' %>
+    <% if APP_CONFIG['status'] == :read_only  %>
+      <%= render :partial => 'shared/read_only' %>
+    <% end %>
       
     <div id="headerDiv" class="headerDiv">
       <h1><%= link_to "NYPL Map Warper", root_path %></h1>

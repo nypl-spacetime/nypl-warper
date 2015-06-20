@@ -35,6 +35,13 @@ defaults: &defaults
   s3_tiles_bucket_path: ""
   s3_tiles_max_zoom: "21"
   tilestache_path: ""
+  # Application status. OVerrides site-admin specified value
+  #   possible values are:
+  #   :online     - online and operating normally
+  #   :offline    - site offline
+  #   :read_only  - site in read-only mode. Only site admins have full functions
+  status: :online
+  read_only_text: "The site is currently in read-only mode while essential maintenance work is being carried out."
   
 
 development:

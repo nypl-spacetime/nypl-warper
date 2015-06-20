@@ -5,7 +5,7 @@ class ImportsController < ApplicationController
 
   before_filter :find_import, :except => [:index, :new, :create]
   before_filter :check_imported, :only => [:start]
-
+  
   rescue_from ActiveRecord::RecordNotFound, :with => :bad_record
 
   def index

@@ -1,6 +1,8 @@
 class HomeController < ApplicationController
 
   layout 'application'
+  skip_before_filter :check_site_online, :only => [:offline]
+  skip_before_filter :check_site_read_only
   
   def index
     @html_title =  "Home - "
