@@ -114,6 +114,7 @@ div.comment span.comment_metadata {
 
 #warper-maindiv {
     margin: 1.5em;
+    margin-top: 0.2em;
 }
 
 #warper-maindiv h4 {
@@ -712,7 +713,7 @@ div.period span.period{
 	overflow:hidden; /*to clear float*/
 }
 #searchform #query{
-      width:10em;
+      width:11em;
 }
 #search-form input {
 	vertical-align: center;
@@ -1559,4 +1560,41 @@ span.current_status{
   border:1px solid green;
   padding-left: 0.3em;
   padding-right: 0.3em;
+}
+
+#year-label{
+  float:left;
+}
+
+#year-slider-container {
+  padding-top: 0.5em;
+  padding-bottom: 0.7em;
+  padding-left: 3em;
+  width: 330px;
+}
+.year-slider-tooltip {
+	display: block;
+	position: absolute;
+	border: 1px solid #D9D9D9;
+	font: 400 12px/12px Arial;
+	border-radius: 3px;
+	background: #fff;
+	bottom: -29px;
+	padding: 5px;
+	left: -9px;
+	text-align: center;
+	width: 50px;
+}
+.year-slider-tooltip strong {
+	display: block;
+	padding: 2px;
+}
+.noUi-connect {
+  background-color: #D4BABD !important;
+}
+.noUi-target {
+  height: 15px !important;
+}
+.noUi-horizontal .noUi-handle{
+  height: 24px !important;
 }

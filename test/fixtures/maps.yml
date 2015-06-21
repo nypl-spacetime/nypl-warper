@@ -13,6 +13,7 @@ map1:
   mask_status: 0
   map: true
   map_type: 1
+  issue_year: 1850
   
 unloaded:
   id: 2
@@ -29,3 +30,4 @@ unloaded:
   mask_status: 0
   map: true
   map_type: 1
+  issue_year: 1920

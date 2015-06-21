@@ -43,10 +43,10 @@ class MapsControllerTest < ActionController::TestCase
     assert_redirected_to maps(:map1)
     
     @map = assigns(:map)
-    assert_equal :published, @map.status
+    assert_equal :publishing, @map.status
     
     assert_redirected_to maps(:map1)
-    assert flash[:notice].include?("Map changed. New Status")
+    assert flash[:notice].include?("Map publishing")
   end
   
     
@@ -125,6 +125,20 @@ class MapsControllerTest < ActionController::TestCase
     get :index, :field => "text", :query => "unwarped"
     index_maps = assigns(:maps)
     assert index_maps.include? maps(:unloaded)
+  end
+  
+  test "search/index maps for year" do
+    get :index, :from => 1800, :to => 2000
+    index_maps = assigns(:maps)
+    
+    assert index_maps.include? maps(:unloaded)
+    assert index_maps.include? maps(:map1)
+    
+    get :index, :from => 1800, :to => 1900
+    index_maps = assigns(:maps)
+    
+    assert_equal false, index_maps.include?(maps(:unloaded))
+    assert index_maps.include? maps(:map1)
   end
 
 

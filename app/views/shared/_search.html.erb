@@ -7,6 +7,8 @@
   </select>
   for 
   <%= text_field_tag 'query', @query -%>
+  <input type="hidden" id="from" />
+  <input type="hidden" id="to"/>
   <input type="submit" value=" Go ">
   <% if @show_warped == "1" -%>
     <% check_all = false -%>
@@ -20,7 +22,47 @@
   <%= radio_button_tag('show_warped', 0, check_all, :id => 'all_maps') %>
   <label for="rectified_maps">Rectified maps only</label>
   <%= radio_button_tag('show_warped', 1, check_rectified, :id => 'rectified_maps') %>
+  
+  <div id="year-filter">
+    <div id="year-label">
+      Year
+    </div>
+    <div id="year-slider-container">
+      <div id="year-slider"></div>
+    </div>	
+  </div>
+  <script>
+    var year_from = <%= params[:from] || 1600 %>;
+    var year_to = <%= params[:to] || 2015 %>;
+  jQuery("#year-slider").noUiSlider({
+    start: [year_from, year_to],
+    connect: true,
+    step: 1,
+    format: wNumb({
+      decimals: 0
+    }),
+    range: {
+      'min': <%=  @year_min.to_i %>,
+      'max': <%= @year_max.to_i %>
+    }
+    });
+    
+    jQuery("#year-slider").Link('upper').to('-inline-<div class="year-slider-tooltip"></div>', function ( value ) {
+      jQuery(this).html(
+        '<span>' + value + '</span>'
+      );
+    });
+       
+    jQuery("#year-slider").Link('lower').to('-inline-<div class="year-slider-tooltip"></div>', function ( value ) {
+      jQuery(this).html(
+        '<span>' + value + '</span>'
+      );
+    });
+    
+    jQuery("#year-slider").Link('upper').to('to')
+    jQuery("#year-slider").Link('lower').to('from')
 
+   </script>	
 <% end -%>
   <br />
   New: <%= link_to 'Find Rectified Maps by Location',  url_for(:controller => 'maps', :action=>'geosearch'), :class => "buttonWarper" %>

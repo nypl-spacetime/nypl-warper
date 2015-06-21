@@ -56,6 +56,19 @@ class MapsController < ApplicationController
       conditions = nil
     end
     
+    @year_min = Map.minimum(:issue_year)
+    @year_max = Map.maximum(:issue_year)
+    @year_min = 1600 if @year_min == 0
+    @year_max = 2015 if @year_max == 0
+    
+    year_conditions = nil
+    if params[:from] && params[:to] && (@year_min != params[:from].to_i && @year_max != params[:to].to_i)
+      year_conditions = {:issue_year => params[:from].to_i..params[:to].to_i}
+    end
+    
+    @from = params[:from]
+    @to = params[:to]
+        
     if params[:sort_order] && params[:sort_order] == "desc"
       sort_nulls = " NULLS LAST"
     else
@@ -71,9 +84,9 @@ class MapsController < ApplicationController
     #order('name').where('name LIKE ?', "%#{search}%").paginate(page: page, per_page: 10)
     
     if @show_warped == "1"
-      @maps = Map.warped.where(where_options).order(order_options).paginate(paginate_params)
+      @maps = Map.warped.where(where_options).where(year_conditions).order(order_options).paginate(paginate_params)
     else
-      @maps = Map.where(where_options).order(order_options).paginate(paginate_params)
+      @maps = Map.where(where_options).where(year_conditions).order(order_options).paginate(paginate_params)
     end
     
     @html_title = "Browse Maps"

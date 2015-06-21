@@ -145,6 +145,18 @@ class LayersController < ApplicationController
     else
       select = "*"
     end
+    
+    @year_min = Map.minimum(:issue_year)
+    @year_max = Map.maximum(:issue_year)
+    
+    year_conditions = nil
+    if params[:from] && params[:to] && (@year_min != params[:from].to_i && @year_max != params[:to].to_i)
+      year_conditions = {:depicts_year => params[:from].to_i..params[:to].to_i}
+    end
+    
+    @from = params[:from]
+    @to = params[:to]
+    
 
     if params[:sort_order] && params[:sort_order] == "desc"
       sort_nulls = " NULLS LAST"
@@ -165,12 +177,11 @@ class LayersController < ApplicationController
       @map = Map.find(map)
       
       layer_ids = @map.layers.map(&:id)
-      @layers = Layer.where(id: layer_ids).select('*, round(rectified_maps_count::float / maps_count::float * 100) as percent').where(conditions).order(order_options).paginate(paginate_params)
-      
+      @layers = Layer.where(id: layer_ids).where(conditions).select('*, round(rectified_maps_count::float / maps_count::float * 100) as percent').where(conditions).order(order_options).paginate(paginate_params)
       @html_title = "Layer List for Map #{@map.id}"
       @page = "for_map"
     else
-      @layers = Layer.select(select).where(conditions).order(sort_clause + sort_nulls).paginate(paginate_params)
+      @layers = Layer.select(select).where(conditions).where(year_conditions).order(sort_clause + sort_nulls).paginate(paginate_params)
       @html_title = "Browse Layer List"
     end
    

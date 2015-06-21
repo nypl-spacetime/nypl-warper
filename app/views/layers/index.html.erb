@@ -7,16 +7,60 @@
 <% else %>
 
   <div id="search-form">
-
+  
     <%= form_tag url_for(:controller => "layers"), :id=>"searchform",:name=> "searchform", :method => :get do -%>
       Search
       <select id="field" name="field">
-      <%= options_for_select([ ["Text", "text"], 
-                             ["Collections Id", "uuid"]], @field)-%>
+        <%= options_for_select([ ["Text", "text"], 
+            ["Collections Id", "uuid"]], @field)-%>
       </select>
       for
       <%= text_field_tag 'query', @query -%>
+      <input type="hidden" id="from" />
+      <input type="hidden" id="to"/>
       <input type="submit" value=" Go " />
+    
+      <div id="year-filter">
+        <div id="year-label">
+          Year
+        </div>
+        <div id="year-slider-container">
+          <div id="year-slider"></div>
+        </div>	
+      </div>
+      <script>
+        var year_from = <%= params[:from] || 1600 %>;
+        var year_to = <%= params[:to] || 2015 %>;
+      jQuery("#year-slider").noUiSlider({
+        start: [year_from, year_to],
+        connect: true,
+        step: 1,
+        format: wNumb({
+          decimals: 0
+        }),
+        range: {
+          'min': <%=  @year_min.to_i %>,
+          'max': <%= @year_max.to_i %>
+        }
+        });
+
+        jQuery("#year-slider").Link('upper').to('-inline-<div class="year-slider-tooltip"></div>', function ( value ) {
+          jQuery(this).html(
+            '<span>' + value + '</span>'
+          );
+        });
+
+        jQuery("#year-slider").Link('lower').to('-inline-<div class="year-slider-tooltip"></div>', function ( value ) {
+          jQuery(this).html(
+            '<span>' + value + '</span>'
+          );
+        });
+
+        jQuery("#year-slider").Link('upper').to('to')
+        jQuery("#year-slider").Link('lower').to('from')
+
+       </script>
+      
     <% end %>
     <br/>
     New: <%= link_to 'Find Layers by Location',  url_for(:controller => 'layers', :action=>'geosearch'), :class => "buttonWarper"%>
