@@ -32,8 +32,8 @@
     </div>	
   </div>
   <script>
-    var year_from = <%= params[:from] || 1600 %>;
-    var year_to = <%= params[:to] || 2015 %>;
+    var year_from = <%= params[:from] || @year_min.to_i %>;
+    var year_to = <%= params[:to] || @year_max.to_i %>;
   jQuery("#year-slider").noUiSlider({
     start: [year_from, year_to],
     connect: true,
