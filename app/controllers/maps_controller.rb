@@ -272,7 +272,7 @@ class MapsController < ApplicationController
     # Logged in users
     #
     unless user_signed_in? and current_user.has_role?("adminstrator")
-      if @map.published?
+      if @map.published? || @map.status == :publishing
         @disabled_tabs += ["warp", "clip", "align"]  #dont show any others unless you're an editor
       end
     end
@@ -600,7 +600,7 @@ class MapsController < ApplicationController
   def save_mask_and_warp
     logger.debug "save mask and warp"
     @map.save_mask(params[:output])
-    unless @map.status == :warping
+    unless @map.status == :warping || @map.status == :publishing
       @map.mask!
       stat = "ok"
       if @map.gcps.hard.size.nil? || @map.gcps.hard.size < 3
@@ -797,7 +797,7 @@ class MapsController < ApplicationController
       @too_few = true
       @notice_text = "Sorry, the map needs at least three control points to be able to rectify it"
       @output = @notice_text
-    elsif @map.status == :warping
+    elsif @map.status == :warping || @map.status == :publishing
       @fail = true
       @notice_text = "Sorry, the map is currently being rectified somewhere else, please try again later."
       @output = @notice_text

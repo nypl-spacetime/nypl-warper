@@ -59,8 +59,8 @@ module Tilestache
   private
   
   def tilestache_config_json(options)
-    
-    url = "http://#{APP_CONFIG['host']}/#{options[:item_type]}s/tile/#{options[:item_id]}/{Z}/{X}/{Y}.png"
+
+    url = "http://#{APP_CONFIG['host']}#{ActionController::Base.relative_url_root.to_s}/#{options[:item_type]}s/tile/#{options[:item_id]}/{Z}/{X}/{Y}.png"
         
     config = {
       "cache" => {
