@@ -1,10 +1,11 @@
 <% content_for :head do %>
   <%= javascript_tag "window._token = '#{form_authenticity_token}'" %>
   <script type="text/javascript" charset="utf-8">
-    var icon_imgPath = '/assets/icons/';
+    var icon_imgPath = '<%= asset_url('/assets/icons/')%>';
     var gcp_add_url = "<%= url_for add_gcp_path :mapid=> @map %>";
-    var gcp_update_url = "/gcps/update";
-    var gcp_update_field_url = "/gcps/update_field";
+    
+    var gcp_update_url = "<%= url_for(update_gcp_base_path) %>";
+    var gcp_update_field_url = "<%= url_for(update_field_gcp_base_path) %>";
 
     var from_map;
     var to_map;
@@ -16,7 +17,7 @@
     var wms_url = '<%= url_for :controller => 'maps', :action => 'wms', :id => @map  -%>';
     var empty_wms_url = '<%= url_for :controller => 'maps', :action => 'wms' -%>';
     var map_has_bounds = false;
-    var layer_baseurl = '/layers/wms';
+    var layer_baseurl = '<%= url_for(wms_layer_base_path) %>';
     var layers_array = [<%=@other_layers.join(",")-%>];
     var map_bounds = new OpenLayers.Bounds();
   <% if @map.gcps.hard.size > 0 %>

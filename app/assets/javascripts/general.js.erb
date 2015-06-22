@@ -1,5 +1,5 @@
 
- OpenLayers._getScriptLocation = function(){ return '/assets/openlayers/'; };
+ OpenLayers._getScriptLocation = function(){ return '<%= asset_url("/assets/openlayers/") %>'; };
  
   var addthis_share = {templates: {twitter: '{{url}} (from @<%=  APP_CONFIG['addthis_twitter_user'] %>)'}};
 

@@ -63,19 +63,24 @@ Rails.application.routes.draw do
   
   get '/maps/thumb/:id' => 'maps#thumb', :as =>'thumb_map'
   get '/layers/thumb/:id' => 'layers#thumb', :as =>'thumb_layer'
-  
+  get '/maps/thumb' => 'maps#thumb', :as => 'map_thumb_base'
+
   get '/gcps/' => 'gcp#index', :as => "gcps"
   get '/gcps/:id' => 'gcps#show', :as => "gcp"
   delete '/gcps/:id/destroy' => 'gcps#destroy', :as => "destroy_gcp"
   post '/gcps/add/:mapid' => 'gcps#add', :as => "add_gcp"
   put '/gcps/update/:id' => 'gcps#update', :as => "update_gcp"
   put '/gcps/update_field/:id' => 'gcps#update_field', :as => "update_field_gcp"
-  
+
+  put 'gcps/update' => 'gcps#update', :as => "update_gcp_base"
+  put 'gcps/update_field' => 'gcps#update', :as => "update_field_gcp_base" 
 
   get '/maps/wms/:id' => "maps#wms", :as => 'wms_map'
   get '/maps/tile/:id/:z/:x/:y' => "maps#tile", :as => 'tile_map'
   
   get '/layers/wms/:id' => "layers#wms", :as => "wms_layer"
+  get '/layers/wms' => "layers#wms", :as => "wms_layer_base"
+
   get '/layers/tile/:id/:z/:x/:y' => "layers#tile", :as => 'tile_layer'
   
   resources :layers, :except => [:edit, :update, :destroy, :new, :create] do

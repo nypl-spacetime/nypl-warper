@@ -20,8 +20,8 @@
     var subtypeURL = "<%= url_for :controller => 'digitize', :action => 'subtype' -%>";
     var geoserverURL = '<%= "http://"+ request.host + "/geoserver/wfs" %>';
 
-var cssPath = "/assets/";
-var jsPath = "/assets/";
+var cssPath = "<%=asset_url("/assets/")%>";
+var jsPath = "<%=asset_url("/assets/")%>";
 
     var browserIsIE6orBefore = false;
 
