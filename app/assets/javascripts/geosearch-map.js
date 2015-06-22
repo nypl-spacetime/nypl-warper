@@ -5,6 +5,7 @@ function replaceMapTable(smaps) {
     var tableRow = "<tr id='map-row-" + smap.id + "' class='minimap-tr'>" +
             "<td class='mini-map-thumb'><img src='" + mapThumbBaseURL + smap.id + "' height='70' ></td>" +
             "<td>" + smap.title + "<br />" +
+            smap.issue_year + "<br />"+ 
             "<a href='" + mapBaseURL + "/" + smap.id + "' target='_blank'>Open map</a> </td></tr>";
 
     jQuery("#searchmap-table").append(tableRow);
@@ -14,6 +15,9 @@ function replaceMapTable(smaps) {
 function insertMapTablePagination(total, per, current) {
   var num = current * per;
   var start = num - per;
+  if (start == 0){
+    start = 1;
+  }
   var last = false;
   var nextlot = current + 1;
   var prevlot = current - 1;

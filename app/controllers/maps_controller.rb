@@ -62,7 +62,7 @@ class MapsController < ApplicationController
     @year_max = 2015 if @year_max == 0
     
     year_conditions = nil
-    if params[:from] && params[:to] && (@year_min != params[:from].to_i && @year_max != params[:to].to_i)
+    if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
       year_conditions = {:issue_year => params[:from].to_i..params[:to].to_i}
     end
     
@@ -185,12 +185,22 @@ class MapsController < ApplicationController
       sort_geo ="ST_Area(bbox_geom) DESC ,"
     end
 
+    @year_min = Map.minimum(:issue_year)
+    @year_max = Map.maximum(:issue_year)
+    @year_min = 1600 if @year_min == 0
+    @year_max = 2015 if @year_max == 0
+
+    year_conditions = nil
+    if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
+      year_conditions = {:issue_year => params[:from].to_i..params[:to].to_i}
+    end
+
     paginate_params = {
       :page => params[:page],
       :per_page => 20
     }
     order_params = sort_geo + sort_clause + sort_nulls
-    @maps = Map.select("bbox, title, description, updated_at, id, nypl_digital_id, uuid, issue_year").warped.where(conditions).order(order_params).paginate(paginate_params)
+    @maps = Map.select("bbox, title, description, updated_at, id, nypl_digital_id, uuid, issue_year").warped.where(conditions).where(year_conditions).order(order_params).paginate(paginate_params)
     @jsonmaps = @maps.to_json # (:only => [:bbox, :title, :id, :nypl_digital_id])
     respond_to do |format|
       format.html{ render :layout =>'application' }

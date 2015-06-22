@@ -245,6 +245,15 @@ a.addthis_button_compact{
 font-size: 10px;
 }
 
+#geosearch-year-filter-container {
+  height: 55px;
+}
+
+#geosearch {
+  border: 2px solid #BBBBBB;
+  padding: 5px;
+}
+
 #searchmap
 {     margin-left: 2px;
         position: relative;
@@ -271,7 +280,9 @@ float: right;
 }
 
 #searchmap-table td {
-font-size: 70%;
+  font-size: 70%;
+  vertical-align: top;
+  padding-right: 1em;
 }
 
 #searchmap-table td.mini-map-thumb {
@@ -1331,6 +1342,11 @@ border:2px solid #00f2ab;
 
 
 /* OPENLAYERS spechul stilz */
+.olPopupCloseBox {
+    background: transparent asset_url("close.gif") no-repeat scroll 0% 0%;
+        margin-right: -3px;
+    }
+
 div.olControlMousePosition
 {
 	bottom:0;

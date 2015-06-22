@@ -95,14 +95,23 @@ class LayersController < ApplicationController
       sort_geo ="ST_Area(bbox_geom) DESC ,"
     end
     
-    
+    @year_min = Map.minimum(:issue_year)
+    @year_max = Map.maximum(:issue_year)
+    @year_min = 1600 if @year_min == 0
+    @year_max = 2015 if @year_max == 0
+
+    year_conditions = nil
+    if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
+      year_conditions = {:depicts_year => params[:from].to_i..params[:to].to_i}
+    end
+
     paginate_params = {
       :page => params[:page],
       :per_page => 20
     }
     order_params = sort_geo + sort_clause + sort_nulls
     @layers = Layer.select("bbox, name, updated_at, id, maps_count, rectified_maps_count,
-                       depicts_year").visible.with_maps.where(conditions).paginate(paginate_params)
+                       depicts_year").visible.with_maps.where(conditions).where(year_conditions).paginate(paginate_params)
     
     @jsonlayers = @layers.to_json
     respond_to do |format|
@@ -150,7 +159,7 @@ class LayersController < ApplicationController
     @year_max = Map.maximum(:issue_year)
     
     year_conditions = nil
-    if params[:from] && params[:to] && (@year_min != params[:from].to_i && @year_max != params[:to].to_i)
+    if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
       year_conditions = {:depicts_year => params[:from].to_i..params[:to].to_i}
     end
     
