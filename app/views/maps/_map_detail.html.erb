@@ -46,7 +46,7 @@
 
     <% if user_signed_in? %>
       <div class="users_version_info map_summary ">
-        <% if @current_version_number > 0 %>
+        <% if @current_version_number > 0  && @current_version_user %>
           Version No.<%= @current_version_number%> by <%= link_to(@current_version_user.login, user_path(@current_version_user.id)) %>. 
         <% end %>
         <% if @version_users && @version_users.length > 0 %>
