@@ -34,6 +34,7 @@
         Unrectified.
       <%end-%>
     </span>
+    
 
     <div class="inset_info">
       <% if map.parent || map.inset_maps.nil? %>
@@ -42,6 +43,25 @@
         This map has <%= link_to pluralize(map.inset_maps.size, "inset map"), inset_maps_map_path %>.
       <% end %>
     </div>
+
+    <% if user_signed_in? %>
+      <div class="users_version_info map_summary ">
+        <% if @current_version_number > 0 %>
+          Version No.<%= @current_version_number%> by <%= link_to(@current_version_user.login, user_path(@current_version_user.id)) %>. 
+        <% end %>
+        <% if @version_users && @version_users.length > 0 %>
+          <%=  pluralize(@version_users.length, "User") -%> also helped including:
+          <% @version_users.each do | version_user | 
+            user = User.select(:login, :id).find_by_id(version_user.whodunnit.to_i)
+          %>
+            <%= link_to(user.login, user_path(user.id)) %><%= ","  if(version_user != @version_users.last) -%>
+          <% end %>
+        <% else %>
+          No other users have helped this map yet. Be the first!
+        <% end %>
+      </div>
+    <% end %>
+    
     <span class="map_links">
       <% if user_signed_in? %>
         <% current_user_maps = current_user.maps %>
