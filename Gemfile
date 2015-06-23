@@ -65,6 +65,8 @@ gem "rmagick"
 
 gem "s3"
 
+gem 'rack-attack'
+
 group :development do
    gem 'web-console', '~> 2.0'
    gem 'spring'

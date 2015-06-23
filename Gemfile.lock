@@ -175,6 +175,8 @@ GEM
     pg (0.18.1)
     proxies (0.2.1)
     rack (1.6.0)
+    rack-attack (4.3.0)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.1)
@@ -302,6 +304,7 @@ DEPENDENCIES
   paper_trail (~> 4.0.0.rc1)
   paperclip (~> 4.2.0)
   pg
+  rack-attack
   rails (= 4.2.1)
   rmagick
   rvm1-capistrano3
