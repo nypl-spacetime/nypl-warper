@@ -36,8 +36,11 @@ module Tilestache
     tile_bbox = bbox[1],bbox[0],bbox[3],bbox[2]
     tile_bbox_str = tile_bbox.join(" ")
     
+    layer_name = self.id.to_s
+    layer_name = "map-"+ layer_name if options[:item_type] == "map"
+    
     command = "cd #{APP_CONFIG['tilestache_path']}; python scripts/tilestache-seed.py -c #{config_file}" +
-      " -l #{self.id} -b #{tile_bbox_str} --enable-retries -x #{(1..max_zoom.to_i).to_a.join(' ')}"
+      " -l #{layer_name} -b #{tile_bbox_str} --enable-retries -x #{(1..max_zoom.to_i).to_a.join(' ')}"
     
     puts command
     
@@ -61,7 +64,10 @@ module Tilestache
   def tilestache_config_json(options)
 
     url = "http://#{APP_CONFIG['host']}#{ActionController::Base.relative_url_root.to_s}/#{options[:item_type]}s/tile/#{options[:item_id]}/{Z}/{X}/{Y}.png"
-        
+    
+    layer_name = options[:item_id].to_s
+    layer_name = "map-"+ layer_name if options[:item_type] == "map"
+    
     config = {
       "cache" => {
         "name" => "S3",
@@ -71,7 +77,7 @@ module Tilestache
         "path" => options[:path]
       },
       "layers" => {
-        options[:item_id] => {       
+        layer_name => {       
           "provider" => {
             "name" => "proxy", 
             "url" =>  url
@@ -86,7 +92,7 @@ module Tilestache
 #        "path" => "/tmp/stache"
 #      },
 #      "layers" => {
-#        options[:item_id] => {       
+#        layer_name => {       
 #          "provider" => {
 #            "name" => "proxy", 
 #            "url" =>  url
