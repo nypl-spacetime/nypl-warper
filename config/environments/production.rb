@@ -81,4 +81,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   
   config.active_record.raise_in_transactional_callbacks = true
+  
+  config.action_controller.relative_url_root = "/warper"  #for use when starting app in dev mode: 'RAILS_ENV=development bundle exec thin --prefix=/warper start'
+  config.action_mailer.default_url_options = { :script_name => "/warper" }
 end

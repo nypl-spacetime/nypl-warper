@@ -35,5 +35,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   config.active_record.raise_in_transactional_callbacks = true
-  #config.action_controller.relative_url_root = "/warper"
+  config.action_controller.relative_url_root = "/warper"  #for use when starting app: 'RAILS_ENV=development bundle exec thin --prefix=/warper start'
+  config.action_mailer.default_url_options = { :script_name => "/warper" }
 end
