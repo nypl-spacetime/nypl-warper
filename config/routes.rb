@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     end
     resource :user_account
     resources :roles
+    resources :flags, :only => [:create]
   end
   
   get '/admin/' => 'admins#index', :as => "admin"
@@ -59,6 +60,13 @@ Rails.application.routes.draw do
         get 'tag'
     end
     resources :layers
+    resources :flags, :only => [:create]
+  end
+  
+  resources :flags, :except => [:exit, :update, :new] do
+    member do
+      put :close
+    end
   end
   
   get '/maps/thumb/:id' => 'maps#thumb', :as =>'thumb_map'

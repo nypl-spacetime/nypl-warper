@@ -17,8 +17,9 @@ class Map < ActiveRecord::Base
   #belongs_to :owner, :class_name => "User"
   belongs_to :parent, :class_name => "Map", :foreign_key => "parent_id"
   has_many :inset_maps, :class_name => "Map",:foreign_key => "parent_id"
- 
   
+  has_many :flags, :as => :flaggable 
+ 
   validates_presence_of :title
   validates_numericality_of :rough_lat, :rough_lon, :rough_zoom, :allow_nil => true
   validates_length_of :issue_year, :maximum => 4,:allow_nil => true, :allow_blank => true
