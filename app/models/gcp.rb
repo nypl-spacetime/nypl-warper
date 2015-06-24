@@ -16,7 +16,7 @@ class Gcp < ActiveRecord::Base
   
   after_save :touch_map
   
-  after_destroy {|gcp| gcp.map.paper_trail_event = 'gcp_delete'  }
+  after_destroy {|gcp| gcp.map.paper_trail_event = 'gcp_delete' if gcp.map  }
   after_destroy :touch_map
   
   
@@ -28,7 +28,7 @@ class Gcp < ActiveRecord::Base
   
  private
   def touch_map
-    self.map.touch_with_version(:gcp_touched_at)
+    self.map.touch_with_version(:gcp_touched_at) if self.map
   end
   
 
