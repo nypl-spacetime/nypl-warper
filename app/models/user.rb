@@ -11,8 +11,6 @@ class User < ActiveRecord::Base
   has_many :maps, -> { uniq }, :through => :my_maps
  
   #has_many :layers, :dependent => :destroy
-  has_many :memberships, :dependent => :destroy
-  has_many :groups, :through => :memberships
   
   validates_presence_of    :login
   validates_length_of      :login,    :within => 3..40

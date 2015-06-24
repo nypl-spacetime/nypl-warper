@@ -51,11 +51,13 @@
         <% end %>
         <% if @version_users && @version_users.length > 0 %>
           <%=  pluralize(@version_users.length, "User") -%> also helped including:
-          <% @version_users.each do | version_user | 
-            user = User.select(:login, :id).find_by_id(version_user.whodunnit.to_i)
+          <% @version_users.each do | version_user |
+            if User.exists?(:id => version_user.whodunnit.to_i)
+              user = User.select(:login, :id).find_by_id(version_user.whodunnit.to_i)
           %>
             <%= link_to(user.login, user_path(user.id)) %><%= ","  if(version_user != @version_users.last) -%>
-          <% end %>
+          <% end
+          end %>
         <% else %>
           No other users have helped this map yet. Be the first!
         <% end %>

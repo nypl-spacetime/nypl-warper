@@ -19,7 +19,7 @@
     if user -%>
       <%= link_to user.login, :controller=>"users",:action=>"show", :id=>user.id-%>
     <% else -%>
-      &mdash;
+    <span class="subdued">User:<%= version.whodunnit %></span>
     <%end%>
   </td>
   
@@ -33,7 +33,8 @@
   <% end %>
     
   <td class="<%= cl %>">
-    <%= link_to typename + ' ' + version.item_id.to_s, activity_details_path(version.item_id) -%>
+    <%= link_to typename + ' ' + version.item_id.to_s, map_path(version.item_id) if version.item_type == "Map" -%>
+    <%= link_to typename + ' ' + version.item_id.to_s, gcp_path(version.item_id) if version.item_type == "Gcp" -%>
   </td>
 
   <td class="<%= cl %>">
@@ -46,8 +47,8 @@
 
   <td class="<%=cl %>">
 
-    <%-unless defined?(page) && page =~ /detail/ -%>
-      <%= link_to "Further details", activity_details_url(:id => version) %>
+    <%- unless defined?(page) && page =~ /detail/ -%>
+      <%= link_to "Further details", activity_details_url(:id => version.id) %>
     <%-end-%>
   </td>
   <% if admin_authorized? %>
