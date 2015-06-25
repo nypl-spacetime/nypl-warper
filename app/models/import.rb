@@ -217,7 +217,7 @@ class Import < ActiveRecord::Base
     issue_year = nil
       
     if key_date && key_date["$"]
-      issue_year = key_date["$"].to_i
+      issue_year = clean_date(key_date["$"])
     end
 
     if issue_year.nil?
@@ -227,7 +227,7 @@ class Import < ActiveRecord::Base
           
         if other_date
           other_date_year = deep_find("$", other_date)
-          issue_year = other_date_year["$"].to_i
+          issue_year = clean_date(other_date_year["$"])
 
           break
         end
@@ -247,6 +247,14 @@ class Import < ActiveRecord::Base
       :status => :unloaded, :map_type=>:is_map, :mask_status => :unmasked)
       
     map
+  end
+  
+  #cleans the date string and returns int
+  def clean_date(date_string)
+    date_string.gsub!(/-/ ,'0')
+    date_string.gsub!(/\[|\]/ ,'')
+    
+    date_string.to_i
   end
 
   def get_layer(related_item)
