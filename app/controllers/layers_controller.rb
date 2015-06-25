@@ -185,6 +185,16 @@ class LayersController < ApplicationController
     if !map.nil?
       @map = Map.find(map)
       
+      if @map.versions.last 
+        @current_version_number = @map.versions.last.index
+        @current_version_user = User.find_by_id(@map.versions.last.whodunnit.to_i)
+      else
+        @current_version_number = 1
+        @current_version_user = nil
+      end
+
+    @version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(6)
+      
       layer_ids = @map.layers.map(&:id)
       @layers = Layer.where(id: layer_ids).where(conditions).select('*, round(rectified_maps_count::float / maps_count::float * 100) as percent').where(conditions).order(order_options).paginate(paginate_params)
       @html_title = "Layer List for Map #{@map.id}"
