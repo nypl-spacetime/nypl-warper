@@ -279,7 +279,7 @@ class MapsController < ApplicationController
       @current_version_user = nil
     end
 
-    @version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(10)
+    @version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(6)
     
     unless user_signed_in? and current_user.has_role?("adminstrator")
       if @map.published? || @map.status == :publishing
