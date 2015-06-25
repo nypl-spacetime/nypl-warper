@@ -3,7 +3,7 @@ namespace :warper do
   def dump_database
     database = Rails.configuration.database_configuration[Rails.env]["database"]
     dump_name = "#{database}-#{Time.now.strftime('%Y-%m-%d-%H%M%S')}.dump"
-    system "pg_dump -Fc -i > db/#{dump_name}"
+    system "pg_dump #{database} -Fc -i > db/#{dump_name}"
       
     dump_name
   end
