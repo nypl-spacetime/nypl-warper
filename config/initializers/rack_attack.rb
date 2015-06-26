@@ -18,7 +18,7 @@ Rack::Attack.cache.store = ActiveSupport::Cache::RedisStore.new("127.0.0.1")
 #  Attacks on logins
 Rack::Attack.throttle('logins/ip', :limit => 5, :period => 20.seconds) do |req|
   if req.path.include?('/u/sign_in') && req.post?
-    req.ip + req.user_agent
+    req.ip + req.user_agent.to_s
   end
 end
 
@@ -28,21 +28,21 @@ Rack::Attack.throttle('warper/post_request', :limit => 5, :period => 20.seconds)
       req.path.include?("/save_mask_and_warp") || 
       req.path.include?("/comments") ||
       req.path.include?("/gcps/add")  && req.post?
-    req.ip + req.user_agent
+    req.ip + req.user_agent.to_s
   end
 end
 
 #  Limiting other requests, puts
 Rack::Attack.throttle('warper/put_request', :limit => 5, :period => 20.seconds) do |req|
   if req.path.include?("/rectify") || req.path.include?("/gcps/update") | req.path.include?("/comments") && req.put?
-    req.ip + req.user_agent
+    req.ip + req.user_agent.to_s
   end
 end
 
 #  Limiting requests, admin throttle test
 Rack::Attack.throttle('admin/throttletest', :limit => 2, :period => 10.seconds) do |req|
   if req.path.include?('/admin/throttle_test') && req.get?
-    req.ip + req.user_agent
+    req.ip + req.user_agent.to_s
   end
 end
 
