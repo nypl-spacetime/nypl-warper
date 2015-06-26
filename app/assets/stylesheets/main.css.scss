@@ -1015,6 +1015,18 @@ font-weight: bold;
   padding-bottom: 2px;
 }
 
+/*responsive tabs*/
+
+
+@media screen and (max-width: 1060px) {
+  #navlist li.responsive_wide{ display:none;}
+}
+@media screen and (max-width: 660px) {
+  #navlist li.responsive_narrow{ display:none;}
+}
+@media screen and (max-width: 470px) {
+  #navlist li.responsive{ display:none;}
+}
 #navlist {
 	padding: 3px 0 0 1em;
 	border-bottom: 1px solid #999;
