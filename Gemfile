@@ -45,7 +45,7 @@ gem "omniauth-facebook"
 
 gem 'pg'
 #gem 'activerecord-postgis-adapter'
-gem 'activerecord-postgis-adapter', '3.0.0.beta2'
+gem 'activerecord-postgis-adapter', '~>3.0'
 
 gem 'acts-as-taggable-on', '~> 3.3.0'
 gem 'paperclip', '~> 4.2.0'
