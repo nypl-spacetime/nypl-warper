@@ -64,8 +64,9 @@
        </script>
       
     <% end %>
-    <br/>
-    New: <%= link_to 'Find Layers by Location',  url_for(:controller => 'layers', :action=>'geosearch'), :class => "buttonWarper"%>
+    <div id="geosearch-link">
+      New: <%= link_to 'Find Layers by Location',  url_for(:controller => 'layers', :action=>'geosearch'), :class => ""%>
+    </div>
   </div>
 
   <h2><%= @html_title -%>
