@@ -2,8 +2,8 @@
   
   <script type="text/javascript">
     var gs_bounds = new OpenLayers.Bounds(<%=@bbox-%>);
-    var mapBaseURL = '/maps/';
-    var mapThumbBaseURL = '/maps/thumb/';
+    var mapBaseURL = '<%= url_for maps_path %>';
+    var mapThumbBaseURL = '<%= url_for(map_thumb_base_path) %>/';
     var year_from = <%= @year_min.to_i %>;
     var year_to = <%= @year_max.to_i %>;
   

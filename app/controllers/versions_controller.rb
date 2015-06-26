@@ -12,7 +12,7 @@ class VersionsController < ApplicationController
   def index
     @html_title = "Recent Activity"
     @versions = PaperTrail::Version.order(:created_at => :desc).paginate(:page => params[:page],
-      :per_page => 20)
+      :per_page => 50)
     @title = "Recent Activity For Everything"
     @linktomap = true
     render :action => 'index'
@@ -33,7 +33,7 @@ class VersionsController < ApplicationController
     order_options = "created_at DESC"
    
     @versions = PaperTrail::Version.where(:whodunnit => @user.id).order(order_options).paginate(:page => params[:page],
-      :per_page => 20)
+      :per_page => 50)
     
     render :action => 'index'
   end

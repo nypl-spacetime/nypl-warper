@@ -173,7 +173,7 @@ class LayersController < ApplicationController
       sort_nulls = " NULLS FIRST"
     end
 
-    @per_page = params[:per_page] || 20
+    @per_page = params[:per_page] || 50
     paginate_params = {
       :page => params[:page],
       :per_page => @per_page

@@ -42,7 +42,7 @@ class UsersController < ApplicationController
       COUNT(case when event='destroy' and item_type='Gcp' then 1 end) as gcp_destroy_count 
       from versions #{period_where_clause} group by whodunnit ORDER BY #{sort_clause}"
     
-    @users_activity  = PaperTrail::Version.paginate_by_sql(the_sql,:page => params[:page], :per_page => 30)
+    @users_activity  = PaperTrail::Version.paginate_by_sql(the_sql,:page => params[:page], :per_page => 50)
  
   end
 
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     else
       conditions = nil
     end
-    @users = User.where(conditions).order(sort_clause).paginate(:page=> params[:page], :per_page => 30)
+    @users = User.where(conditions).order(sort_clause).paginate(:page=> params[:page], :per_page => 50)
 
   end
 
