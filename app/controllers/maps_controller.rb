@@ -273,13 +273,18 @@ class MapsController < ApplicationController
     #
     if @map.versions.last 
       @current_version_number = @map.versions.last.index
-      @current_version_user = User.find_by_id(@map.versions.last.whodunnit.to_i)
+      if User.exists?(@map.versions.last.whodunnit.to_i)
+        @current_version_user = User.find_by_id(@map.versions.last.whodunnit.to_i)
+      else
+        @current_version_user  = nil
+      end
     else
       @current_version_number = 1
       @current_version_user = nil
     end
 
-    @version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(6)
+    version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(7)
+    @version_users = version_users.to_a.delete_if{|v| !User.exists?(v.whodunnit) }
     
     unless user_signed_in? and current_user.has_role?("adminstrator")
       if @map.published? || @map.status == :publishing
@@ -368,7 +373,7 @@ class MapsController < ApplicationController
     @current_tab = "warped"
     @selected_tab = 5
     @html_title = "Viewing Rectfied Map "+ @map.id.to_s
-    if @map.warped_or_published? && @map.gcps.hard.size > 2
+    if (@map.warped_or_published? || @map.status == :publishing) && @map.gcps.hard.size > 2 
       @other_layers = Array.new
       @map.layers.visible.each do |layer|
         @other_layers.push(layer.id)
