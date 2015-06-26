@@ -1015,7 +1015,16 @@ font-weight: bold;
   padding-bottom: 2px;
 }
 
-/*responsive tabs*/
+/* responsive map tabs */
+@media screen and (max-width: 800px) {
+  .ui-tabs {font-size: 15px; }
+}
+@media screen and (max-width: 645px) {
+  .ui-tabs {font-size: 12px;}
+}
+
+
+/*responsive nav tabs*/
 
 
 @media screen and (max-width: 1060px) {
