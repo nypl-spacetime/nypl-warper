@@ -11,8 +11,8 @@ class HomeController < ApplicationController
     
     @layers = Layer.all.order(:updated_at => :desc).limit(3).includes(:maps)
     
-    @year_min = Map.minimum(:issue_year)
-    @year_max = Map.maximum(:issue_year)
+    @year_min = Map.minimum(:issue_year) - 1
+    @year_max = Map.maximum(:issue_year) + 1
     @year_min = 1600 if @year_min == 0
     @year_max = 2015 if @year_max == 0
     

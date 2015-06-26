@@ -95,8 +95,8 @@ class LayersController < ApplicationController
       sort_geo ="ST_Area(bbox_geom) DESC ,"
     end
     
-    @year_min = Map.minimum(:issue_year)
-    @year_max = Map.maximum(:issue_year)
+    @year_min = Map.minimum(:issue_year) - 1
+    @year_max = Map.maximum(:issue_year) + 1
     @year_min = 1600 if @year_min == 0
     @year_max = 2015 if @year_max == 0
 
@@ -155,8 +155,8 @@ class LayersController < ApplicationController
       select = "*"
     end
     
-    @year_min = Map.minimum(:issue_year)
-    @year_max = Map.maximum(:issue_year)
+    @year_min = Map.minimum(:issue_year) - 1
+    @year_max = Map.maximum(:issue_year) + 1
     
     year_conditions = nil
     if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
