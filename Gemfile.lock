@@ -175,7 +175,7 @@ GEM
     pg (0.18.1)
     proxies (0.2.1)
     rack (1.6.0)
-    rack-attack (4.3.0)
+    rack-attack (3.0.0)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -205,6 +205,12 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
     rdoc (4.2.0)
+    redis (3.2.1)
+    redis-activesupport (4.0.0)
+      activesupport (~> 4)
+      redis-store (~> 1.1.0)
+    redis-store (1.1.5)
+      redis (>= 2.2)
     request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
@@ -304,8 +310,9 @@ DEPENDENCIES
   paper_trail (~> 4.0.0.rc1)
   paperclip (~> 4.2.0)
   pg
-  rack-attack
+  rack-attack (~> 3.0)
   rails (= 4.2.1)
+  redis-activesupport
   rmagick
   rvm1-capistrano3
   s3

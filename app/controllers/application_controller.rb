@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   before_filter :check_site_online
   before_filter :check_site_read_only, :unless => :devise_controller?
   
+  before_filter :check_rack_attack
+  
   def info_for_paper_trail
     { :ip => request.remote_ip, :user_agent => request.user_agent }
   end
@@ -75,6 +77,12 @@ class ApplicationController < ActionController::Base
       end
     end
     
+  end
+  
+  def check_rack_attack
+    if request.env['rack.attack.matched'] == "admin/throttletest"
+      puts "Flag this user" + current_user.inspect
+    end
   end
 
 

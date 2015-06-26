@@ -65,7 +65,8 @@ gem "rmagick"
 
 gem "s3"
 
-gem 'rack-attack'
+gem 'rack-attack', '~>3.0'
+gem 'redis-activesupport'
 
 group :development do
    gem 'web-console', '~> 2.0'

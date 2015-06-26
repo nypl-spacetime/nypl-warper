@@ -33,6 +33,13 @@ class AdminsController < ApplicationController
     end
     redirect_to :read_only
   end
+  
+  #
+  # Action used by Rack Attack for throttling behaviour testing
+  #
+  def throttle_test
+    render :text => "throttle test"
+  end
 
   
 end

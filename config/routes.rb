@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get '/admin/' => 'admins#index', :as => "admin"
   get '/admin/read_only' => 'admins#read_only', :as => 'read_only'
   post '/admin/change_site_status' =>'admins#change_site_status', :as => 'change_site_status'
+  get '/admin/throttle_test' => 'admins#throttle_test', :as => 'admintest'
 
   get '/maps/activity' => 'versions#for_map_model', :as => "maps_activity"
   
