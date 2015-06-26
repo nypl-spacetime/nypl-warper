@@ -18,7 +18,7 @@
       <%= text_field_tag 'query', @query -%>
       <input type="hidden" id="from" />
       <input type="hidden" id="to"/>
-      <input type="submit" value=" Go " />
+      
     
       <div id="year-filter">
         <div id="year-label">
@@ -28,6 +28,8 @@
           <div id="year-slider"></div>
         </div>	
       </div>
+      
+      <input type="submit" value="Search" />
       <script>
         var year_from = <%= params[:from] || @year_min.to_i %>;
         var year_to = <%= params[:to] || @year_max.to_i %>;

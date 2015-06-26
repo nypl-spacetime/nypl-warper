@@ -245,8 +245,17 @@ a.addthis_button_compact{
 font-size: 10px;
 }
 
+#geosearch-link{
+  float:right;
+}
+
 #geosearch-year-filter-container {
   height: 55px;
+  margin-top: 27px;
+}
+
+#geosearch-year-filter-container #year-slider-container {
+  width: 350px;
 }
 
 #geosearch {
@@ -292,6 +301,10 @@ width: 80px;
 #searchmap-table tfoot td {
   text-align: center;
   font-size: 110%;
+}
+
+#searchmap-table caption {
+  min-width: 120px;
 }
 
 .normal { background-color: #CCCCCC }
@@ -730,6 +743,27 @@ div.period span.period{
 	border-radius:6px;
 	margin-bottom: 10px;
 	overflow:hidden; /*to clear float*/
+}
+
+#searchform #radio-buttons{ 
+  display: inline-block;
+}
+#searchform {
+  margin-top: 15px;
+  
+}
+#searchform input{
+ margin-bottom: 26px;
+}
+#searchform input[type="radio"] {
+  margin-bottom: 0px;
+}
+
+#searchform input[type="submit"] {
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 #searchform #query{
       width:11em;
@@ -1594,15 +1628,21 @@ span.current_status{
   padding-right: 0.3em;
 }
 
+#year-filter{
+  vertical-align: top;
+  display: inline-block;
+  margin-bottom: 10px;
+}
 #year-label{
   float:left;
+  padding-left: 5px;
 }
 
 #year-slider-container {
-  padding-top: 0.5em;
-  padding-bottom: 0.7em;
-  padding-left: 3em;
-  width: 330px;
+  padding-top: 7px;
+  padding-right: 20px;
+  padding-left: 58px;
+  width: 300px;
 }
 .year-slider-tooltip {
 	display: block;
@@ -1611,7 +1651,7 @@ span.current_status{
 	font: 400 12px/12px Arial;
 	border-radius: 3px;
 	background: #fff;
-	bottom: -29px;
+  top: -26px;
 	padding: 5px;
 	left: -9px;
 	text-align: center;

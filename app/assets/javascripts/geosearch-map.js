@@ -25,7 +25,11 @@ function insertMapTablePagination(total, per, current) {
     num = total;
     last = true;
   }
-  var tableCaption = "<caption>Found " + total + " Maps. Showing " + start + " - " + num;
+  if (total > 0) {
+    var tableCaption = "<caption>Found " + total + " Maps. Showing " + start + " - " + num;
+  } else {
+    var tableCaption = "<caption>Found " + total + " Maps";
+  }
   jQuery("#searchmap-table").append(tableCaption);
 
 
