@@ -78,10 +78,23 @@ class ApplicationController < ActionController::Base
     end
     
   end
-  
+
   def check_rack_attack
-    if request.env['rack.attack.matched'] == "admin/throttletest"
-      puts "Flag this user" + current_user.inspect
+    if request.env['rack.attack.flag_user'] == true
+
+      flag =  Flag.find_or_initialize_by(:flaggable_id => current_user.id) 
+
+      if flag.new_record?
+        flag.flaggable_type = "User"
+        flag.reason = "request_throttle"
+        flag.message =  [
+          env['rack.attack.matched'],
+          env['rack.attack.match_type'],
+          env['rack.attack.match_data']
+        ].inspect
+        flag.save
+      end
+
     end
   end
 

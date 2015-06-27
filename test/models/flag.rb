@@ -61,4 +61,8 @@ class FlagTest < ActiveSupport::TestCase
     assert_equal users(:user1), @flag.reporter
     assert_equal users(:adminuser), @flag.closer
   end
+  
+  test "sends an email when first created" do
+    
+  end
 end

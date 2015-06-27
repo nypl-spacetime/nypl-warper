@@ -1,1 +1,46 @@
-<%= @flags.inspect  %>
+<h1>User Flags</h1>
+
+
+<%= will_paginate @flags %>
+
+<table class="flag-table">
+  <thead>
+    <tr>
+      <%= sort_header_tag('flaggable_id', :title => "User") %>
+      <%= sort_header_tag('created_at', :title => "Flag Created") %>
+
+      <%= sort_header_tag('reason', :title => "Reason") %>
+      <th>Message</th>
+      <%= sort_header_tag('closed_at', :title => "Closed?") %>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @flags.each do | flag | %>
+      <tr class="<%= cycle('table0', 'table1') %>" >
+        <td><%  
+          user = nil
+          if flag.flaggable_type == "User"
+            if User.exists?(:id => flag.flaggable_id)
+              user = User.select(:login, :id).find_by_id(flag.flaggable_id)
+            end
+            end
+        %>
+          <%= link_to("#{user.login} id:#{user.id}", user_path(user.id)) if user -%>
+
+        <td><%= time_ago_in_words(flag.created_at) %> ago.</td>
+        <td><%= flag.reason %></td>
+        <td class="smaller"><%= flag.message %></td>
+        <td><%= flag.closed_at.nil? ? "Open" : "Closed" %></td>
+        <td> <% if flag.closed_at.nil? %>
+            <%= link_to("Close", close_flag_path(flag.id), :method => :put, :class=>"delete_button",  data: { confirm: 'Close this Flag??'}) %> |
+          <% end %>
+          <%= link_to("Delete", flag_path(flag.id), :method => :delete, :class=>"delete_button",  data: { confirm: 'Delete this flag?'})%>
+        </td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @flags %>

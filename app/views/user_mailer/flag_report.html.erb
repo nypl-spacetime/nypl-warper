@@ -1,0 +1,18 @@
+<p>
+  <%= APP_CONFIG['site_name'] %> Possible Malicious Activity User Flag Report <%= @flagged_user.login %> at <%= @flag.created_at %>. <br />
+  This email has gone out to all administrators on the site.
+</p>
+
+<p>
+  There has been a new user flag report created for user <%= link_to @flagged_user.login, url_for(user_url(@flagged_user.id)) %>. The reason given was <%= @flag.reason %>. 
+</p>
+
+<p>
+  The message from the system with this flag was <br />
+  <%= @flag.message %>
+</p>
+
+<p>
+  You can manage all user flags here: <%= link_to "Manage User Flags", flags_url %>.
+</p>
+

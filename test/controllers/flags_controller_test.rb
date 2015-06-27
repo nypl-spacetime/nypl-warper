@@ -3,7 +3,7 @@ class FlagsControllerTest < ActionController::TestCase
   fixtures :maps, :layers, :roles, :permissions
 
   test "create new flag" do
-    sign_in users(:user1)
+    sign_in users(:adminuser)
     map = maps(:map1)
     post :create, :flag => { :reason => "error"}, :map_id => map
     
@@ -36,7 +36,7 @@ class FlagsControllerTest < ActionController::TestCase
     flag = flags(:map1_flag)
     put :close, :id => flag.id
     assert_response :redirect
-    assert_redirected_to map
+    assert_redirected_to flags_url
     assert flash[:notice].include?("closed")
   end
 end

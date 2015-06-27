@@ -687,7 +687,8 @@ width:100%;
 .activity-table th {
 text-align:left;
 }
-.activity-table td.smaller {
+
+td.smaller {
   font-size: xx-small;
   max-width: 300px;
 }
@@ -1695,4 +1696,11 @@ span.current_status{
 span.subdued {
   color:grey;
   font-size:smaller;
+}
+
+.flag-table {
+width: 100%;
+}
+.flag-table tr.total{
+  font-weight: bold;
 }

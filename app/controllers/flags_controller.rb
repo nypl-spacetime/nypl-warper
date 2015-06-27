@@ -1,21 +1,36 @@
 class FlagsController < ApplicationController
+  layout 'application'
+    
   before_filter :authenticate_user!
-  before_filter :check_administrator_role, :except => [:create]
+  before_filter :check_administrator_role
 
-  #before_filter :find_flag, :except => [:index, :new, :create]
+  rescue_from ActiveRecord::RecordNotFound, :with => :bad_record 
 
-  
-  rescue_from ActiveRecord::RecordNotFound, :with => :bad_record
-  
-  #show, :index, :create, :close
+  helper :sort
+  include SortHelper
   
   def index
-    @flags = Flag.all
+    sort_init('updated_at', {:default_order => "desc"})
+    sort_update
+    if params[:sort_order] && params[:sort_order] == "desc"
+      sort_nulls = " NULLS LAST"
+    else
+      sort_nulls = " NULLS FIRST"
+    end
+    order_options = sort_clause + sort_nulls
+    
+    @per_page = params[:per_page] || 2
+    paginate_params = {
+      :page => params[:page],
+      :per_page => @per_page
+    }
+    
+    @flags =  Flag.order(order_options).paginate(paginate_params)
   end
   
   def create
     @parent = flagged_item
-    @flag = flagged_item.flags.build(flag_params)
+    @flag =   flagged_item.flags.build(flag_params)
     @flag.reporter = current_user
     
     if @flag.save
@@ -25,11 +40,28 @@ class FlagsController < ApplicationController
     end
 
   end
-  
+   
   def close
-    
+    @flag = Flag.find_by_id(params[:id])
+    if @flag.close(current_user)
+      flash[:notice] = "Flag closed."
+    else
+      flash[:error] = "Error closing flag."
+    end
+     
+    redirect_to :action => 'index'
   end
   
+  def destroy
+    @flag = Flag.find_by_id(params[:id])
+    if @flag.destroy
+      flash[:notice] = "Flag deleted."
+    else
+      flash[:error] = "Error deleting flag."
+    end
+     
+    redirect_to :action => 'index'
+  end
   
   private
   
