@@ -32,7 +32,7 @@ class VersionsController < ApplicationController
     
     order_options = "created_at DESC"
    
-    @versions = PaperTrail::Version.where(:whodunnit => @user.id).order(order_options).paginate(:page => params[:page],
+    @versions = PaperTrail::Version.where(:whodunnit => user_id).order(order_options).paginate(:page => params[:page],
       :per_page => 50)
     
     render :action => 'index'
