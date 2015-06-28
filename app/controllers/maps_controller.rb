@@ -158,7 +158,7 @@ class MapsController < ApplicationController
         [ extents[0], extents[1] ]
       ]
 
-      bbox_polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([bbox_poly_ary]).as_ewkt
+      bbox_polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([bbox_poly_ary]).as_wkt
       if params[:operation] == "within"
         conditions = ["ST_Within(bbox_geom, ST_GeomFromText('#{bbox_polygon}'))"]
       else
@@ -194,13 +194,15 @@ class MapsController < ApplicationController
     if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
       year_conditions = {:issue_year => params[:from].to_i..params[:to].to_i}
     end
-
+    
+    status_conditions = {:status => [Map.status(:warped), Map.status(:published), Map.status(:publishing)]}
+    
     paginate_params = {
       :page => params[:page],
       :per_page => 20
     }
     order_params = sort_geo + sort_clause + sort_nulls
-    @maps = Map.select("bbox, title, description, updated_at, id, nypl_digital_id, uuid, issue_year").warped.where(conditions).where(year_conditions).order(order_params).paginate(paginate_params)
+    @maps = Map.select("bbox, title, description, updated_at, id, nypl_digital_id, uuid, issue_year, status").warped.where(conditions).where(year_conditions).where(status_conditions).order(order_params).paginate(paginate_params)
     @jsonmaps = @maps.to_json # (:only => [:bbox, :title, :id, :nypl_digital_id])
     respond_to do |format|
       format.html{ render :layout =>'application' }

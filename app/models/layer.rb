@@ -156,7 +156,7 @@ class Layer < ActiveRecord::Base
           [ extents[0], extents[1] ]
         ]
         logger.error poly_array.inspect
-        self.bbox_geom = GeoRuby::SimpleFeatures::Polygon.from_coordinates([poly_array]).as_ewkt
+        self.bbox_geom = GeoRuby::SimpleFeatures::Polygon.from_coordinates([poly_array]).as_wkt
 
         @bounds = extent
         save!
