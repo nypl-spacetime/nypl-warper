@@ -33,12 +33,12 @@
 
     <% @users_activity.each do | user | %>
       <tr class="<%= cycle('table0', 'table1') -%>">
-        <td><% if user.whodunnit 
+        <td><% if user.whodunnit && User.exists?(:id => user.whodunnit.to_i)
             user_name = User.select(:login).find_by_id(user.whodunnit).login
           %>
             <%= link_to(user_name, user_path(user.whodunnit))%>
           <% else %>
-            Unknown
+            Unknown <%="(UserID:#{user.whodunnit})" if user.whodunnit %>
           <% end %>
         </td>
         <td><%=user.total_count %></td>
