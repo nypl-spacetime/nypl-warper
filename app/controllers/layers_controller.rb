@@ -162,8 +162,8 @@ class LayersController < ApplicationController
       select = "*"
     end
     
-    @year_min = Map.minimum(:issue_year) - 1
-    @year_max = Map.maximum(:issue_year) + 1
+    @year_min = Map.minimum(:issue_year).to_i - 1
+    @year_max = Map.maximum(:issue_year).to_i + 1
     
     year_conditions = nil
     if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
