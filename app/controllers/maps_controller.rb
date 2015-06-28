@@ -157,8 +157,14 @@ class MapsController < ApplicationController
         [ extents[0], extents[3] ],
         [ extents[0], extents[1] ]
       ]
-
-      bbox_polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([bbox_poly_ary]).as_wkt
+      
+      map_srid = 0
+      map_srid = Map.warped.first.bbox_geom.srid if Map.warped.first && Map.warped.first.bbox_geom
+      if map_srid == 0
+        bbox_polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([bbox_poly_ary]).as_wkt
+      else
+        bbox_polygon = GeoRuby::SimpleFeatures::Polygon.from_coordinates([bbox_poly_ary]).as_ewkt
+      end
       if params[:operation] == "within"
         conditions = ["ST_Within(bbox_geom, ST_GeomFromText('#{bbox_polygon}'))"]
       else
