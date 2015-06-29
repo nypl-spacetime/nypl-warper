@@ -9,6 +9,18 @@ namespace :map do
         return found
       end
     end
+    
+      #cleans the date string and returns int
+    def clean_date(date_string)
+      if date_string.end_with?("-")
+        date_string.gsub!(/-/ ,'0')
+      elsif date_string.start_with?("-")
+        date_string.gsub!(/-/ ,'')
+      end
+      date_string.gsub!(/\[|\]/ ,'')
+      
+      date_string.to_i
+    end
                   
     
     desc "imports a map and any associated layer based on a uuid environment variable"
@@ -103,7 +115,7 @@ namespace :map do
         issue_year = nil
         
         if key_date && key_date["$"]
-          issue_year = key_date["$"].to_i
+          issue_year = clean_date(key_date["$"])
         end
         
         if issue_year.nil?
@@ -113,7 +125,7 @@ namespace :map do
             
             if other_date
               other_date_year = deep_find("$", other_date)
-              issue_year = other_date_year["$"].to_i
+              issue_year = clean_date(other_date_year["$"])
               
               break
             end

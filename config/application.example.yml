@@ -7,6 +7,7 @@ defaults: &defaults
   src_maps_dir: 
   dst_maps_dir:
   mask_dir:
+  tileindex_dir: 
   yahoo_app_id: "ascas"
   host: "localhost:3000"
   site_name: "MapWarper"
@@ -45,8 +46,8 @@ defaults: &defaults
   #throttling for destructive requests
   enable_throttling: true
   # throttle_limit is the number of requests and throttle_period is the number of seconds that the requests can occur
-  throttle_limit: 5
-  throttle_period: 10 
+  throttle_limit: 30
+  throttle_period: 60 
   
 
 development:

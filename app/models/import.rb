@@ -251,7 +251,11 @@ class Import < ActiveRecord::Base
   
   #cleans the date string and returns int
   def clean_date(date_string)
-    date_string.gsub!(/-/ ,'0')
+    if date_string.end_with?("-")
+      date_string.gsub!(/-/ ,'0')
+    elsif date_string.start_with?("-")
+      date_string.gsub!(/-/ ,'')
+    end
     date_string.gsub!(/\[|\]/ ,'')
     
     date_string.to_i
