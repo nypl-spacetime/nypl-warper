@@ -13,13 +13,13 @@ namespace :map do
       #cleans the date string and returns int
     def clean_date(date_string)
       date_string.gsub!(/\?/ ,'')
-      if date_string.end_with?("-")
+      if (date_string.length == 3  || date_string.length == 4) && date_string.end_with?("-")
         date_string.gsub!(/-/ ,'0')
-      elsif date_string.start_with?("-")
+      elsif date_string.start_with?("-") || (date_string.length >= 5 && date_string.end_with?("-"))
         date_string.gsub!(/-/ ,'')
       end
       date_string.gsub!(/\[|\]/ ,'')
-      
+
       date_string.to_i
     end
                   
