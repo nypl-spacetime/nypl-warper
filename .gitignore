@@ -15,3 +15,4 @@ secret
 db/maptileindex/*
 db/*.dump
 fixtures/vcr_cassettes/*.yml
+public/assets
