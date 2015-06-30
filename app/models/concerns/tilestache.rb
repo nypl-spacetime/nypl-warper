@@ -146,7 +146,7 @@ module Tilestache
     
     description  = self.description
     
-    attribution ="From: <a href='http://digitalcollections.nypl.org/items/#{self.uuid}'>NYPL Digital Collections</a> | <a href='http://maps.nypl.org/warper/#{self.class.to_s.downcase}/#{self.id}/'>Warper</a> "
+    attribution ="From: <a href='http://digitalcollections.nypl.org/items/#{self.uuid}'>NYPL Digital Collections</a> | <a href='http://maps.nypl.org/warper/#{self.class.to_s.downcase}s/#{self.id}/'>Warper</a> "
     
     bbox = self.bbox.split(",")
    
