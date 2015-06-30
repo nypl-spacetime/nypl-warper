@@ -11,7 +11,7 @@
 
 
   <script type="text/javascript">
-   
+    OpenLayers._getScriptLocation = function(){ return '<%= asset_url("/assets/openlayers/") %>'; };
     var refLayerID = "<%=@layer.id%>";
     var refLayerYear = "<%=@layer.depicts_year%>";
     var refLayerURL = "<%= url_for :controller => 'layers', :action => 'wms', :id => @layer -%>";
