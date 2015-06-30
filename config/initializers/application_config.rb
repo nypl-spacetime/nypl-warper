@@ -21,7 +21,15 @@ GDAL_PATH = APP_CONFIG['gdal_path'] || ""
 #MAX_ATTACHMENT_SIZE = APP_CONFIG['max_attachment_size']
 #GDAL_MEMORY_LIMIT = APP_CONFIG['gdal_memory_limit']
 
+ActionMailer::Base.delivery_method = :smtp
+ActionMailer::Base.smtp_settings = {
+  :address => "outbounds9.obsmtp.com",
+  :port => 25,
+  :domain => "maps.nypl.org"
+  
+  }
+#ActionMailer::Base.delivery_method = :sendmail
 
 ActionMailer::Base.default_url_options[:host] = APP_CONFIG['host']
-ActionMailer::Base.delivery_method = :sendmail
+
 Devise.mailer_sender = APP_CONFIG['email']
