@@ -38,9 +38,9 @@
 
     <div class="inset_info">
       <% if map.parent || map.inset_maps.nil? %>
-        This is an inset map. <%= link_to "View original map", map.parent %>
+        This is an inset map. <%= link_to "View original map", map_url(:id=>map.parent) %>
       <% elsif !map.inset_maps.empty?  %>
-        This map has <%= link_to pluralize(map.inset_maps.size, "inset map"), inset_maps_map_path %>.
+        This map has <%= link_to pluralize(map.inset_maps.size, "inset map"), inset_maps_map_path(:id=>map.id) %>.
       <% end %>
     </div>
 
