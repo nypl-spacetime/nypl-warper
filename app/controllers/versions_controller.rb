@@ -91,12 +91,21 @@ class VersionsController < ApplicationController
     @version = PaperTrail::Version.find(params[:id])
     if @version.item_type != "Gcp"
       flash[:error] = "Sorry this is not a GCP"
-      rreturn redirect_to :activity_details
-    else
-      gcp = @version.reify
-      gcp.save 
-      flash[:notice] = "GCP Reverted!"
       return redirect_to :activity_details
+    else
+      if @version.event == "create"
+        if Gcp.exists?(@version.item_id.to_i)
+          gcp = Gcp.find(@version.item_id.to_i)
+          gcp.destroy
+          flash[:notice] = "GCP Reverted and Deleted!"
+          return redirect_to :activity_details
+        end
+      else
+        gcp = @version.reify
+        gcp.save 
+        flash[:notice] = "GCP Reverted!"
+        return redirect_to :activity_details
+      end
     end
     
   end
