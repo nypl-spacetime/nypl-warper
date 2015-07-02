@@ -441,6 +441,19 @@ class MapsController < ApplicationController
   def inset_maps
     @html_title = "Inset Maps for "+ @map.id.to_s
     @inset_maps = @map.inset_maps
+    
+    if @map.versions.last 
+      @current_version_number = @map.versions.last.index
+      if User.exists?(@map.versions.last.whodunnit.to_i)
+        @current_version_user = User.find_by_id(@map.versions.last.whodunnit.to_i)
+      else
+        @current_version_user  = nil
+      end
+    else
+      @current_version_number = 1
+      @current_version_user = nil
+    end
+    
     if @inset_maps.empty? 
       flash[:notice] = "No inset maps found for this map"
       redirect_to @map and return
