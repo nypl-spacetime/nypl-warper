@@ -295,7 +295,7 @@ class MapsController < ApplicationController
     @version_users = version_users.to_a.delete_if{|v| !User.exists?(v.whodunnit) }
     
     unless user_signed_in? and current_user.has_role?("adminstrator")
-      if @map.published? || @map.status == :publishing
+      if @map.status == :publishing
         @disabled_tabs += ["warp", "clip", "align"]  #dont show any others unless you're an editor
       end
     end
