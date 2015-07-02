@@ -33,7 +33,14 @@ class ImportsController < ApplicationController
   end
 
   def show
-    @logtext = @import.status == :ready ? "" : File.open("log/#{@import.log_filename}").read 
+    
+    if !@import.log_filename.blank? && File.exists?("log/#{@import.log_filename}")
+      @logtext = File.open("log/#{@import.log_filename}").read 
+    elsif !File.exists?("log/#{@import.log_filename}")
+      @logtext = "log file not found"
+    else
+      @logtext = ""
+    end
      @count = nil
     if @import.status == :ready && @import.import_type == :latest
       @count = @import.count_latest()

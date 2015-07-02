@@ -19,7 +19,7 @@
 <table class="usertable">
   <thead>
     <tr>
-      <%= sort_header_tag('username', :title => "User") %>
+      <%= sort_header_tag('whodunnit', :title => "User id") %>
       <%= sort_header_tag('total_count', :title => "Total") %>
       <%= sort_header_tag('map_count', :title => "Total Map Changes") %>
       <%= sort_header_tag('gcp_count', :title => "Total Points Changes") %>
@@ -36,9 +36,9 @@
         <td><% if user.whodunnit && User.exists?(:id => user.whodunnit.to_i)
             user_name = User.select(:login).find_by_id(user.whodunnit).login
           %>
-            <%= link_to(user_name, user_path(user.whodunnit))%>
+            <%= link_to("#{user.whodunnit} - #{user_name}", user_path(user.whodunnit))%>
           <% else %>
-            Unknown <%="(UserID:#{user.whodunnit})" if user.whodunnit %>
+            Unknown <%="(User:#{user.whodunnit})" if user.whodunnit %>
           <% end %>
         </td>
         <td><%=user.total_count %></td>
