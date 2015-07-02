@@ -89,11 +89,15 @@ class Import < ActiveRecord::Base
       item = client.get_mods_item(uuid)
       
       map = get_map(item, uuid)
-      layers = get_layers(item["relatedItem"]) 
-      layers.flatten! 
-      
-      save_map_with_layers(map,layers)
-      update_layer_counts
+      if map.nil?
+        import_logger.warn "not saving"
+      else
+        layers = get_layers(item["relatedItem"]) 
+        layers.flatten! 
+
+        save_map_with_layers(map,layers)
+        update_layer_counts
+      end
     end
 
   end
@@ -116,7 +120,8 @@ class Import < ActiveRecord::Base
       else
         map = get_map(item, map_item["uuid"], map_item["imageID"])
       end
-        
+      next if map.nil?
+      
       layers = get_layers(item["relatedItem"]) 
       layers.flatten! 
       save_map_with_layers(map,layers)
@@ -153,7 +158,8 @@ class Import < ActiveRecord::Base
       else
         map = get_map(item, map_item["uuid"], map_item["imageID"])
       end
-
+      next if map.nil?
+      
       #TODO - possible problem with the API here. no highResLink in results
       #workaround starts
       highResLink = client.get_highreslink(map.bibl_uuid, map.nypl_digital_id)
@@ -198,6 +204,10 @@ class Import < ActiveRecord::Base
     title = (title.chars.to_a.size > 254 ? title.chars.to_a[0...251].join + "..." : title).to_s
       
     #relatedItem for :
+    if item["relatedItem"].nil? || item["relatedItem"]["identifier"].nil?
+      import_logger.warn "No relatedItem or Identifier found for #{uuid}"
+      return nil
+    end
     identifier =  item["relatedItem"]["identifier"]
     if identifier.class == Hash
       identifier = [identifier]

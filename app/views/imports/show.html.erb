@@ -37,7 +37,7 @@
     </div>
     <%=  link_to('START IMPORT', start_import_path(@import), :data => {:confirm => "Ready to Start this import?"}, :class=>"buttonWarper") %>  
   <% else%>
-    Showing latest log. <%= "log/#{@import.logfile}" %> <br/>
+    Showing latest log. <%= "log/#{@import.log_filename}" %> <br/>
     <% if @import.status == :running %>
       <span class="mapstatus">This import is still running: reload page to refresh logfile below.</span>
     <% end %>
