@@ -14,6 +14,8 @@
   Imports can be deleted and edited before being run. Once run they cannot be altered.<br />
 </p>
 
-<%= error_messages_for @import %>
+<div class="import_error_messages">
+  <%= error_messages_for @import %>
+</div>
 
 <%= render :partial => "form" %>
