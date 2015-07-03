@@ -8,6 +8,9 @@ class Import < ActiveRecord::Base
   validate :validate_correct_import_type
   validates_presence_of :since_date, :if => (:until_date?)
   validates_presence_of :until_date, :if => (:since_date?)
+  
+  validates_format_of :since_date, :with => /\d{4}-\d{2}-\d{2}/, :message => "must be in the following format: YYYY-MM-DD", :allow_blank => true
+  validates_format_of :until_date, :with => /\d{4}-\d{2}-\d{2}/, :message => "must be in the following format: YYYY-MM-DD", :allow_blank => true
 
   after_initialize :default_values
 

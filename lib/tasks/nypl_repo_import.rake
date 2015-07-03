@@ -33,8 +33,12 @@ namespace :map do
       uuid = ENV["uuid"]
 
       import = Import.new(:uuid => uuid, :import_type => :map)
-      import.import!
-
+      if import.valid?
+        import.import!
+      else
+        puts "Invalid import. errors were: #{import.errors.messages}"
+      end
+      
     end #task
 
 
@@ -49,7 +53,11 @@ namespace :map do
 
       import = Import.new(:uuid => uuid, :import_type => :layer)
 
-      import.import!
+      if import.valid?
+        import.import!
+      else
+        puts "Invalid import. errors were: #{import.errors.messages}"
+      end
     end
 
 
@@ -63,7 +71,12 @@ namespace :map do
       since_date = ENV["since"] 
       until_date = ENV["until"]
       import = Import.new(:import_type => :latest, :since_date => since_date, :until_date => until_date)
-      import.import!
+      if import.valid?
+        import.import!
+      else
+        puts "Invalid import. errors were: #{import.errors.messages}"
+      end
+      
 
     end #task
     

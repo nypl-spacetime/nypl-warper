@@ -28,11 +28,14 @@
 
   <% if @import.status == :ready %>
     <%=  link_to 'Edit this import', edit_import_path(@import) %><br />
+  <% end %>
+  <%if @import.status == :ready || @import.status == :finished %>
     <%=  link_to 'Delete this import' ,{:controller=>"imports", :action =>"destroy", :id => @import},  :method => :delete, :data => { :confirm => "Are you sure?" } %> <br />
-    
+  <% end %>
+  <% if @import.status == :ready %>   
     <div id="import_count">  
       <%  if @count -%>
-      Count of Maps for import: <%=@count%>
+        Count of Maps for import: <%=@count%>
       <% end %>
     </div>
     <%=  link_to('START IMPORT', start_import_path(@import), :data => {:confirm => "Ready to Start this import?"}, :class=>"buttonWarper") %>  

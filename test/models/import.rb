@@ -18,6 +18,15 @@ class ImportTest < ActiveSupport::TestCase
     end
   end
 
+
+  test "should be invalid with an invalid date" do
+    import = Import.new(:import_type=> :latest, :since_date => "abcd-11-11", :until_date => "1020-11-11")
+    assert_not import.valid?
+    
+    import = Import.new(:import_type=> :latest, :since_date => "1011-11-11", :until_date => "1020/11/11")
+    assert_not import.valid?
+  end
+  
   test "should not save import without a param" do
     import = Import.new
     assert_not import.save
