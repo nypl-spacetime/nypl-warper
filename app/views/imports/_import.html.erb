@@ -2,7 +2,7 @@
   <td><%= link_to(import.id.to_s, import_path(import.id)) %> </td>
   <td><%=h time_ago_in_words(import.created_at) -%> ago</td>
   <td><%= link_to(( import.user.login), user_path(import.user.id), :method => :get) if import.user  -%></td>
-  <td><%= link_to(( import.import_type), import_path(import.id), :method => :get)  -%></td>
+  <td><%= link_to(( import.import_type.to_s.titlecase), import_path(import.id), :method => :get)  -%></td>
   <td><%= import.uuid %>  </td>
   <td><%= "#{import.since_date} - #{import.until_date}" %>  </td>
   

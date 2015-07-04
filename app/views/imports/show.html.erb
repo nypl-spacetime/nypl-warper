@@ -29,7 +29,7 @@
   <% if @import.status == :ready %>
     <%=  link_to 'Edit this import', edit_import_path(@import) %><br />
   <% end %>
-  <%if @import.status == :ready || @import.status == :finished %>
+  <% if @import.status != :running %>
     <%=  link_to 'Delete this import' ,{:controller=>"imports", :action =>"destroy", :id => @import},  :method => :delete, :data => { :confirm => "Are you sure?" } %> <br />
   <% end %>
   <% if @import.status == :ready %>   

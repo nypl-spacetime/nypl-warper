@@ -71,12 +71,7 @@ class ImportsController < ApplicationController
     if @import.import_type == :latest
       @import.prepare_run
       Spawnling.new do
-        begin
-          @import.import!(true)
-        rescue Exception => e
-          logger.error e.inspect
-          logger.error e.stacktrace
-        end
+        @import.import!(true)
       end
     else
       @import.import!

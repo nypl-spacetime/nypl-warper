@@ -1,7 +1,7 @@
 class Import < ActiveRecord::Base
   belongs_to :user, :class_name => "User"
 
-  acts_as_enum :status, [:ready, :running, :finished]
+  acts_as_enum :status, [:ready, :running, :finished, :failed]
   acts_as_enum :import_type, [:map, :layer, :latest]
 
   validate :presence_of_a_param
@@ -13,6 +13,8 @@ class Import < ActiveRecord::Base
   validates_format_of :until_date, :with => /\d{4}-\d{2}-\d{2}/, :message => "must be in the following format: YYYY-MM-DD", :allow_blank => true
 
   after_initialize :default_values
+  
+  after_destroy :delete_logfile
 
   def presence_of_a_param
     unless [uuid?, since_date?, until_date?].include?(true)
@@ -21,10 +23,10 @@ class Import < ActiveRecord::Base
   end
 
   def validate_correct_import_type
-    if [:map, :layer].include?(import_type) && uuid.nil?
+    if [:map, :layer].include?(import_type) && uuid.blank?
       errors.add :base, 'You need to add a uuid for map and layer types'
     end
-    if import_type == :latest && (since_date.nil? || until_date.nil?)
+    if import_type == :latest && (since_date.blank? || until_date.blank?)
       errors.add :base, 'You need to add since_date and until_date for latest import type'
     end
   end
@@ -57,16 +59,23 @@ class Import < ActiveRecord::Base
       
       puts "Starting import. Logging in log/#{log_filename}" 
       import_logger.info "Stared import #{Time.now}"
-
-      if import_type == :map
-        import_map
-        finish_import
-      elsif import_type == :layer
-        import_layer
-        finish_import
-      elsif import_type == :latest
-        import_latest
-        finish_import
+      begin
+        if import_type == :map
+          import_map
+          finish_import
+        elsif import_type == :layer
+          import_layer
+          finish_import
+        elsif import_type == :latest
+          import_latest
+          finish_import
+        end
+      rescue Exception => e
+        import_logger.error "error with import."
+        import_logger.error e.inspect
+        
+        self.status = :failed
+        self.save
       end
       
       self.status
@@ -87,7 +96,7 @@ class Import < ActiveRecord::Base
       map = Map.find_by_uuid(uuid)
       import_logger.warn "Map #{map.id.to_s} with uuid #{uuid} exists."
     else
-
+      
       client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
       item = client.get_mods_item(uuid)
       
@@ -143,7 +152,7 @@ class Import < ActiveRecord::Base
 
 
   def import_latest
-    client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
+    client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger) 
     map_items = client.get_items_since("%22Map%20Division%22&field=physicalLocation", since_date, until_date)
     
     if map_items == [nil]
@@ -365,6 +374,11 @@ class Import < ActiveRecord::Base
 
   end
  
+  def delete_logfile
+    if log_filename && log_filename.include?(".log") && File.exists?("#{Rails.root}/log/#{log_filename}")
+      File.delete("#{Rails.root}/log/#{log_filename}")
+    end
+  end
 
 
 

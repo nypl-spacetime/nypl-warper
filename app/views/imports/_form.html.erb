@@ -1,22 +1,56 @@
-<%= form_for @import do |f| %>
-  <p>
-    <%= f.select(:import_type, [:map, :layer, :latest] ) %>
-  </p>
-  <p>
-    <b><%= f.label :uuid, "UUID of the map or layer (keep blank for latest)"  %></b> 
-    <%= f.text_field :uuid, :class=>"uuid-field" %>
-  </p>
-  <p>
-    <b><%= f.label :since_date, "Since date in YYYY-MM-DD format"  %></b> 
-    <%= f.text_field :since_date, :class=>"date-field" %>
-  </p>
-  <p>
-    <b><%= f.label :until_date, "Until date in YYYY-MM-DD format"  %></b> 
-    <%= f.text_field :until_date, :class=>"date-field" %>
-  </p>
-  <p>
+<% content_for :head do %>
+  <script type="text/javascript">
+    jQuery(function () {     
+    <% if @import.import_type == :latest %>
+      jQuery("#date-fields").show();
+      jQuery("#uuid-field").hide();
+    <% else %>
+      jQuery("#uuid-field").show();
+      jQuery("#date-fields").hide();
+    <% end %>
+    <% unless @import.errors.empty? %>
+      jQuery("#date-fields").show();
+    <% end %>
+    });
 
+    function toggle_fields(sel) {
+      if (sel.value == "latest") {
+        jQuery("#date-fields").show();
+        jQuery("#uuid-field").hide();
+      } else {
+        jQuery("#uuid-field").show();
+        jQuery("#date-fields").hide();
+      }
+    }
+  </script>
+<% end %>
+<fieldset id="import-fieldset">
+  <legend>Import Map, Layer or Latest</legend>
+
+  <%= form_for @import do |f| %>
+    <p>
+      <b><%= f.label :import_type, "Import Type"  %></b> 
+      <%= f.select(:import_type, [:map, :layer, :latest], {}, :onchange => ("toggle_fields(this);")) %>
+    </p>
+    <div id="uuid-field" style="display:none">
+      <p class="uuid-field">
+        <b><%= f.label :uuid, "UUID of the map or layer"  %></b> 
+        <%= f.text_field :uuid, :class=>"uuid-field" %>
+      </p>
+    </div>
+    <div id="date-fields" style="display:none">
+      <p>
+        <b><%= f.label :since_date, "Since date in YYYY-MM-DD format"  %></b> 
+        <%= f.text_field :since_date, :class=>"date-field" %>
+      </p>
+      <p>
+        <b><%= f.label :until_date, "Until date in YYYY-MM-DD format"  %></b> 
+        <%= f.text_field :until_date, :class=>"date-field" %>
+      </p>
+      <p>
+    </div>
     <br />
 
     <%= f.submit((defined?(page) && page =~ /new/) ? "Create" : "Update" )%>
   <% end  %>
+</fieldset>
