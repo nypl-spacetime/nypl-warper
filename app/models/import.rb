@@ -57,7 +57,7 @@ class Import < ActiveRecord::Base
         prepare_run
       end
       
-      puts "Starting import. Logging in log/#{log_filename}" 
+      puts "Starting import. Logging in log/#{log_filename}"  if defined? Rake
       import_logger.info "Stared import #{Time.now}"
       begin
         if import_type == :map
@@ -71,6 +71,7 @@ class Import < ActiveRecord::Base
           finish_import
         end
       rescue Exception => e
+        puts "error with import #{e.inspect}" if defined? Rake
         import_logger.error "error with import."
         import_logger.error e.inspect
         
@@ -95,6 +96,7 @@ class Import < ActiveRecord::Base
     if Map.exists?(:uuid => uuid)
       map = Map.find_by_uuid(uuid)
       import_logger.warn "Map #{map.id.to_s} with uuid #{uuid} exists."
+      puts "Map #{map.id.to_s} with uuid #{uuid} exists." if defined? Rake
     else
       
       client = NyplRepo::Client.new(REPO_CONFIG[:token], true, import_logger)
@@ -157,6 +159,7 @@ class Import < ActiveRecord::Base
     
     if map_items == [nil]
       import_logger.warn "No items found!"
+      puts "No items found!" if defined? Rake
     end
 
     map_items.each do | map_item |
