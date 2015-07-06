@@ -8,8 +8,20 @@ class ImportsController < ApplicationController
   
   rescue_from ActiveRecord::RecordNotFound, :with => :bad_record
 
+  helper :sort
+  include SortHelper
+  
   def index
-    @imports = Import.order("updated_at DESC").paginate(:page => params[:page],:per_page => 30)
+    sort_init('created_at', {:default_order => "desc"})
+    sort_update
+    if params[:sort_order] && params[:sort_order] == "desc"
+      sort_nulls = " NULLS LAST"
+    else
+      sort_nulls = " NULLS FIRST"
+    end
+    order_options = sort_clause + sort_nulls
+    
+    @imports = Import.order(order_options).paginate(:page => params[:page],:per_page => 50)
   end
 
   def new

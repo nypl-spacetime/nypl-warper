@@ -5,14 +5,14 @@
 <table class="usertable">
   <thead>
     <tr>
-      <th>Id</th>
-      <th>Created At</th>
-      <th>User</th>
-      <th>Type</th>
+      <%= sort_header_tag('id', :title => "Id") %>
+      <%= sort_header_tag('created_at', :title => "Created At") %>
+      <%= sort_header_tag('user_id', :title => "User Id") %>
+      <%= sort_header_tag('import_type', :title => "Type") %>
       <th>UUID</th>
       <th>since-until</th>
-      <th>Status</th>
-      <th>Finished At</th>   
+      <%= sort_header_tag('status', :title => "Status") %>
+      <%= sort_header_tag('finished_at', :title => "Finished At") %>   
     </tr>
   </thead>
   <tbody>
