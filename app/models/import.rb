@@ -282,7 +282,7 @@ class Import < ActiveRecord::Base
     elsif date_string.start_with?("-") || (date_string.length >= 5 && date_string.end_with?("-"))
       date_string.gsub!(/-/ ,'')
     end
-    date_string.gsub!(/[a-zA-Z]/, '')
+    date_string.gsub!(/[^0-9]/, '')
     date_string.gsub!(/\[|\]/ ,'')
     
     date_string.to_i
