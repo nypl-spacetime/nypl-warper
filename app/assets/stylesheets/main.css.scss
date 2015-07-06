@@ -1738,3 +1738,11 @@ width: 100%;
 .flag-table tr.total{
   font-weight: bold;
 }
+#flag-status {
+  margin-bottom: 1em;
+}
+
+#flag-status .throttle {
+  left: 147px;
+  position: absolute;
+}

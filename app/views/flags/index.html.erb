@@ -1,5 +1,10 @@
 <h1>User Flags</h1>
 
+<div id="flag-status">
+  Throttle Status: <span class="throttle"> <%=  APP_CONFIG["enable_throttling"] == true ? 'Enabled' : 'Disabled' %> </span><br />
+ Limit:<span class="throttle"><%= APP_CONFIG["throttle_limit"] %> requests in <%= APP_CONFIG["throttle_period"] %> seconds</span> <br />
+ Response delay:<span class="throttle"> <%= APP_CONFIG["throttle_delay"] %> seconds</span><br />
+</div>
 
 <%= will_paginate @flags %>
 

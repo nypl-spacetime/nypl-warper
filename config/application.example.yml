@@ -47,7 +47,9 @@ defaults: &defaults
   enable_throttling: true
   # throttle_limit is the number of requests and throttle_period is the number of seconds that the requests can occur
   throttle_limit: 30
-  throttle_period: 60 
+  throttle_period: 60
+  #throttle_delay is the number of seconds to add to the response on a throttled logged in call
+  throttle_delay: 2
   
 
 development:

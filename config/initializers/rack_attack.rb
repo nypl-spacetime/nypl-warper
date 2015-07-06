@@ -45,6 +45,12 @@ if APP_CONFIG["enable_throttling"] == true
       req.ip + req.user_agent.to_s
     end
   end
+  
+  Rack::Attack.throttle('warper/delete_request', :limit => limit, :period => period.seconds) do |req|
+    if  (req.path.include?("/maps") || req.path.include?("/gcps")) && req.delete?
+      req.ip + req.user_agent.to_s
+    end
+  end
 
   #  Limiting requests, admin throttle test
   Rack::Attack.throttle('admin/throttletest', :limit => limit, :period => period.seconds) do |req|
