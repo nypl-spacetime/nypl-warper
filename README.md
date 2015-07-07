@@ -8,7 +8,7 @@ You can see this code in action at http://maps.nypl.org/.
 --- 
 
 The NYPL Map Warper is an open source map geo-rectification, warping and georeferencing application.
-It enables a user to upload an image, a scanned map or aerial photo for example, and by placing control points on a reference map and the image, to warp it, to stretch it to fit.
+It enables a user to browse and explore the NYPL's historical map collection, and by placing control points on a reference map and the image, to warp it, to stretch it to fit.
 
 ![Map Warper screenshot of main interface](/app/assets/images/Screenshot_MapWarper.png?raw=true "Map Warper screenshot of main interface")
 
