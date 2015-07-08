@@ -18,7 +18,11 @@ class Flag < ActiveRecord::Base
 
   def send_email_report
     if flaggable_type == "User"
-      UserMailer.flag_report(self).deliver_now
+      begin
+        UserMailer.flag_report(self).deliver_now
+      rescue Exception => e
+        logger.error "error with flag email " + e.inspect
+      end
     end
   end
   

@@ -25,8 +25,9 @@ ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.smtp_settings = {
   :address => "outbounds9.obsmtp.com",
   :port => 25,
-  :domain => "maps.nypl.org"
-  
+  :domain => "maps.nypl.org",
+  :enable_starttls_auto => true,
+  :openssl_verify_mode  => 'none'
   }
 #ActionMailer::Base.delivery_method = :sendmail
 
