@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150624151012) do
+ActiveRecord::Schema.define(version: 20150708161955) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20150624151012) do
     t.datetime "updated_at",     null: false
   end
 
+  add_index "flags", ["flaggable_id", "flaggable_type"], name: "index_flags_on_flaggable_id_and_flaggable_type", unique: true, using: :btree
   add_index "flags", ["flaggable_id"], name: "index_flags_on_flaggable_id", using: :btree
 
   create_table "gcps", force: :cascade do |t|

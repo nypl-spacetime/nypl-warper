@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
 
   def check_rack_attack
     if request.env['rack.attack.flag_user'] == true
-
+  
       flag =  Flag.find_or_initialize_by(:flaggable_id => current_user.id) 
 
       if flag.new_record?
@@ -92,7 +92,12 @@ class ApplicationController < ActionController::Base
           env['rack.attack.match_type'],
           env['rack.attack.match_data']
         ].inspect
-        flag.save
+        
+        begin
+          flag.save
+        rescue ActiveRecord::RecordNotUnique  => e
+          logger.error "Flag not unique "+ e.inspect
+        end
       end
 
     end
