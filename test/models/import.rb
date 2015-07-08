@@ -146,5 +146,20 @@ class ImportTest < ActiveSupport::TestCase
 
   end
 
-
+  test "date parsing" do
+    
+    okay_dates = ["1653", "-1800", "1800", "1800-", "c1800", "c. 1800", "12 April 2005", "[12 April 2005]", "12/12/1823"]
+   
+    okay_dates.each do | date |
+      assert_not_nil Import.new.send(:clean_date, date)
+    end
+    
+    bad_dates = ["1100", "2200", "12", "18 century"]
+   
+    bad_dates.each do | date |
+      assert_nil Import.new.send(:clean_date, date)
+    end
+      
+  end
+  
 end

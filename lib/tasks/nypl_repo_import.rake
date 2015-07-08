@@ -22,7 +22,14 @@ namespace :map do
       date_string.gsub!(/[^0-9][^\d]/, '') 
       date_string.gsub!(/.(?=.{4})/, '')
 
-      date_string.to_i
+      date_int = date_string.to_i
+      if date_int < 1300
+        date_int = nil
+      elsif date_int > Time.now.year
+        date_int = nil
+      end
+      
+      date_int
     end
                   
     
