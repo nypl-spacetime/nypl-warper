@@ -156,6 +156,8 @@ To start in a relative url root use thin
 
     RAILS_ENV=development bundle exec thin --prefix=/warper start
 
+and then browse to http://localhost:3000/warper/
+
 
 
 ## Deployment instructions

@@ -20,7 +20,7 @@ dpkg-reconfigure -f noninteractive grub-pc
 apt-get install -y ruby1.9.1 libruby1.9.1 ruby1.9.1-dev ri1.9.1 \
     postgresql-9.3-postgis-2.1 postgresql-server-dev-all postgresql-contrib \
     build-essential git-core \
-    libxml2-dev libxslt-dev imagemagick libmapserver1 gdal-bin libgdal-dev ruby-mapscript nodejs
+    libxml2-dev libxslt-dev imagemagick libmapserver1 gdal-bin libgdal-dev ruby-mapscript nodejs libmagickwand-dev redis-server
 
 
 #ruby gdal needs the build Werror=format-security removed currently
