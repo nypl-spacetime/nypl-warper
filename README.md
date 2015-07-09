@@ -5,6 +5,10 @@ collaboration of the New York Public Library.
 
 You can see this code in action at http://maps.nypl.org/.
 
+---
+
+Consult the wiki for for more documentation including a report detailing the changes in this version compared with the previous version. https://github.com/NYPL/nypl-warper/wiki
+
 --- 
 
 The NYPL Map Warper is an open source map geo-rectification, warping and georeferencing application.
