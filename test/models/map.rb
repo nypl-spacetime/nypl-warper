@@ -55,4 +55,17 @@ class MapTest < ActiveSupport::TestCase
     assert_nil @inset_map.create_inset
   end
   
+  test "should not copy the status to an inset map" do
+    assert_not_equal @map.status, @inset_map.status
+  end
+  
+  test "an inset map should be unmasked" do
+    assert_equal :unmasked, @inset_map.mask_status
+  end
+  
+  test "an inset map should be unrectified" do
+    assert_equal :available, @inset_map.status
+    assert_nil  @inset_map.rectified_at
+  end
+  
 end

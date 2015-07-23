@@ -764,6 +764,10 @@ class Map < ActiveRecord::Base
       inset_map.filename = File.join(maps_dir, unique_id) + ".tif"
       FileUtils.copy(self.filename, inset_map.filename)
       
+      inset_map.status = :available
+      inset_map.mask_status = :unmasked
+      inset_map.rectified_at = nil
+      
       inset_map.layers = self.layers
       
       inset_map.uuid = unique_id
