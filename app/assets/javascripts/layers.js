@@ -97,9 +97,9 @@ if(typeof(G_SATELLITE_MAP) !== 'undefined'){
     
 var ny_2014 = new OpenLayers.Layer.OSM("NYC 2014",
         [
-          "https://a.tiles.mapbox.com/v3/nypllabs.7f17c2d1/${z}/${x}/${y}.png",
-          "https://b.tiles.mapbox.com/v3/nypllabs.7f17c2d1/${z}/${x}/${y}.png",
-          "https://c.tiles.mapbox.com/v3/nypllabs.7f17c2d1/${z}/${x}/${y}.png"
+          "https://a.tiles.mapbox.com/v3/nypllabs.ae54ce49/${z}/${x}/${y}.png",
+          "https://b.tiles.mapbox.com/v3/nypllabs.ae54ce49/${z}/${x}/${y}.png",
+          "https://c.tiles.mapbox.com/v3/nypllabs.ae54ce49/${z}/${x}/${y}.png"
         ],
         {
           transitionEffect: 'resize',
