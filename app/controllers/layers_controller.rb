@@ -433,9 +433,9 @@ class LayersController < ApplicationController
       #map.setProjection("init=epsg:900913")
       map.applyConfigOptions
 
-      # logger.info map.getProjection
+      rel_url_root =  (ActionController::Base.relative_url_root.blank?)? '' : ActionController::Base.relative_url_root
       map.setMetaData("wms_onlineresource",
-        "http://" + request.host_with_port + "/layers/wms/#{@layer.id}")
+        "http://" + request.host_with_port  + rel_url_root + "/layers/wms/#{@layer.id}")
 
       raster = Mapscript::LayerObj.new(map)
       raster.name = "image"
