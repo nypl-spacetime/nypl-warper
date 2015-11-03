@@ -294,8 +294,8 @@ class MapsController < ApplicationController
     version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(7)
     @version_users = version_users.to_a.delete_if{|v| !User.exists?(v.whodunnit) }
     
-    unless user_signed_in? and current_user.has_role?("adminstrator")
-      if @map.status == :publishing
+    unless user_signed_in? and current_user.has_role?("administrator")
+      if @map.status == :publishing or @map.status == :published
         @disabled_tabs += ["warp", "clip", "align"]  #dont show any others unless you're an editor
       end
     end
@@ -635,8 +635,15 @@ class MapsController < ApplicationController
   
   def save_mask_and_warp
     logger.debug "save mask and warp"
-    @map.save_mask(params[:output])
-    unless @map.status == :warping || @map.status == :publishing
+    
+    if @map.status == :publishing or @map.status == :published
+      stat = "fail"
+      msg = "Mask not applied. Map is published so is unable to mask."
+    elsif @map.status == :warping
+      stat = "fail"
+      msg = "Mask not saved as the map is currently being rectified somewhere else, please try again later."
+    else
+      @map.save_mask(params[:output])
       @map.mask!
       stat = "ok"
       if @map.gcps.hard.size.nil? || @map.gcps.hard.size < 3
@@ -647,9 +654,7 @@ class MapsController < ApplicationController
         rectify_main
         msg = "Map masked and rectified."
       end
-    else
-      stat = "fail"
-      msg = "Mask saved, but not applied as the map is currently being rectified somewhere else, please try again later."
+    
     end
 
     respond_to do |format|
@@ -833,17 +838,19 @@ class MapsController < ApplicationController
       @too_few = true
       @notice_text = "Sorry, the map needs at least three control points to be able to rectify it"
       @output = @notice_text
-    elsif @map.status == :warping || @map.status == :publishing
+    elsif @map.status == :warping 
       @fail = true
       @notice_text = "Sorry, the map is currently being rectified somewhere else, please try again later."
+      @output = @notice_text
+    elsif @map.status == :publishing or @map.status == :published
+      @fail = true
+      @notice_text = "Sorry, this map is published, and cannot be rectified."
       @output = @notice_text
     else
       if user_signed_in?
         um  = current_user.my_maps.new(:map => @map)
         um.save
 
-        # two ways of creating the relationship
-        # @map.users << current_user
       end
 
       @output = @map.warp! transform_option, resample_option, use_mask #,masking_option
