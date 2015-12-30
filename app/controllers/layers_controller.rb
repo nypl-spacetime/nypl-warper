@@ -1,11 +1,11 @@
 class LayersController < ApplicationController
   layout 'layerdetail', :only => [:show,  :edit, :export, :metadata]
   before_filter :authenticate_user! , :except => [:wms, :wms2, :show_kml, :show, :index, :metadata, :maps, :thumb, :geosearch, :comments, :tile, :export]
-  before_filter :check_administrator_role, :only => [:publish, :toggle_visibility, :merge, :trace, :id, :remove_map, :update_year] 
-  
+  before_filter :check_administrator_role, :only => [:publish, :toggle_visibility, :merge, :trace, :id, :remove_map, :update_year]
+
   before_filter :find_layer, :only => [:show, :export, :metadata, :toggle_visibility, :update_year, :publish, :remove_map, :merge, :maps, :thumb, :comments, :trace, :id, :digitize]
   before_filter :check_if_layer_is_editable, :only => [:edit, :update, :remove_map, :update_year, :update, :destroy]
-  
+
   skip_before_filter :check_site_read_only, :only => [:show, :index, :metadata, :maps, :thumb, :geosearch, :comments, :tile, :wms, :wms2, :export]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :bad_record
@@ -28,7 +28,7 @@ class LayersController < ApplicationController
     redirect_to @layer.thumb
   end
 
-  
+
   def geosearch
     require 'geoplanet'
     sort_init 'updated_at'
@@ -40,7 +40,7 @@ class LayersController < ApplicationController
     if params[:place] && !params[:place].blank?
       place_query = params[:place]
       GeoPlanet.appid = APP_CONFIG['yahoo_app_id']
-      
+
       geoplanet_result = GeoPlanet::Place.search(place_query, :count => 2)
       if geoplanet_result[0]
         g_bbox =  geoplanet_result[0].bounding_box.map!{|x| x.reverse}
@@ -87,25 +87,23 @@ class LayersController < ApplicationController
     else
       conditions = nil
     end
-    
-    
+
+
     if params[:sort_order] && params[:sort_order] == "desc"
       sort_nulls = " NULLS LAST"
     else
       sort_nulls = " NULLS FIRST"
     end
     @operation = params[:operation]
-    
+
     if @operation == "intersect"
       sort_geo = "ABS(ST_Area(bbox_geom) - ST_Area(ST_GeomFromText('#{bbox_polygon}'))) ASC,  "
     else
       sort_geo ="ST_Area(bbox_geom) DESC ,"
     end
-    
+
     @year_min = Map.minimum(:issue_year) - 1
     @year_max = Map.maximum(:issue_year) + 1
-    @year_min = 1600 if @year_min == 0
-    @year_max = 2015 if @year_max == 0
 
     year_conditions = nil
     if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
@@ -119,7 +117,7 @@ class LayersController < ApplicationController
     order_params = sort_geo + sort_clause + sort_nulls
     @layers = Layer.select("bbox, name, updated_at, id, maps_count, rectified_maps_count,
                        depicts_year").visible.with_maps.where(conditions).where(year_conditions).paginate(paginate_params)
-    
+
     @jsonlayers = @layers.to_json
     respond_to do |format|
       format.html{ render :layout =>'application' }
@@ -140,16 +138,16 @@ class LayersController < ApplicationController
     sort_update
     @query = params[:query]
     @field = %w(text name description catnyp uuid).detect{|f| f== (params[:field])}
-    
-    
+
+
     @field = "text" if @field.nil?
     where_col = @field
-    
+
     if  @field == "text"
       where_col  = "(name || ' ' || description)"
     end
-    
-    
+
+
     if @query && @query != "null" #null will be set by pagless js if theres no query
       conditions =   ["#{where_col}  ~* ?", '(:punct:|^|)'+@query+'([^A-z]|$)']
     else
@@ -161,18 +159,18 @@ class LayersController < ApplicationController
     else
       select = "*"
     end
-    
+
     @year_min = Map.minimum(:issue_year).to_i - 1
     @year_max = Map.maximum(:issue_year).to_i + 1
-    
+
     year_conditions = nil
     if params[:from] && params[:to] && !(@year_min == params[:from].to_i && @year_max == params[:to].to_i)
       year_conditions = {:depicts_year => params[:from].to_i..params[:to].to_i}
     end
-    
+
     @from = params[:from]
     @to = params[:to]
-    
+
 
     if params[:sort_order] && params[:sort_order] == "desc"
       sort_nulls = " NULLS LAST"
@@ -185,14 +183,14 @@ class LayersController < ApplicationController
       :page => params[:page],
       :per_page => @per_page
     }
-    
+
     order_options =  sort_clause  + sort_nulls
-   
+
     map = params[:map_id]
     if !map.nil?
       @map = Map.find(map)
-      
-      if @map.versions.last 
+
+      if @map.versions.last
         @current_version_number = @map.versions.last.index
         @current_version_user = User.find_by_id(@map.versions.last.whodunnit.to_i)
       else
@@ -201,7 +199,7 @@ class LayersController < ApplicationController
       end
 
     @version_users = PaperTrail::Version.where({:item_type => 'Map', :item_id => @map.id}).where.not(:whodunnit => nil).where.not(:whodunnit => @current_version_user).select(:whodunnit).distinct.limit(6)
-      
+
       layer_ids = @map.layers.map(&:id)
       @layers = Layer.where(id: layer_ids).where(conditions).select('*, round(rectified_maps_count::float / maps_count::float * 100) as percent').where(conditions).order(order_options).paginate(paginate_params)
       @html_title = "Layer List for Map #{@map.id}"
@@ -210,7 +208,7 @@ class LayersController < ApplicationController
       @layers = Layer.select(select).where(conditions).where(year_conditions).order(sort_clause + sort_nulls).paginate(paginate_params)
       @html_title = "Browse Layer List"
     end
-   
+
     if request.xhr?
       # for pageless :
       # #render :partial => 'layer', :collection => @layers
@@ -283,7 +281,7 @@ class LayersController < ApplicationController
         format.html {render :layout => "layerdetail"}# show.html.erb
         #format.json {render :json => @layer.to_json(:except => [:uuid, :parent_uuid, :description])}
         format.json {render :json => {:stat => "ok", :items => @layer}.to_json(:except => [:uuid, :parent_uuid, :description]), :callback => params[:callback] }
-        
+
         format.kml {render :action => "show_kml", :layout => false}
       end
     end
@@ -311,7 +309,7 @@ class LayersController < ApplicationController
     @current_tab = "metadata"
     @selected_tab = 4
     @layer_properties = @layer.layer_properties
-    
+
     choose_layout_if_ajax
   end
 
@@ -351,7 +349,7 @@ class LayersController < ApplicationController
 
   def remove_map
     @map = Map.find(params[:map_id])
-    
+
     @layer.remove_map(@map.id)
     render :text =>  "Dummy text - Map removed from this layer "
   end
@@ -372,24 +370,24 @@ class LayersController < ApplicationController
     @overlay = @layer
     render "maps/trace", :layout => "application"
   end
-  
+
   def id
     redirect_to layer_path unless @layer.is_visible? && @layer.rectified_maps_count > 0
     @overlay = @layer
     render "maps/id", :layout => false
   end
-  
+
   # called by id JS oauth
   def idland
     render "maps/idland", :layout => false
   end
 
-  
+
   def digitize
     @current_tab = "digitize"
     @selected_tab = 1
     @html_title = "Digitizing Layer "+ @layer.id.to_s
-    
+
     if request.xhr?
       @xhr_flag = "xhr"
       render :action => "digitize", :layout => "tab_container"
@@ -402,7 +400,7 @@ class LayersController < ApplicationController
         redirect_to :action => 'show'
       end
     end
-    
+
   end
 
   require 'mapscript'
@@ -635,7 +633,7 @@ class LayersController < ApplicationController
       render :layout => "layer_tab_container"
     end
   end
-  
+
   def bad_record
     #logger.error("not found #{params[:id]}")
     respond_to do | format |
@@ -662,11 +660,9 @@ class LayersController < ApplicationController
       session[:return_to] = request.request_uri
     end
   end
-  
+
   def layer_params
     params.require(:layer).permit(:name, :description, :source_uri, :depicts_year)
   end
-  
+
 end
-
-
