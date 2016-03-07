@@ -99,7 +99,7 @@ Create and configure the following files
 * `config/database.yml`
 * `config/application.yml`
 
-In addition have a look in `config/initializers/application_config.rb `for some other paths and variables, and `config/initializers/devise.rb `for devise and omniauth 
+In addition have a look in `config/initializers/application_config.rb `for some other paths and variables, and `config/initializers/devise.rb ` for devise and omniauth and also `config/environments/development.rb` if you rather not use the `/warper` relative path.
 
 ## Database creation
 
@@ -116,11 +116,10 @@ Creating a new user
     user.email = "super@superxyz123.com"
     user.password = "your_password"
     user.password_confirmation = "your_password"
-    user.activated_at = Time.now
+    user.confirmed_at = Time.now
     user.save
 
     role = Role.find_by_name('super user')
-    user = User.find_by_login('super')
 
     permission  = Permission.new
     permission.role = role
@@ -136,18 +135,18 @@ Creating a new user
 
 ## Development 
 
-Via Vagrant - There is a vagrantfile you can use this uses a provision script in lib/vagrant. Type
+Via Vagrant - There is a vagrantfile you can use this uses a provision script in `lib/vagrant`. Type
 
     vagrant up
     
-to get and install the virtual machine - this will also install the libraries and depencies and ruby gems for mapwarper into the virtual machine. See the file in lib/vagrant/provision.sh for more details about this process 
+to get and install the virtual machine - this will also install the libraries and depencies and ruby gems for mapwarper into the virtual machine. See the file in `lib/vagrant/provision.sh` for more details about this process 
 
-After that runs, type vagrant ssh to login and then you can 
+After that runs, type `vagrant ssh` to login and then you can 
 
     cd /srv/mapwarper
     rails c
 
-Create a user in the console, as shown above and then exit
+Create a user in the console, as shown above and then `exit`
 
     rails s
 to start the server, running on port 3000
