@@ -116,7 +116,7 @@ Creating a new user
     user.email = "super@superxyz123.com"
     user.password = "your_password"
     user.password_confirmation = "your_password"
-    user.activated_at = Time.now
+    user.confirmed_at = Time.now
     user.save
 
     role = Role.find_by_name('super user')
