@@ -135,7 +135,7 @@ Creating a new user
 
 ## Development 
 
-Via [Vagrant](https://www.vagrantup.com/), There is a [`Vagrantfile`](/Vagrantfile) you can use which uses the [`/lib/vagrant/provision.sh`](/lib/vagrant/provision.sh) provision script. **Note:** the default `Vagrantfile` is configured to take 8GB RAM. To use this file type:
+Via [Vagrant](https://www.vagrantup.com/), there is a [`Vagrantfile`](/Vagrantfile) you can use which uses the [`/lib/vagrant/provision.sh`](/lib/vagrant/provision.sh) provision script. **Note:** the default `Vagrantfile` is configured to take 8GB RAM. To use this file type:
 
     vagrant up
 
