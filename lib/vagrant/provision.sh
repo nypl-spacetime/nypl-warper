@@ -58,5 +58,5 @@ fi
 
 echo "now migrating database. This may take a few minutes"
 # migrate the database to the latest version
-sudo -u vagrant -H bundle exec rake db:migrate
+sudo -u vagrant -H RAILS_ENV=development bundle exec rake db:migrate
 popd

@@ -27,7 +27,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   #you may want to alter this
   config.vm.provider :virtualbox do |v|
-    v.memory = 2048
+    v.memory = 8192
     v.cpus = 2
     # v.customize [ "modifyvm", :id, "--hwvirtex", "off", "--memory", 1024, "--cpus", 1 ]
   end

@@ -135,28 +135,39 @@ Creating a new user
 
 ## Development 
 
-Via Vagrant - There is a vagrantfile you can use this uses a provision script in `lib/vagrant`. Type
+Via Vagrant - There is a [`Vagrantfile`](/Vagrantfile) you can use which uses a provision script in `lib/vagrant`. *Note:* the default `Vagrantfile` is configured to take 8GB RAM. To use this file type:
 
     vagrant up
-    
-to get and install the virtual machine - this will also install the libraries and depencies and ruby gems for mapwarper into the virtual machine. See the file in `lib/vagrant/provision.sh` for more details about this process 
 
-After that runs, type `vagrant ssh` to login and then you can 
+to get and install the virtual machine - this will also install the libraries and depencies and ruby gems for mapwarper into the virtual machine. See the file in `lib/vagrant/provision.sh` for more details about this process.
+
+After that runs, type `vagrant ssh` to login and then you can:
 
     cd /srv/mapwarper
     rails c
 
-Create a user in the console, as shown above and then `exit`
+Create a user in the console, as shown above and then `exit`. Then start the server in port 3000 with:
 
     rails s
-to start the server, running on port 3000
 
-To start in a relative url root use thin
+To start in a relative url root use `thin`:
 
     RAILS_ENV=development bundle exec thin --prefix=/warper start
 
-and then browse to http://localhost:3000/warper/
+and then browse to `http://localhost:3000/warper/`
 
+## Import a test map
+
+This codebase only supports [maps from NYPL](http://maps.nypl.org/) via the [Digital Collections API](http://api.repo.nypl.org/) (use that link to get an account and token). Fortunately, many of our maps are Public Domain so you can test the warper locally (non PD maps are not downloadable in high-res from the API). The warper imports maps (subject to throttling limits) based on the `UUID` visible in the [item page](http://digitalcollections.nypl.org/items/98b7f36a-3d7a-6c65-e040-e00a18064b00) (`98b7f36a-3d7a-6c65-e040-e00a18064b00` in this case):
+
+1. add the generated API token to `/config/nypl_repo.yml`
+2. start the server and log in with a super user
+3. go to `Admin / Imports`
+4. Click `Add New Import`
+5. Select `Import Type`: `Map` and type in the `UUID`: `a66456f6-3860-95d5-e040-e00a18065ecc` and click `Create`
+6. Click `Start Import`
+
+This will take a few minutes to pull the map. You now have a map you can work with and test functionality!
 
 
 ## Deployment instructions
