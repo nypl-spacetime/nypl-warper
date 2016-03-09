@@ -135,26 +135,24 @@ Creating a new user
 
 ## Development 
 
-Via Vagrant - There is a [`Vagrantfile`](/Vagrantfile) you can use which uses a provision script in `lib/vagrant`. *Note:* the default `Vagrantfile` is configured to take 8GB RAM. To use this file type:
+Via Vagrant - There is a [`Vagrantfile`](/Vagrantfile) you can use which uses the [`/lib/vagrant/provision.sh`](/lib/vagrant/provision.sh) provision script. **Note:** the default `Vagrantfile` is configured to take 8GB RAM. To use this file type:
 
     vagrant up
 
-to get and install the virtual machine - this will also install the libraries and depencies and ruby gems for mapwarper into the virtual machine. See the file in `lib/vagrant/provision.sh` for more details about this process.
+to get and install the virtual machine - this will also install the libraries and depencies and ruby gems for mapwarper into the virtual machine. See [`/lib/vagrant/provision.sh`](/lib/vagrant/provision.sh) for more details about this process.
 
 After that runs, type `vagrant ssh` to login and then you can:
 
     cd /srv/mapwarper
     rails c
 
-Create a user in the console, as shown above and then `exit`. Then start the server in port 3000 with:
-
-    rails s
-
-To start in a relative url root use `thin`:
+Create a user in the console, as shown above and then `exit`. Then start the server in a relative url root use `thin`:
 
     RAILS_ENV=development bundle exec thin --prefix=/warper start
 
 and then browse to `http://localhost:3000/warper/`
+
+In non-Vagrant circumstances you may want to run it just using `rails s`.
 
 ## Import a test map
 
@@ -176,6 +174,6 @@ The system can use capistrano for deployment
 
 ## API
 
-See README_API.md for API details
+See [`README_API.md`](/README_API.md) for API details
 
 
