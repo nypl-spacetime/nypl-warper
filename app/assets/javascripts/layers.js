@@ -97,16 +97,16 @@ if(typeof(G_SATELLITE_MAP) !== 'undefined'){
     
 var ny_2014 = new OpenLayers.Layer.OSM("NYC 2014",
         [
-          "http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-          "http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-          "http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
+          "http://${s}.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png",
+          "http://${s}.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png",
+          "http://${s}.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png"
         ],
         {
           transitionEffect: 'resize',
           displayOutsideMaxExtent: true,
           wrapDateLine: true,
           numZoomLevels: 22,
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+          attribution: 'Map via <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://mapbox.com">Mapbox</a>'
         }
 );
             
