@@ -148,7 +148,7 @@ After that runs, type `vagrant ssh` to login and then you can
 
 Create a user in the console, as shown above and then `exit`
 
-    rails s
+    rails server -p 0.0.0.0
 to start the server, running on port 3000
 
 To start in a relative url root use thin
