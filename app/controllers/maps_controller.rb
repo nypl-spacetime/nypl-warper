@@ -95,7 +95,7 @@ class MapsController < ApplicationController
     else
       respond_to do |format|
         format.html{ render :layout =>'application' }  # index.html.erb
-        format.xml  { render :xml => @maps.to_xml(:root => "maps", :except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]) {|xml|
+        format.xml  { render :xml => @maps.to_xml(:root => "maps", :except => [:content_type, :size, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]) {|xml|
             xml.tag!'stat', "ok"
             xml.tag!'total-entries', @maps.total_entries
             xml.tag!'per-page', @maps.per_page
@@ -106,7 +106,7 @@ class MapsController < ApplicationController
             :per_page => @maps.per_page,
             :total_entries => @maps.total_entries,
             :total_pages => @maps.total_pages,
-            :items => @maps.to_a}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid], :methods => :depicts_year) , :callback => params[:callback]
+            :items => @maps.to_a}.to_json(:except => [:content_type, :size, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid], :methods => :depicts_year) , :callback => params[:callback]
         }
       end
     end
