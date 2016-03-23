@@ -266,7 +266,7 @@ class MapsController < ApplicationController
           format.kml {render :action => "show_kml", :layout => false}
           format.rss {render :action=> 'show'}
           # format.xml {render :xml => @map.to_xml(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]) }
-          format.json {render :json =>{:stat => "ok", :items => @map}.to_json(:except => [:content_type, :size, :bbox_geom, :uuid, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]), :callback => params[:callback] }
+          format.json {render :json =>{:stat => "ok", :items => @map}.to_json(:except => [:content_type, :size, :parent_uuid, :filename, :parent_id,  :map, :thumbnail, :rough_centroid]), :callback => params[:callback] }
         end
       end
       
