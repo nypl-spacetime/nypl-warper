@@ -105,9 +105,9 @@ In addition have a look in `config/initializers/application_config.rb `for some 
 
 Create a postgis database
 
-    sudo su - postgres
-    createdb mapwarper_development
+    sudo -u postgres createdb mapwarper_development
     psql mapwarper_development -c "create extension postgis;"
+    RAILS_ENV=development bundle exec rake db:migrate
 
 ## Database initialization
 
