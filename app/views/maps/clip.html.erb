@@ -5,7 +5,8 @@
     var gml_file_exists = <%= @gml_exists %>;
     var timestamp = Math.round(new Date().getTime() / 1000.0);
 
-    var gml_url = "<%=request.protocol + request.host_with_port-%>/shared/masks/<%= @map.id%>"+".gml.ol?"+timestamp;
+    var gml_url = "<%=@gml_url%>";
+
       var clip_image_width = <%= @map.width %>;
       var clip_image_height = <%= @map.height %>;
       var clip_wms_url = '<%= url_for :controller => 'maps', :action => 'wms', :id => @map  -%>';
