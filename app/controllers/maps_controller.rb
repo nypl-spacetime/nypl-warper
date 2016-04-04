@@ -373,6 +373,11 @@ class MapsController < ApplicationController
     if File.exists?(@map.masking_file_gml+".ol")
       @gml_exists = "true"
     end
+    if APP_CONFIG['mask_dir'].blank?
+      @gml_url = "/warper/mapimages/#{@map.id}.gml.ol?#{Time.now.to_i}"
+    else
+      @gml_url = "#{request.protocol}#{request.host_with_port}/shared/masks/#{@map.id}.gml.ol?#{Time.now.to_i}"
+    end
     choose_layout_if_ajax
   end
   
