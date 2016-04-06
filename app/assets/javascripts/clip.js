@@ -30,7 +30,7 @@ function clipinit() {
     controls: [new OpenLayers.Control.PanZoomBar()],
     maxExtent: new OpenLayers.Bounds(-1000, 0, iw, ih),
     maxResolution: 'auto',
-    numZoomLevels: 8
+    numZoomLevels: 9
   });
 
   var image = new OpenLayers.Layer.WMS(title,

@@ -10,11 +10,13 @@ function uinit() {
 
 function unwarped_init() {
 
+  /*
   // mds is disabled in the map setup since it invokes the zoomWheel control and we want that disabled
   var mds = new OpenLayers.Control.MouseDefaults();
   mds.defaultDblClick = function() {
     return true;
   };
+  */
 
   var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
   var panZoomBar = new OpenLayers.Control.PanZoomBar();

@@ -8,15 +8,8 @@ function warpedinit() {
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
     OpenLayers.Util.onImageLoadErrorColor = "transparent";
 
-  // disabling the zoomWheel
-  // mouseWheelOptions has been left in place to allow for easy experimentation with these settings
-  var zoomWheel = new OpenLayers.Control.Navigation(
-   {
-      zoomWheelEnabled: false,
-      mouseWheelOptions: {interval: 2500, cumulative: false}
-    }
-  );
-
+    // disabling the zoomWheel
+    var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
 
     var options_warped = {
         projection: new OpenLayers.Projection("EPSG:900913"),
