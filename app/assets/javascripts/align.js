@@ -8,8 +8,6 @@ function addImageTo(placeholder, mapid) {
     jQuery("#" + placeholder).html("<img src = '" + thumburl + "' />");
  }
 
-window.addEventListener("resize", align_updateSize);
-align_updateSize();
 
 jQuery(function() {
 
