@@ -21,15 +21,16 @@ function updateFormats() {
 
 function clipinit() {
 
-  var mds = new OpenLayers.Control.MouseDefaults();
+  // mds is disabled to prevent scrollwheel
+  //var mds = new OpenLayers.Control.MouseDefaults();
 
-  var iw = clip_image_width + 1000;
+  var iw = clip_image_width + 1000; // why the extra width and height?
   var ih = clip_image_height + 500;
   clipmap = new OpenLayers.Map('clipmap', {
-    controls: [mds, new OpenLayers.Control.PanZoomBar()],
+    controls: [new OpenLayers.Control.PanZoomBar()],
     maxExtent: new OpenLayers.Bounds(-1000, 0, iw, ih),
     maxResolution: 'auto',
-    numZoomLevels: 9
+    numZoomLevels: 8
   });
 
   var image = new OpenLayers.Layer.WMS(title,
@@ -82,7 +83,8 @@ function clipinit() {
     scratchGeom = null;
   });
   navigate = new OpenLayers.Control.Navigation({
-    title: "Move around Map"
+    title: "Move around Map",
+    zoomWheelEnabled: false
   });
   navigate.events.register("activate", this, function() {
     //check to see if theres something in the temp buffer
@@ -126,6 +128,11 @@ function clipinit() {
   controlpanel.addControls([deletePoly, modify, polygon, navigate]);
   clipmap.addControl(controlpanel);
   navigate.activate();
+
+  window.addEventListener("resize", clip_updateSize);
+  clip_updateSize();
+  clipmap.zoomToMaxExtent();
+
 }
 
 function deletePolygon(feature) {
@@ -167,5 +174,35 @@ function updateOtherMaps() {
     });
     warped_wmslayer.redraw(true);
   }
+}
+
+function clip_updateSize() {
+  //console.log('clip_updateSize')
+
+  var headerSpace = 220
+
+  clipmap.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  clipmap.div.style.width = "100%";
+  clipmap.updateSize();
+
+  // calculate the distance from the top of the browser to the top of the tabs to set the scroll position correctly
+  var ele = document.getElementById("wooTabs");
+  var offsetFromTop = 0;
+  while(ele){
+     offsetFromTop += ele.offsetTop;
+     ele = ele.offsetParent;
+  }
+
+  //window.scrollTo(0, offsetFromTop);
+
+  //animate the scroll position transition
+  jQuery('html, body').clearQueue();
+  jQuery('html, body').animate({
+        scrollTop: offsetFromTop
+    }, 500);
+
+  // clear preset height if one was set
+  setTimeout( removePlaceholderHeight, 500);
+
 }
 

@@ -149,8 +149,8 @@ function init() {
     saveDraggedMarker(feature);
   };
 
-  navig = new OpenLayers.Control.Navigation({title: "Move Around Map"});
-  navigFrom = new OpenLayers.Control.Navigation({title: "Move Around Map"});
+  navig = new OpenLayers.Control.Navigation({title: "Move Around Map", zoomWheelEnabled: false});
+  navigFrom = new OpenLayers.Control.Navigation({title: "Move Around Map", zoomWheelEnabled: false});
 
   to_panel.addControls([navig, dragMarker, drawFeatureTo]);
   to_map.addControl(to_panel);
@@ -159,8 +159,8 @@ function init() {
   from_map.addControl(from_panel);
 
   //we'll add generic navigation controls so we can zoom whilst addingd
-  to_map.addControl(new OpenLayers.Control.Navigation());
-  from_map.addControl(new OpenLayers.Control.Navigation());
+  to_map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: false}));
+  from_map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: false}));
 
   navig.activate();
   navigFrom.activate();
@@ -199,6 +199,10 @@ function init() {
     }
   });
 
+
+  window.addEventListener("resize", warp_updateSize);
+  warp_updateSize();
+  from_map.zoomToMaxExtent();
 
 }
 
@@ -828,4 +832,36 @@ function bestGuess(guessObj) {
 function centerToMap(lon, lat, zoom) {
   var newCenter = new OpenLayers.LonLat(lon, lat).transform(to_map.displayProjection, to_map.projection);
   to_map.setCenter(newCenter, zoom);
+}
+
+function warp_updateSize() {
+  //console.log('warp_updateSize')
+
+  var headerSpace = 255
+
+  from_map.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  from_map.div.style.width = "100%";
+  from_map.updateSize();
+
+  to_map.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  to_map.div.style.width = "100%";
+  to_map.updateSize();
+
+  // calculate the distance from the top of the browser to the top of the tabs to set the scroll position correctly
+  var ele = document.getElementById("wooTabs");
+  var offsetFromTop = 0;
+  while(ele){
+     offsetFromTop += ele.offsetTop;
+     ele = ele.offsetParent;
+  }
+
+  //window.scrollTo(0, offsetFromTop);
+
+  /* animate the scroll position transition  */
+  jQuery('html, body').clearQueue();
+  jQuery('html, body').animate({
+        scrollTop: offsetFromTop
+    }, 500);
+ 
+ setTimeout( removePlaceholderHeight, 500);
 }
