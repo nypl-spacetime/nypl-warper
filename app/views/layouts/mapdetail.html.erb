@@ -47,39 +47,52 @@
         });
 
         jQuery("#wooTabs").bind("tabsshow", function(event, ui) {
-          if (ui.panel.id == "Rectify") {
-            if (typeof to_map != 'undefined') {
-              to_map.updateSize();
-              from_map.updateSize();
+          //console.log('ui.panel.id: ' + ui.panel.id);
+
+          if (ui.panel.id == "Show") {
+            if (typeof umap != 'undefined') {
+              unwarped_updateSize();
+            } else {
+              presetContainer()
             }
           }
-          if (ui.panel.id == "Preview_Rectified_Map") {
-            if (typeof warpedmap != 'undefined') {
-              warpedmap.updateSize();
+
+          if (ui.panel.id == "Rectify") {
+            if (typeof to_map != 'undefined') {
+              warp_updateSize();
+            } else {
+              presetContainer()
             }
           }
 
           if (ui.panel.id == "Crop") {
             if (typeof clipmap != 'undefined') {
-              clipmap.updateSize();
+              clip_updateSize();
+            } else {
+              presetContainer()
             }
           }
 
-          if (ui.panel.id == "Show") {
-            if (typeof umap != 'undefined') {
-              umap.div.style.width = "100%";
-              umap.updateSize();
+          if (ui.panel.id == "Preview") {
+            if (typeof warpedmap != 'undefined') {
+              warped_updateSize()
+            } else {
+              presetContainer();
             }
           }
+
           if (ui.panel.id == "Activity_History") {
 
           }
 
-
-
         }); //end tabshow
 
       });//end jquery function
+
+      function presetContainer(){
+        // tab content does not yet exist so we're presetting container height to avoid scrolling
+        jQuery('#wooTabs').css({'min-height': '2000px'});
+      }
 
     </script>
     <script type="text/javascript">

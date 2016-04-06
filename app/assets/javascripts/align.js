@@ -7,7 +7,8 @@ function addImageTo(placeholder, mapid) {
     thumburl = thumb_base_path + "/"+ mapid;
     jQuery("#" + placeholder).html("<img src = '" + thumburl + "' />");
  }
-    
+
+
 jQuery(function() {
 
   place = new Object;
@@ -71,6 +72,8 @@ jQuery(function() {
     close: function() {
     }
   });
+
+
 });
 
 
@@ -130,4 +133,6 @@ function serialiseStuff() {
 
 
 }
+
+removePlaceholderHeight();
 

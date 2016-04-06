@@ -7,6 +7,10 @@ var minOpacity = 0.1;
 function warpedinit() {
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
     OpenLayers.Util.onImageLoadErrorColor = "transparent";
+
+    // disabling the zoomWheel
+    var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
+
     var options_warped = {
         projection: new OpenLayers.Projection("EPSG:900913"),
         displayProjection: new OpenLayers.Projection("EPSG:4326"),
@@ -17,8 +21,8 @@ function warpedinit() {
         controls: [
             new OpenLayers.Control.Attribution(),
             new OpenLayers.Control.LayerSwitcher(),
-            new OpenLayers.Control.Navigation(),
-            new OpenLayers.Control.PanZoomBar()
+            new OpenLayers.Control.PanZoomBar(),
+            zoomWheel
         ]
     };
 
@@ -82,6 +86,9 @@ function warpedinit() {
         }
     });
 
+    window.addEventListener("resize", warped_updateSize);
+    warped_updateSize();
+
 
 }
 
@@ -113,4 +120,35 @@ function changeOpacity(byOpacity) {
         Math.max(minOpacity, newOpacity));
     OpenLayers.Util.getElement('opacity').value = newOpacity;
     wmslayer.setOpacity(newOpacity);
+}
+
+
+function warped_updateSize() {
+  //console.log('warped_updateSize')
+
+  var headerSpace = 130
+
+  warpedmap.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  warpedmap.div.style.width = "100%";
+  warpedmap.updateSize();
+
+  // calculate the distance from the top of the browser to the top of the tabs to set the scroll position correctly
+  var ele = document.getElementById("wooTabs");
+  var offsetFromTop = 0;
+  while(ele){
+     offsetFromTop += ele.offsetTop;
+     ele = ele.offsetParent;
+  }
+
+  //window.scrollTo(0, offsetFromTop);
+
+  //animate the scroll position transition
+  jQuery('html, body').clearQueue();
+  jQuery('html, body').animate({
+        scrollTop: offsetFromTop
+    }, 500);
+
+  // clear preset height if one was set
+  setTimeout( removePlaceholderHeight, 500);
+
 }
