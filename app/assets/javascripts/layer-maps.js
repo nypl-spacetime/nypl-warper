@@ -2,6 +2,7 @@ var layerMap;
 var mapIndexLayer;
 var mapIndexSelCtrl;
 var selectedFeature;
+
 function init(){
   OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
   OpenLayers.Util.onImageLoadErrorColor = "transparent";
@@ -18,7 +19,7 @@ function init(){
     controls: [
     new OpenLayers.Control.Attribution(),
     switcher,
-    new OpenLayers.Control.Navigation(),
+    new OpenLayers.Control.Navigation({ zoomWheelEnabled: false } ),
     new OpenLayers.Control.PanZoomBar()
     ]
   };
@@ -96,6 +97,9 @@ function init(){
   loadMapFeatures();
 
   jQuery("#view-maps-index-link").append("(<a href='javascript:toggleMapIndexLayer();'>Toggle map outlines on map above</a>)");
+
+  window.addEventListener("resize", layer_updateSize);
+  layer_updateSize();
 }
 
 function toggleMapIndexLayer(){
@@ -158,3 +162,31 @@ function onFeatureUnselect(feature) {
   feature.popup.destroy();
   feature.popup = null;
 }  
+
+
+function layer_updateSize(){
+
+  var headerSpace = 160
+
+  layerMap.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  layerMap.div.style.width = "100%";
+  layerMap.updateSize();
+
+  // calculate the distance from the top of the browser to the top of the tabs to set the scroll position correctly
+  var ele = document.getElementById("wooTabs");
+  var offsetFromTop = 0;
+  while(ele){
+     offsetFromTop += ele.offsetTop;
+     ele = ele.offsetParent;
+  }
+
+  //window.scrollTo(0, offsetFromTop);
+
+  //animate the scroll position transition
+  jQuery('html, body').clearQueue();
+  jQuery('html, body').animate({
+        scrollTop: offsetFromTop
+    }, 500);
+
+
+}

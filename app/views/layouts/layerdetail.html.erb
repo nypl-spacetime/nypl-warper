@@ -69,6 +69,17 @@
         });
         jQuery("#wooTabs").bind("tabsshow", function(event, ui) {
           jQuery(".hidden-at-start").hide();
+
+          console.log('ui.panel.id: ' + ui.panel.id);
+
+          if (ui.panel.id == "Show") {
+            if (typeof layerMap != 'undefined') {
+              layer_updateSize();
+            } else {
+              //presetContainer()
+            }
+          }
+
         });
 
         jQuery("#wooTabs").bind("tabsshow", function(event, ui) {
