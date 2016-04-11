@@ -123,19 +123,19 @@ function init() {
           {displayClass: 'olControlEditingToolbar'}
   );
   var dragMarker = new OpenLayers.Control.DragFeature(to_vectors,
-          {displayClass: 'olControlDragFeature', title: 'Move Control Point'});
+          {displayClass: 'olControlDragFeature', title: 'Drag Control Point (d)'});
   dragMarker.onComplete = function(feature) {
     saveDraggedMarker(feature);
   };
 
   var drawFeatureTo = new OpenLayers.Control.DrawFeature(active_to_vectors, OpenLayers.Handler.Point,
-          {displayClass: 'olControlDrawFeaturePoint', title: 'Add Control Point', handlerOptions: {style: active_style}});
+          {displayClass: 'olControlDrawFeaturePoint', title: 'Add Control Point (p)', handlerOptions: {style: active_style}});
   drawFeatureTo.featureAdded = function(feature) {
     newaddGCPto(feature);
   };
 
   var drawFeatureFrom = new OpenLayers.Control.DrawFeature(active_from_vectors, OpenLayers.Handler.Point,
-          {displayClass: 'olControlDrawFeaturePoint', title: 'Add Control Point', handlerOptions: {style: active_style}});
+          {displayClass: 'olControlDrawFeaturePoint', title: 'Add Control Point (p)', handlerOptions: {style: active_style}});
   drawFeatureFrom.featureAdded = function(feature) {
     newaddGCPfrom(feature);
   };
@@ -144,13 +144,13 @@ function init() {
           {displayClass: 'olControlEditingToolbar'}
   );
   var dragMarkerFrom = new OpenLayers.Control.DragFeature(from_vectors,
-          {displayClass: 'olControlDragFeature', title: 'Move Control Point'});
+          {displayClass: 'olControlDragFeature', title: 'Drag Control Point (d)'});
   dragMarkerFrom.onComplete = function(feature) {
     saveDraggedMarker(feature);
   };
 
-  navig = new OpenLayers.Control.Navigation({title: "Move Around Map", zoomWheelEnabled: false});
-  navigFrom = new OpenLayers.Control.Navigation({title: "Move Around Map", zoomWheelEnabled: false});
+  navig = new OpenLayers.Control.Navigation({title: "Move Around Map (m)", zoomWheelEnabled: false});
+  navigFrom = new OpenLayers.Control.Navigation({title: "Move Around Map (m)", zoomWheelEnabled: false});
 
   to_panel.addControls([navig, dragMarker, drawFeatureTo]);
   to_map.addControl(to_panel);
@@ -170,6 +170,56 @@ function init() {
   joinControls(drawFeatureTo, drawFeatureFrom);
 
 
+  // keyboard shortcuts for switching tools
+  var keyboardControl = new OpenLayers.Control();  
+  var control = new OpenLayers.Control();
+  var callbacks = { keydown: function(evt) {
+    //console.log("You pressed a key: " + evt.keyCode);
+    switch(evt.keyCode) {
+        case 80: // p
+            switchTool('pin');
+            break;
+        case 68: // d
+            switchTool('drag');
+            break;
+        case 77: // m
+            switchTool('move');
+            break;
+        default:
+          //console.log('default')
+        }
+    }
+  };
+        
+  var options = {};
+  var handler = new OpenLayers.Handler.Keyboard(control, callbacks, options);
+
+  function switchTool(newTool){
+    // first deactivate everything
+    from_map.controls[2].deactivate();
+    from_map.controls[3].deactivate();
+    from_map.controls[4].deactivate();
+
+    switch(newTool) {
+        case 'pin':
+            from_map.controls[4].activate();
+            break;
+        case 'drag':
+            from_map.controls[3].activate();
+            break;
+        case 'move':
+            from_map.controls[2].activate();
+            break;
+        default: 
+          //console.log('switchTool ' + newTool + ' not matched');
+    }
+  }
+
+  handler.activate();
+  to_map.addControl(keyboardControl);
+
+
+
   //set up jquery slider for warped layer
   jQuery("#warped-slider").slider({
     value: 100 * warpedOpacity,
@@ -187,6 +237,8 @@ function init() {
     }
   });
   
+  //
+  // switch between maps based upon zoom level
   to_map.events.register("zoomend", mapnik, function () {
     if (this.map.getZoom() > 18 && this.visibility == true) {
       this.map.setBaseLayer(ny_2014);
@@ -200,6 +252,7 @@ function init() {
   });
 
 
+  // setup resize
   window.addEventListener("resize", warp_updateSize);
   warp_updateSize();
   from_map.zoomToMaxExtent();
