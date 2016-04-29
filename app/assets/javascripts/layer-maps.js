@@ -167,8 +167,14 @@ function onFeatureUnselect(feature) {
 function layer_updateSize(){
 
   var headerSpace = 160
+  var minHeight = 500;
+  var calculatedHeight = Number(window.innerHeight - headerSpace);
 
-  layerMap.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  if (calculatedHeight < minHeight){
+    calculatedHeight = minHeight;
+  } 
+
+  layerMap.div.style.height = calculatedHeight + "px";
   layerMap.div.style.width = "100%";
   layerMap.updateSize();
 
