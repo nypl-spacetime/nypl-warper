@@ -56,8 +56,6 @@ function unwarped_init() {
 function unwarped_updateSize() {
   //console.log('unwarper_updateSize')
 
-  var minHeight = 500;
-
   // calculate the distance from the top of the browser to the top of the tabs to determine space available for preview
   var ele = document.getElementById("wooTabs");
   var offsetFromTop = 0;
@@ -66,13 +64,7 @@ function unwarped_updateSize() {
      ele = ele.offsetParent;
   }
 
-  var calculatedHeight = Number(window.innerHeight - offsetFromTop - 90);
-
-  if (calculatedHeight < minHeight){
-    calculatedHeight = minHeight;
-  } 
-
-  umap.div.style.height =  calculatedHeight + "px";
+  umap.div.style.height = Number(window.innerHeight - offsetFromTop - 90) + "px";
   umap.div.style.width = "100%";
 
   umap.updateSize();
