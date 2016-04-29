@@ -128,7 +128,13 @@ function warped_updateSize() {
 
   var headerSpace = 130
 
-  warpedmap.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  var minHeight = 500;
+  var calculatedHeight = Number(window.innerHeight - headerSpace);
+  if (calculatedHeight < minHeight){
+    calculatedHeight = minHeight;
+  }
+
+  warpedmap.div.style.height = calculatedHeight + "px";
   warpedmap.div.style.width = "100%";
   warpedmap.updateSize();
 

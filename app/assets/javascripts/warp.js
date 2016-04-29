@@ -890,13 +890,21 @@ function centerToMap(lon, lat, zoom) {
 function warp_updateSize() {
   //console.log('warp_updateSize')
 
+  
   var headerSpace = 255
 
-  from_map.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  var minHeight = 370;
+  var calculatedHeight = Number(window.innerHeight - headerSpace);
+
+  if (calculatedHeight < minHeight){
+    calculatedHeight = minHeight;
+  } 
+
+  from_map.div.style.height = calculatedHeight + "px";
   from_map.div.style.width = "100%";
   from_map.updateSize();
 
-  to_map.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  to_map.div.style.height = calculatedHeight + "px";
   to_map.div.style.width = "100%";
   to_map.updateSize();
 

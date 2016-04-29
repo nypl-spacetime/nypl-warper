@@ -180,8 +180,13 @@ function clip_updateSize() {
   //console.log('clip_updateSize')
 
   var headerSpace = 220
+  var minHeight = 500;
+  var calculatedHeight = Number(window.innerHeight - headerSpace);
+  if (calculatedHeight < minHeight){
+    calculatedHeight = minHeight;
+  }
 
-  clipmap.div.style.height = Number(window.innerHeight - headerSpace) + "px";
+  clipmap.div.style.height = calculatedHeight + "px";
   clipmap.div.style.width = "100%";
   clipmap.updateSize();
 
