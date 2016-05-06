@@ -23,14 +23,17 @@ function clipinit() {
 
   // mds is disabled to prevent scrollwheel
   //var mds = new OpenLayers.Control.MouseDefaults();
+  var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
+  //var keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' })
+
+  var mapResolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
 
   var iw = clip_image_width + 1000; // why the extra width and height?
   var ih = clip_image_height + 500;
   clipmap = new OpenLayers.Map('clipmap', {
-    controls: [new OpenLayers.Control.PanZoomBar()],
+    controls: [new OpenLayers.Control.PanZoomBar(), zoomWheel],
     maxExtent: new OpenLayers.Bounds(-1000, 0, iw, ih),
-    maxResolution: 'auto',
-    numZoomLevels: 9
+    resolutions: mapResolutions
   });
 
   var image = new OpenLayers.Layer.WMS(title,
@@ -38,12 +41,16 @@ function clipinit() {
             layers: 'basic',
             format: 'image/png',
             status: 'unwarped'
-          });
+          }, { transitionEffect: 'resize' });
 
   clipmap.addLayer(image);
   if (!clipmap.getCenter()) {
     clipmap.zoomToMaxExtent();
   }
+
+
+
+
   //if theres a file load it
   //else make a plain one
 

@@ -1,4 +1,6 @@
 var un_bounds;
+var unwarped_image;
+
 function uinit() {
   delete umap;
   delete unwarped_image;
@@ -10,6 +12,8 @@ function uinit() {
 
 function unwarped_init() {
 
+
+
   /*
   // mds is disabled in the map setup since it invokes the zoomWheel control and we want that disabled
   var mds = new OpenLayers.Control.MouseDefaults();
@@ -18,39 +22,131 @@ function unwarped_init() {
   };
   */
 
-  var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
-  var panZoomBar = new OpenLayers.Control.PanZoomBar();
 
+
+  var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
+  var panZoomBar = new OpenLayers.Control.PanZoomBar();
+  var keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' })
 
   if (typeof (umap) == 'undefined') {
 
+    var mapResolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
+
     umap = new OpenLayers.Map('unmap',
       {
-        controls: [panZoomBar, zoomWheel], 
+        controls: [panZoomBar, zoomWheel, keyboard], 
         maxExtent: un_bounds, 
-        maxResolution: 10.94, 
-        numZoomLevels: 8
+        resolutions: mapResolutions
+
       }
     );
 
     umap.events.register("addlayer", umap, function(e) {
-      //console.log('on add layer')
-      umap.zoomToMaxExtent();
+      //console.log('on addlayer event, adjusting zoom')
     });
 
-    var unwarped_image = new OpenLayers.Layer.WMS(title, wms_url, {format: 'image/png', status: 'unwarped'});
-    umap.addLayer(unwarped_image);
-  }
+    // adjust map size before the layer is added to obtain the correct zoomToMaxExtent
+    unwarped_updateSize();
 
-  if (!umap.getCenter()) {
-    console.log('zoomToExtent of un_bounds ---- this never seems to run')
-    umap.zoomToExtent(un_bounds);
+
+    unwarped_image = new OpenLayers.Layer.WMS(title, wms_url, {format: 'image/png', status: 'unwarped'}, { transitionEffect: 'resize' } );
+
+    /*
+    unwarped_image.events.register('loadend', unwarped_image, function(evt){
+      //map.zoomToExtent(uses_layer.getDataExtent())
+      umap.zoomToMaxExtent();
+    })
+    */
+
+    umap.addLayer(unwarped_image);
+
+    // keyboard shortcuts for switching tools
+    var keyboardControl = new OpenLayers.Control();  
+    var control = new OpenLayers.Control();
+    var callbacks = { keydown: function(evt) {
+      //console.log("You pressed a key: " + evt.keyCode);
+      
+      switch(evt.keyCode) {
+        /* keyboard defaults control picked up the zoom in/out functionality
+          case 107: // numeric keypad +
+              changeZoom('out');
+              break;
+          case 109: // numeric keypad -
+              changeZoom('in');
+              break;
+
+          case 187: // top row +
+              changeZoom('out');
+              break;
+          case 189: // top row -
+              changeZoom('in');
+              break;
+        */
+
+          case 49: // 1
+              changeZoom(1);
+              break;
+          case 50: // -
+              changeZoom(2);
+              break;
+          case 51: // -
+              changeZoom(3);
+              break;
+          case 52: // -
+              changeZoom(4);
+              break;
+          case 53: // -
+              changeZoom(5);
+              break;
+          case 54: // -
+              changeZoom(6);
+              break;
+          case 55: // -
+              changeZoom(7);
+              break;
+          case 56: // -
+              changeZoom(8);
+              break;
+          case 57: // -
+              changeZoom(9);
+              break;
+
+          default:
+            //console.log('default')
+          }
+      }
+    };
+          
+    var options = {};
+    var handler = new OpenLayers.Handler.Keyboard(control, callbacks, options);
+
+    function changeZoom(newZoom){
+
+      switch(newZoom) {
+          case 'in':
+              umap.zoomTo(umap.zoom - 1)
+              break;
+          case 'out':
+              umap.zoomTo(umap.zoom + 1)
+              break;
+          default: 
+              // assumming number
+              umap.zoomTo(mapResolutions.length - Number(newZoom * 2) ) ;
+      }
+    }
+
+    function moveMap(newDirection){
+      console.log('moveMap: ' + newDirection);
+
+    }
+
+    handler.activate();
+    umap.addControl(keyboardControl);
+
   }
   
   //umap.zoomToExtent(un_bounds);
   umap.zoomToMaxExtent();
-
-  unwarped_updateSize();
 }
 
 function unwarped_updateSize() {
@@ -66,7 +162,7 @@ function unwarped_updateSize() {
      ele = ele.offsetParent;
   }
 
-  var calculatedHeight = Number(window.innerHeight - offsetFromTop - 90);
+  var calculatedHeight = Number(window.innerHeight - offsetFromTop);
 
   if (calculatedHeight < minHeight){
     calculatedHeight = minHeight;
@@ -85,10 +181,10 @@ function unwarped_updateSize() {
     var scroll = jQuery(window).scrollTop();
 
 
-    if (scroll != 0){
+    if (scroll != 100){
       jQuery('html, body').clearQueue();
       jQuery('html, body').animate({
-        scrollTop: 0
+        scrollTop: 100
       }, 500);
     }
 

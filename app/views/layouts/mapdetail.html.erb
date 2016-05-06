@@ -14,7 +14,6 @@
       var addthis_share = {templates: {twitter: '{{url}} (from @<%=APP_CONFIG['addthis_twitter_user']%>)'}};
       var addthis_config = {ui_click: true};
 
-
       jQuery(function() {
         jQuery("#wooTabs").tabs({selected:<%=@selected_tab||0 %>});
         jQuery("#wooTabs").bind("tabsselect", function(event, ui) {
@@ -52,6 +51,12 @@
           if (ui.panel.id == "Show") {
             if (typeof umap != 'undefined') {
               unwarped_updateSize();
+
+              // if the page was initially loaded on any tab over than Show the zoom extent needs to be reset
+              if (umapLoaded === false){
+                umap.zoomToMaxExtent();
+              }
+
             } else {
               presetContainer()
             }
@@ -99,6 +104,7 @@
       // PageLoad function
       // This function is called when  1. after calling $.historyInit(); 2. after calling $.historyLoad(); 3. after pushing "Go Back" button of a browser
       var tabSuffix = "_tab"; //suffix to be added to link to stop jumping
+      var umapLoaded = false;
       function pageload(hash) {
         if (hash) {
           // restore ajax loaded state
@@ -112,6 +118,9 @@
           jQuery.each(tab_divs, function( index, value ) {
             if (hash === value.id){
               select_tab_index = index;
+              if (value.id.indexOf('Show') != -1){
+                umapLoaded = true;
+              } 
             }
           });
           
