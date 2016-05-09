@@ -83,6 +83,11 @@ function unwarped_init() {
               break;
         */
 
+          case 173: // top row - (?)
+              changeZoom('out');
+              break;
+
+          /* numbers at top of keyboard */
           case 49: // 1
               changeZoom(1);
               break;
@@ -108,6 +113,39 @@ function unwarped_init() {
               changeZoom(8);
               break;
           case 57: // -
+              changeZoom(9);
+              break;
+
+
+          /* numeric keypad */
+          case 96: // 1
+              changeZoom(1);
+              break;
+          case 97: // 1
+              changeZoom(1);
+              break;
+          case 98: // -
+              changeZoom(2);
+              break;
+          case 99: // -
+              changeZoom(3);
+              break;
+          case 100: // -
+              changeZoom(4);
+              break;
+          case 101: // -
+              changeZoom(5);
+              break;
+          case 102: // -
+              changeZoom(6);
+              break;
+          case 103: // -
+              changeZoom(7);
+              break;
+          case 104: // -
+              changeZoom(8);
+              break;
+          case 105: // -
               changeZoom(9);
               break;
 
