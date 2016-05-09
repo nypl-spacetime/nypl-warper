@@ -118,7 +118,7 @@ function unwarped_init() {
 
 
           /* numeric keypad */
-          case 96: // 1
+          case 96: // 0
               changeZoom(1);
               break;
           case 97: // 1

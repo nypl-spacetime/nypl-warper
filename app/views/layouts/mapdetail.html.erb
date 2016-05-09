@@ -58,7 +58,7 @@
               }
 
             } else {
-              presetContainer()
+              presetContainer();
             }
           }
 
@@ -89,6 +89,9 @@
           if (ui.panel.id == "Activity_History") {
 
           }
+
+          // shift focus from tabs to span to prevent arrow keys from changing tabs
+          jQuery("#focusHolder").attr('tabindex',-1).focus();
 
         }); //end tabshow
 
@@ -142,6 +145,15 @@
           jQuery.historyLoad(hash);
         });
       });
+
+      // prevent browser from scrolling with arrow keys
+      window.addEventListener("keydown", function(e) {
+          // space and arrow keys
+          if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+              e.preventDefault();
+          }
+      }, false);
+
     </script>
     <%= csrf_meta_tags %>
     <%= yield :head %>
@@ -167,7 +179,7 @@
     <table id="map_table">
       <%= render :partial => 'maps/map_detail', :object => @map, :locals => {:variety => "detail"} %>
     </table>
-
+    <span id="focusHolder"> </span>
     <% @tabs = [{:name=>"show",:divname=>"Show", :label=>"Show", :path=>map_path},
       {:name=>"warp",:divname=>"Rectify", :label=>"Rectify", :path=>warp_map_path(:id => @map)},
       {:name=>"clip",:divname=>"Crop", :label=>"Crop", :path=>clip_map_path(:id => @map)},
