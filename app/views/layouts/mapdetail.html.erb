@@ -14,7 +14,6 @@
       var addthis_share = {templates: {twitter: '{{url}} (from @<%=APP_CONFIG['addthis_twitter_user']%>)'}};
       var addthis_config = {ui_click: true};
 
-
       jQuery(function() {
         jQuery("#wooTabs").tabs({selected:<%=@selected_tab||0 %>});
         jQuery("#wooTabs").bind("tabsselect", function(event, ui) {
@@ -52,8 +51,14 @@
           if (ui.panel.id == "Show") {
             if (typeof umap != 'undefined') {
               unwarped_updateSize();
+
+              // if the page was initially loaded on any tab over than Show the zoom extent needs to be reset
+              if (umapLoaded === false){
+                umap.zoomToMaxExtent();
+              }
+
             } else {
-              presetContainer()
+              presetContainer();
             }
           }
 
@@ -85,6 +90,9 @@
 
           }
 
+          // shift focus from tabs to span to prevent arrow keys from changing tabs
+          jQuery("#focusHolder").attr('tabindex',-1).focus();
+
         }); //end tabshow
 
       });//end jquery function
@@ -99,6 +107,7 @@
       // PageLoad function
       // This function is called when  1. after calling $.historyInit(); 2. after calling $.historyLoad(); 3. after pushing "Go Back" button of a browser
       var tabSuffix = "_tab"; //suffix to be added to link to stop jumping
+      var umapLoaded = false;
       function pageload(hash) {
         if (hash) {
           // restore ajax loaded state
@@ -112,6 +121,9 @@
           jQuery.each(tab_divs, function( index, value ) {
             if (hash === value.id){
               select_tab_index = index;
+              if (value.id.indexOf('Show') != -1){
+                umapLoaded = true;
+              } 
             }
           });
           
@@ -133,6 +145,15 @@
           jQuery.historyLoad(hash);
         });
       });
+
+      // prevent browser from scrolling with arrow keys
+      window.addEventListener("keydown", function(e) {
+          // space and arrow keys
+          if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+              e.preventDefault();
+          }
+      }, false);
+
     </script>
     <%= csrf_meta_tags %>
     <%= yield :head %>
@@ -158,7 +179,7 @@
     <table id="map_table">
       <%= render :partial => 'maps/map_detail', :object => @map, :locals => {:variety => "detail"} %>
     </table>
-
+    <span id="focusHolder"> </span>
     <% @tabs = [{:name=>"show",:divname=>"Show", :label=>"Show", :path=>map_path},
       {:name=>"warp",:divname=>"Rectify", :label=>"Rectify", :path=>warp_map_path(:id => @map)},
       {:name=>"clip",:divname=>"Crop", :label=>"Crop", :path=>clip_map_path(:id => @map)},

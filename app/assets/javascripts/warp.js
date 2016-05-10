@@ -17,11 +17,12 @@ var active_from_vectors;
 ///////////////////////////////////////////////////////////////////////////////////////////
 function init() {
 
+  var mapResolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
+
   from_map = new OpenLayers.Map('from_map', {
     controls: [new OpenLayers.Control.PanZoomBar()],
     maxExtent: new OpenLayers.Bounds(0, 0, image_width, image_height),
-    maxResolution: 'auto',
-    numZoomLevels: 20
+    resolutions: mapResolutions
   });
   //  from_map.addControl(new OpenLayers.Control.MousePosition());
 
@@ -149,8 +150,8 @@ function init() {
     saveDraggedMarker(feature);
   };
 
-  navig = new OpenLayers.Control.Navigation({title: "Move Around Map (m)", zoomWheelEnabled: false});
-  navigFrom = new OpenLayers.Control.Navigation({title: "Move Around Map (m)", zoomWheelEnabled: false});
+  navig = new OpenLayers.Control.Navigation({title: "Move Around Map (m)", zoomWheelEnabled: true});
+  navigFrom = new OpenLayers.Control.Navigation({title: "Move Around Map (m)", zoomWheelEnabled: true});
 
   to_panel.addControls([navig, dragMarker, drawFeatureTo]);
   to_map.addControl(to_panel);
@@ -159,8 +160,8 @@ function init() {
   from_map.addControl(from_panel);
 
   //we'll add generic navigation controls so we can zoom whilst addingd
-  to_map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: false}));
-  from_map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: false}));
+  to_map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: true}));
+  from_map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: true}));
 
   navig.activate();
   navigFrom.activate();

@@ -9,7 +9,7 @@ function warpedinit() {
     OpenLayers.Util.onImageLoadErrorColor = "transparent";
 
     // disabling the zoomWheel
-    var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
+    var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
 
     var options_warped = {
         projection: new OpenLayers.Projection("EPSG:900913"),
@@ -46,7 +46,8 @@ function warpedinit() {
             status: 'warped'
         }, {
             TRANSPARENT: 'true',
-            reproject: 'true'
+            reproject: 'true',
+            transitionEffect: null // Per docs, "Using 'resize' on non-opaque layers can cause undesired visual effects."
         }, {
             gutter: 15,
             buffer: 0
@@ -61,8 +62,6 @@ function warpedinit() {
     warpedmap.addLayer(warped_wmslayer);
 
     clipmap_bounds_merc = warped_bounds.transform(warpedmap.displayProjection, warpedmap.projection);
-
-    warpedmap.zoomToExtent(clipmap_bounds_merc);
 
     warpedmap.events.register("zoomend", mapnik3, function () {
       if (this.map.getZoom() > 18 && this.visibility == true) {
@@ -89,6 +88,8 @@ function warpedinit() {
     window.addEventListener("resize", warped_updateSize);
     warped_updateSize();
 
+    // after expanding map area zoom in
+    warpedmap.zoomToExtent(clipmap_bounds_merc);
 
 }
 
