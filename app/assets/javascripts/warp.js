@@ -381,20 +381,20 @@ function init() {
     }
   });
   
-  //
-  // switch between maps based upon zoom level
-  to_map.events.register("zoomend", mapnik, function () {
-    if (this.map.getZoom() > 18 && this.visibility == true) {
-      this.map.setBaseLayer(ny_2014);
-    }
-  });
-  
-   to_map.events.register("zoomend", ny_2014, function () {
-    if (this.map.getZoom() < 15 && this.visibility == true) {
-      this.map.setBaseLayer(mapnik);
-    }
-  });
-
+	 /*
+	  // switch between maps based upon zoom level
+	  to_map.events.register("zoomend", mapnik, function () {
+	    if (this.map.getZoom() > 18 && this.visibility == true) {
+	      this.map.setBaseLayer(ny_2014);
+	    }
+	  });
+	  
+	   to_map.events.register("zoomend", ny_2014, function () {
+	    if (this.map.getZoom() < 15 && this.visibility == true) {
+	      this.map.setBaseLayer(mapnik);
+	    }
+	  });
+	*/
 
   // setup resize
   window.addEventListener("resize", warp_updateSize);
