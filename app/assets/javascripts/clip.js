@@ -5,6 +5,37 @@ var navigate;
 var modify;
 var polygon;
 var deletePoly;
+
+if(typeof maps === 'undefined'){
+  var maps = {};
+}
+
+maps['clip'] = {};
+
+maps['clip'].zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
+maps['clip'].panZoomBar = new OpenLayers.Control.PanZoomBar();
+maps['clip'].keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' });
+
+maps['clip'].newZoom = null;
+maps['clip'].oldZoom = null;
+
+maps['clip'].resolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
+
+maps['clip'].active = false;
+maps['clip'].deactivate = function(){
+  //console.log('clip deactivate');
+  maps['clip'].keyboard.deactivate();
+  maps['clip'].active = false;
+}
+maps['clip'].activate = function(){
+  //console.log('clip activate');
+  maps['clip'].keyboard.activate();
+  maps['clip'].active = true;
+  currentMaps = ['clip'];
+  clip_updateSize();
+}
+
+
 function updateFormats() {
 
   formats = {
@@ -21,20 +52,15 @@ function updateFormats() {
 
 function clipinit() {
 
-  // mds is disabled to prevent scrollwheel
-  //var mds = new OpenLayers.Control.MouseDefaults();
-  var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
-  //var keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' })
-
-  var mapResolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
-
   var iw = clip_image_width + 1000; // why the extra width and height?
   var ih = clip_image_height + 500;
   clipmap = new OpenLayers.Map('clipmap', {
-    controls: [new OpenLayers.Control.PanZoomBar(), zoomWheel],
+    controls: [maps['clip'].panZoomBar, maps['clip'].zoomWheel],
     maxExtent: new OpenLayers.Bounds(-1000, 0, iw, ih),
-    resolutions: mapResolutions
+    resolutions: maps['clip'].resolutions
   });
+
+  maps['clip'].map = clipmap;
 
   var image = new OpenLayers.Layer.WMS(title,
           clip_wms_url, {
@@ -47,6 +73,104 @@ function clipinit() {
   if (!clipmap.getCenter()) {
     clipmap.zoomToMaxExtent();
   }
+
+  clipmap.events.register("zoomend", clipmap, function(){
+
+      if (clipmap.zoom < maps['clip'].newZoom){
+        maps['clip'].newZoom = clipmap.zoom + 0.5;
+      } else {
+        maps['clip'].newZoom = clipmap.zoom;
+      }
+  });
+
+
+
+    // keyboard shortcuts for switching tools
+    var keyboardControl = new OpenLayers.Control();  
+    var callbacks = { keydown: function(evt) {
+      //console.log("You pressed a key: " + evt.keyCode);
+      if (typeof currentMaps != 'undefined'){
+
+        switch(evt.keyCode) {
+
+            case 173: // top row - in firefox
+                maps.changeZoom('out');
+                break;
+
+            /* numbers at top of keyboard */
+            case 49: // 1
+                maps.changeZoom(1);
+                break;
+            case 50: // -
+                maps.changeZoom(2);
+                break;
+            case 51: // -
+                maps.changeZoom(3);
+                break;
+            case 52: // -
+                maps.changeZoom(4);
+                break;
+            case 53: // -
+                maps.changeZoom(5);
+                break;
+            case 54: // -
+                maps.changeZoom(6);
+                break;
+            case 55: // -
+                maps.changeZoom(7);
+                break;
+            case 56: // -
+                maps.changeZoom(8);
+                break;
+            case 57: // -
+                maps.changeZoom(9);
+                break;
+
+
+            /* numeric keypad */
+            case 96: // 0
+                maps.changeZoom(1);
+                break;
+            case 97: // 1
+                maps.changeZoom(1);
+                break;
+            case 98: // -
+                maps.changeZoom(2);
+                break;
+            case 99: // -
+                maps.changeZoom(3);
+                break;
+            case 100: // -
+                maps.changeZoom(4);
+                break;
+            case 101: // -
+                maps.changeZoom(5);
+                break;
+            case 102: // -
+                maps.changeZoom(6);
+                break;
+            case 103: // -
+                maps.changeZoom(7);
+                break;
+            case 104: // -
+                maps.changeZoom(8);
+                break;
+            case 105: // -
+                maps.changeZoom(9);
+                break;
+
+            default:
+              //console.log('default')
+            }
+        }
+      
+
+      }
+    };
+          
+    var keyboardHandler = new OpenLayers.Handler.Keyboard(keyboardControl, callbacks, {} );
+    keyboardHandler.activate();
+    clipmap.addControl(keyboardControl);
 
 
 

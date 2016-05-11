@@ -14,6 +14,11 @@
       var addthis_share = {templates: {twitter: '{{url}} (from @<%=APP_CONFIG['addthis_twitter_user']%>)'}};
       var addthis_config = {ui_click: true};
 
+      if(typeof maps === 'undefined'){
+        var maps = {};
+      }
+      var currentMaps = [];
+
       jQuery(function() {
         jQuery("#wooTabs").tabs({selected:<%=@selected_tab||0 %>});
         jQuery("#wooTabs").bind("tabsselect", function(event, ui) {
@@ -27,7 +32,7 @@
         jQuery("#wooTabs").tabs({
           beforeLoad: function( event, ui ) {
             ui.jqXHR.fail(function() {
-              console.log(ui.jqXHR.status)
+              //console.log(ui.jqXHR.status)
               if (ui.jqXHR.status == 401){
                 <% flash  = "Sorry. You may need to <a class='unauthorized' href='#{url_for(new_user_session_path)}'>Log In</a> to view this." %>
                 var flash = "<%= flash.html_safe %>";
@@ -48,15 +53,17 @@
         jQuery("#wooTabs").bind("tabsshow", function(event, ui) {
           //console.log('ui.panel.id: ' + ui.panel.id);
 
+          deactivateMaps();
+
           if (ui.panel.id == "Show") {
             if (typeof umap != 'undefined') {
-              unwarped_updateSize();
+              maps['unwarped'].activate();
 
               // if the page was initially loaded on any tab over than Show the zoom extent needs to be reset
               if (umapLoaded === false){
                 umap.zoomToMaxExtent();
               }
-
+              
             } else {
               presetContainer();
             }
@@ -64,26 +71,29 @@
 
           if (ui.panel.id == "Rectify") {
             if (typeof to_map != 'undefined') {
-              warp_updateSize();
+              maps['warp'].activate();
             } else {
-              presetContainer()
+              presetContainer();
             }
+            
           }
 
           if (ui.panel.id == "Crop") {
             if (typeof clipmap != 'undefined') {
-              clip_updateSize();
+              maps['clip'].activate();
             } else {
               presetContainer()
             }
+            
           }
 
           if (ui.panel.id == "Preview") {
             if (typeof warpedmap != 'undefined') {
-              warped_updateSize()
+              maps['warped'].activate();
             } else {
               presetContainer();
             }
+
           }
 
           if (ui.panel.id == "Activity_History") {
@@ -100,6 +110,24 @@
       function presetContainer(){
         // tab content does not yet exist so we're presetting container height to avoid scrolling
         jQuery('#wooTabs').css({'min-height': '2000px'});
+      }
+
+      function deactivateMaps(){
+        if (typeof maps['unwarped'] !== 'undefined'){
+          maps['unwarped'].deactivate();
+        }
+
+        if (typeof maps['warp'] !== 'undefined'){
+          maps['warp'].deactivate();
+        }
+
+        if (typeof maps['clip'] !== 'undefined'){
+          maps['clip'].deactivate();
+        }
+
+        if (typeof maps['warped'] !== 'undefined'){
+          maps['warped'].deactivate();
+        }
       }
 
     </script>
@@ -121,9 +149,31 @@
           jQuery.each(tab_divs, function( index, value ) {
             if (hash === value.id){
               select_tab_index = index;
+
+              // handle deep links to tabs
               if (value.id.indexOf('Show') != -1){
                 umapLoaded = true;
-              } 
+
+                // workaround for unwarped being loaded by default even if directed to another tab
+                setTimeout(function(){
+                  maps['unwarped'].activate();
+                }, 200);
+
+              } else if (value.id.indexOf('Rectify') != -1) {
+                setTimeout(function(){
+                  maps['warp'].activate();
+                }, 1500);
+
+              } else if (value.id.indexOf('Crop') != -1) {
+                setTimeout(function(){
+                  maps['clip'].activate();
+                }, 1500);
+
+              } else if (value.id.indexOf('Preview') != -1) {
+                setTimeout(function(){
+                  maps['warped'].activate();
+                }, 1500);
+              }
             }
           });
           
