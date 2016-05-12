@@ -10,6 +10,50 @@ var from_vectors;
 var active_to_vectors;
 var active_from_vectors;
 
+if(typeof maps === 'undefined'){
+	var maps = {};
+}
+
+maps['warp'] = {};
+maps['from_map'] = {};
+maps['to_map'] = {};
+
+maps['from_map'].keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' });
+maps['to_map'].keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' });
+
+maps['from_map'].newZoom = null;
+maps['from_map'].oldZoom = null;
+maps['from_map'].resolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
+
+maps['to_map'].newZoom = null;
+maps['to_map'].oldZoom = null;
+maps['to_map'].resolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
+
+maps['warp'].active = false;
+maps['warp'].deactivate = function(){
+  //console.log('warp deactivate');
+  maps['from_map'].keyboard.deactivate();
+  maps['to_map'].keyboard.deactivate();
+
+  maps['from_map'].active = false;
+  maps['to_map'].active = false;
+  maps['warp'].active = false;
+}
+maps['warp'].activate = function(){
+  //console.log('warp activate');
+  
+  maps['from_map'].keyboard.activate();
+  maps['to_map'].keyboard.activate();
+
+  maps['from_map'].active = true;
+  maps['to_map'].active = true;
+  maps['warp'].active = true;
+  warp_updateSize();
+  currentMaps = ['from_map', 'to_map'];
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 // INIT
@@ -17,14 +61,13 @@ var active_from_vectors;
 ///////////////////////////////////////////////////////////////////////////////////////////
 function init() {
 
-  var mapResolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18]
-
   from_map = new OpenLayers.Map('from_map', {
-    controls: [new OpenLayers.Control.PanZoomBar()],
+    controls: [new OpenLayers.Control.PanZoomBar(), maps['from_map'].keyboard],
     maxExtent: new OpenLayers.Bounds(0, 0, image_width, image_height),
-    resolutions: mapResolutions
+    resolutions: maps['from_map'].resolutions
   });
-  //  from_map.addControl(new OpenLayers.Control.MousePosition());
+
+  maps['from_map'].map = from_map;
 
   var image = new OpenLayers.Layer.WMS(title,
           wms_url, {
@@ -55,6 +98,7 @@ function init() {
   };
 
   to_map = new OpenLayers.Map('to_map', options);
+  maps['to_map'].map = to_map;
 
   warped_layer = new OpenLayers.Layer.WMS.Untiled("warped map", wms_url, {
     format: 'image/png',
@@ -176,24 +220,104 @@ function init() {
   var control = new OpenLayers.Control();
   var callbacks = { keydown: function(evt) {
     //console.log("You pressed a key: " + evt.keyCode);
-    switch(evt.keyCode) {
-        case 80: // p
-            switchTool('pin');
-            break;
-        case 68: // d
-            switchTool('drag');
-            break;
-        case 77: // m
-            switchTool('move');
-            break;
-        default:
-          //console.log('default')
+    if (maps['warp'].active){
+      switch(evt.keyCode) {
+      	  case 65: // a
+      	  	toggleWarpMap('from_map');
+      	  	break;
+      	  case 90: // z
+      	  	toggleWarpMap('to_map');
+      	  	break;
+          case 80: // p
+              switchTool('pin');
+              break;
+          case 68: // d
+              switchTool('drag');
+              break;
+          case 77: // m
+              switchTool('move');
+              break;
+
+          case 173: // top row - in firefox
+              maps.changeZoom('out');
+              break;
+
+          /* numbers at top of keyboard */
+          case 49: // 1
+              maps.changeZoom(1);
+              break;
+          case 50: // -
+              maps.changeZoom(2);
+              break;
+          case 51: // -
+              maps.changeZoom(3);
+              break;
+          case 52: // -
+              maps.changeZoom(4);
+              break;
+          case 53: // -
+              maps.changeZoom(5);
+              break;
+          case 54: // -
+              maps.changeZoom(6);
+              break;
+          case 55: // -
+              maps.changeZoom(7);
+              break;
+          case 56: // -
+              maps.changeZoom(8);
+              break;
+          case 57: // -
+              maps.changeZoom(9);
+              break;
+
+
+          /* numeric keypad */
+          case 96: // 0
+              maps.changeZoom(1);
+              break;
+          case 97: // 1
+              maps.changeZoom(1);
+              break;
+          case 98: // -
+              maps.changeZoom(2);
+              break;
+          case 99: // -
+              maps.changeZoom(3);
+              break;
+          case 100: // -
+              maps.changeZoom(4);
+              break;
+          case 101: // -
+              maps.changeZoom(5);
+              break;
+          case 102: // -
+              maps.changeZoom(6);
+              break;
+          case 103: // -
+              maps.changeZoom(7);
+              break;
+          case 104: // -
+              maps.changeZoom(8);
+              break;
+          case 105: // -
+              maps.changeZoom(9);
+              break;
+
+          default:
+            //console.log('default')
         }
+      }
     }
   };
         
   var options = {};
   var handler = new OpenLayers.Handler.Keyboard(control, callbacks, options);
+
+  handler.activate();
+  to_map.addControl(keyboardControl);
+  to_map.addControl(maps['to_map'].keyboard);
+
 
   function switchTool(newTool){
     // first deactivate everything
@@ -216,9 +340,28 @@ function init() {
     }
   }
 
-  handler.activate();
-  to_map.addControl(keyboardControl);
 
+
+
+    to_map.events.register("zoomend", to_map, function(){
+        //console.log('zoomend -- to_map.zoom: ' + to_map.zoom + ' newZoom: ' + newZoom);
+        if (to_map.zoom < maps['to_map'].newZoom){
+          //console.log('adding .5 to accommediate for the math.floor -- to_map.zoom: ' + to_map.zoom + ' newZoom: ' + newZoom);
+          maps['to_map'].newZoom = to_map.zoom + 0.5;
+        } else {
+          maps['to_map'].newZoom = to_map.zoom;
+        }
+    });
+
+    from_map.events.register("zoomend", from_map, function(){
+        //console.log('zoomend -- to_map.zoom: ' + to_map.zoom + ' newZoom: ' + newZoom);
+        if (from_map.zoom < maps['from_map'].newZoom){
+          //console.log('adding .5 to accommediate for the math.floor -- to_map.zoom: ' + to_map.zoom + ' newZoom: ' + newZoom);
+          maps['from_map'].newZoom = to_map.zoom + 0.5;
+        } else {
+          maps['from_map'].newZoom = to_map.zoom;
+        }
+    });
 
 
   //set up jquery slider for warped layer
@@ -238,20 +381,20 @@ function init() {
     }
   });
   
-  //
-  // switch between maps based upon zoom level
-  to_map.events.register("zoomend", mapnik, function () {
-    if (this.map.getZoom() > 18 && this.visibility == true) {
-      this.map.setBaseLayer(ny_2014);
-    }
-  });
-  
-   to_map.events.register("zoomend", ny_2014, function () {
-    if (this.map.getZoom() < 15 && this.visibility == true) {
-      this.map.setBaseLayer(mapnik);
-    }
-  });
-
+	 /*
+	  // switch between maps based upon zoom level
+	  to_map.events.register("zoomend", mapnik, function () {
+	    if (this.map.getZoom() > 18 && this.visibility == true) {
+	      this.map.setBaseLayer(ny_2014);
+	    }
+	  });
+	  
+	   to_map.events.register("zoomend", ny_2014, function () {
+	    if (this.map.getZoom() < 15 && this.visibility == true) {
+	      this.map.setBaseLayer(mapnik);
+	    }
+	  });
+	*/
 
   // setup resize
   window.addEventListener("resize", warp_updateSize);
@@ -259,6 +402,64 @@ function init() {
   from_map.zoomToMaxExtent();
 
 }
+
+
+  function toggleWarpMap(mapName){
+
+  	if (typeof maps['from_map'] != 'undefined' && typeof maps['to_map'] != 'undefined'){
+
+  		if (maps[mapName].active){
+  			maps[mapName].active = false;
+  			maps[mapName].keyboard.deactivate();
+
+  			// remove map from control array
+	  		var newMaps = [];
+	  		for (var i = 0; i < currentMaps.length; i++) {
+	  			if (currentMaps[i] != mapName){
+	  				newMaps.push(currentMaps[i]);
+	  			}
+	  		};
+	  		currentMaps = newMaps;
+
+  		} else {
+  			maps[mapName].active = true;
+  			maps[mapName].keyboard.activate();
+
+  			// add map from control array if not present
+	  		var matched = false;
+	  		for (var i = 0; i < currentMaps.length; i++) {
+	  			if (currentMaps[i] === mapName){
+	  				matched = true;
+	  			}
+	  		};
+
+	  		if (matched === false){
+	  			currentMaps.push(mapName);
+	  		}
+  		}
+
+
+
+  		console.log(mapName + ".active is now " + maps[mapName].active );
+
+  		// check if both have been deactivated in which case reactive both
+  		// because deactivating both maps will appear to be a bug
+  		if (!maps['from_map'].active && !maps['to_map'].active){
+  			console.log('automatically reenabling both maps when both have been disabled')
+  			maps['from_map'].keyboard.activate();
+  			maps['from_map'].active = true;
+  			maps['to_map'].keyboard.activate();
+  			maps['to_map'].active = true;
+  			currentMaps = ['from_map', 'to_map'];
+  		}
+  	}
+
+  }
+
+
+
+
+
 
 function joinControls(first, second) {
   first.events.register("activate", first, function() {

@@ -3,13 +3,34 @@ var warped_wmslayer;
 var maxOpacity = 1;
 var minOpacity = 0.1;
 
+maps['warped'] = {};
+maps['warped'].zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
+maps['warped'].panZoomBar = new OpenLayers.Control.PanZoomBar();
+maps['warped'].keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' });
+
+maps['warped'].newZoom = null;
+maps['warped'].oldZoom = null;
+
+maps['warped'].resolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18] // not applied at the moment
+
+maps['warped'].active = false;
+maps['warped'].deactivate = function(){
+  //console.log('warped deactivate');
+  maps['warped'].keyboard.deactivate();
+  maps['warped'].active = false;
+}
+maps['warped'].activate = function(){
+  //console.log('warped activate');
+  maps['warped'].keyboard.activate();
+  maps['warped'].active = true;
+  currentMaps = ['warped'];
+  warped_updateSize();
+}
+
 
 function warpedinit() {
     OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
     OpenLayers.Util.onImageLoadErrorColor = "transparent";
-
-    // disabling the zoomWheel
-    var zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
 
     var options_warped = {
         projection: new OpenLayers.Projection("EPSG:900913"),
@@ -21,12 +42,26 @@ function warpedinit() {
         controls: [
             new OpenLayers.Control.Attribution(),
             new OpenLayers.Control.LayerSwitcher(),
-            new OpenLayers.Control.PanZoomBar(),
-            zoomWheel
+            maps['warped'].zoomWheel,
+            maps['warped'].panZoomBar,
+            maps['warped'].keyboard
         ]
     };
 
     warpedmap = new OpenLayers.Map('warpedmap', options_warped);
+
+    maps['warped'].map = warpedmap;
+
+    warpedmap.events.register("zoomend", warpedmap, function(){
+
+      if (warpedmap.zoom < maps['warped'].newZoom){
+        maps['warped'].newZoom = warpedmap.zoom + 0.5;
+      } else {
+        maps['warped'].newZoom = warpedmap.zoom;
+      }
+    });
+
+
     // create OSM layer
     mapnik3 = mapnik.clone();
     warpedmap.addLayer(mapnik3);
