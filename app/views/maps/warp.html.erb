@@ -145,7 +145,7 @@
           <option value="cubicspline">Cubic Spline , slower but best quality</option>
           <!-- <option value="lanczos">Lanczos</option> this is very very slow -->
         </select>
-        <%= select_tag(:map, :resample_options, options_for_select([
+        <%= select(:map, :resample_options, options_for_select([
             ['Nearest Neighbour, fastest','near'],
             ['Bilinear','bilinear'],
             ['Cubic (default)','cubic'],
