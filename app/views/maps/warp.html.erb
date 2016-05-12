@@ -135,7 +135,7 @@
             ['2nd Order Polynomial (min 6 points)','p2'],
             ['3rd Order Polynomial (min 10 points)','p3'],
             ['Thin Plate Spline (many points widely spread)','tps']
-        ])), {:name => "transform_options"} %>
+        ])), name: "transform_options" %>
         <%= @map.transform_options %>
         <br />
         Resampling Method:
@@ -151,7 +151,7 @@
             ['Bilinear','bilinear'],
             ['Cubic (default)','cubic'],
             ['Cubic Spline , slower but best quality','cubicspline']
-        ])), {:name => "resample_options"} %>
+        ])), name: "resample_options" %>
         <%= @map.resample_options %>
       </div>
       <p>
