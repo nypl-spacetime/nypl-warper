@@ -129,15 +129,28 @@
           <option value="p3">3rd Order Polynomial (min 10 points)</option>
           <option value="tps">Thin Plate Spline (many points widely spread)</option> <!-- tps could be unsuitable for this style of rectification? needs a good spread of gcps anyhow. -->
         </select>
+        <%= select_tag(@map.transform_options, options_for_select([
+            ['Auto - based on number of control points (default)','auto'],
+            ['1st Order Polynomial (min 3 points)','p1'],
+            ['2nd Order Polynomial (min 6 points)','p2'],
+            ['3rd Order Polynomial (min 10 points)','p3'],
+            ['Thin Plate Spline (many points widely spread)','tps']
+        ])) %>
         <br />
         Resampling Method:
         <select name="resample_options">
-          <option value="near">Nearest Neighbour, fastest (default)</option>
+          <option value="near">Nearest Neighbour, fastest</option>
           <option value="bilinear">Bilinear</option>
-          <option value="cubic" selected="selected">Cubic</option>
+          <option value="cubic" selected="selected">Cubic (default)</option>
           <option value="cubicspline">Cubic Spline , slower but best quality</option>
           <!-- <option value="lanczos">Lanczos</option> this is very very slow -->
         </select>
+        <%= select_tag(@map.resample_options, options_for_select([
+            ['Nearest Neighbour, fastest','near'],
+            ['Bilinear','bilinear'],
+            ['Cubic (default)','cubic'],
+            ['Cubic Spline , slower but best quality','cubicspline']
+        ])) %>
       </div>
       <p>
         

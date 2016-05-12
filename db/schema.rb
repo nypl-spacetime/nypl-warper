@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150708161955) do
+ActiveRecord::Schema.define(version: 20160512195825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,18 +155,20 @@ ActiveRecord::Schema.define(version: 20150708161955) do
     t.string   "parent_uuid"
     t.integer  "status"
     t.integer  "mask_status"
-    t.boolean  "map",                                                                               default: true
+    t.boolean  "map",                                                                                 default: true
     t.string   "bbox"
     t.integer  "map_type"
-    t.geometry "bbox_geom",       limit: {:srid=>4326, :type=>"polygon"}
-    t.decimal  "rough_lat",                                               precision: 15, scale: 10
-    t.decimal  "rough_lon",                                               precision: 15, scale: 10
-    t.geometry "rough_centroid",  limit: {:srid=>4326, :type=>"point"}
+    t.geometry "bbox_geom",         limit: {:srid=>4326, :type=>"polygon"}
+    t.decimal  "rough_lat",                                                 precision: 15, scale: 10
+    t.decimal  "rough_lon",                                                 precision: 15, scale: 10
+    t.geometry "rough_centroid",    limit: {:srid=>4326, :type=>"point"}
     t.integer  "rough_zoom"
     t.integer  "rough_state"
     t.datetime "rectified_at"
     t.datetime "gcp_touched_at"
     t.integer  "issue_year"
+    t.string   "transform_options",                                                                   default: "auto"
+    t.string   "resample_options",                                                                    default: "cubic"
   end
 
   add_index "maps", ["bbox_geom"], name: "index_maps_on_bbox_geom", using: :gist
