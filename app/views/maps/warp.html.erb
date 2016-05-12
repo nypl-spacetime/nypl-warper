@@ -122,13 +122,6 @@
       <a href="#" id="advancedLink">Advanced options</a>
       <div id="advanced_form_options" >
         Rectify Method:
-        <!-- <select name="transform_options">
-          <option value="auto" selected="selected">Auto - based on number of control points (default)</option>
-          <option value="p1">1st Order Polynomial (min 3 points)</option>
-          <option value="p2">2nd Order Polynomial (min 6 points)</option>
-          <option value="p3">3rd Order Polynomial (min 10 points)</option>
-          <option value="tps">Thin Plate Spline (many points widely spread)</option> <!-- tps could be unsuitable for this style of rectification? needs a good spread of gcps anyhow. -->
-        </select> -->
         <%= select_tag("transform_options", options_for_select([
             ['Auto - based on number of control points (default)','auto'],
             ['1st Order Polynomial (min 3 points)','p1'],
@@ -138,13 +131,6 @@
         ], @map.transform_options), name: "transform_options") %>
         <br />
         Resampling Method:
-        <!-- <select name="resample_options">
-          <option value="near">Nearest Neighbour, fastest</option>
-          <option value="bilinear">Bilinear</option>
-          <option value="cubic" selected="selected">Cubic (default)</option>
-          <option value="cubicspline">Cubic Spline , slower but best quality</option>
-          <!-- <option value="lanczos">Lanczos</option> this is very very slow -->
-        </select> -->
         <%= select_tag("resample_options", options_for_select([
             ['Nearest Neighbour, fastest','near'],
             ['Bilinear','bilinear'],
