@@ -852,6 +852,11 @@ class MapsController < ApplicationController
       @notice_text = "Sorry, this map is published, and cannot be rectified."
       @output = @notice_text
     else
+      # save new rectify params in db
+      @map[:resample_options] = params[:resample_options]
+      @map[:transform_options] = params[:transform_options]
+      @map.save
+
       if user_signed_in?
         um  = current_user.my_maps.new(:map => @map)
         um.save
