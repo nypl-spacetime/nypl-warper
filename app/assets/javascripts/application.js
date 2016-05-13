@@ -22,6 +22,7 @@
 //= require SelectFeatureNoClick
 //= require querystring
 //= require jquery.nouislider.all.min
+//= require warper-controls
 
 var querystring = require('querystring-component');
 
