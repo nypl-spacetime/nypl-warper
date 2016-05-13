@@ -89,6 +89,7 @@ function init(){
   layerMap.zoomToExtent(bounds_merc);
   layerMap.updateSize();
   
+  /*
   layerMap.events.register("zoomend", mapnik_lay1, function () {
     if (this.map.getZoom() > 18 && this.visibility == true) {
       this.map.setBaseLayer(nyc_lay1);
@@ -101,6 +102,7 @@ function init(){
       this.map.setBaseLayer(mapnik_lay1);
     }
   });
+  */
   
   //set up the map index layer to help find individual maps
   var mapIndexLayerStyle = OpenLayers.Util.extend({strokeWidth: 3}, OpenLayers.Feature.Vector.style['default']);
