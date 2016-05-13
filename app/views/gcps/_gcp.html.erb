@@ -32,6 +32,6 @@
   </script>
 
   <td> 
-    <%= link_to("delete", destroy_gcp_path(:id => gcp.id),  :id => "delete_gcp_#{gcp.id}", :class=>"delete_button", :remote => true,  :method => "delete",  data: { confirm: 'Really delete these points?'})%>
+    <%= link_to("delete point #{gcp_counter+1}", destroy_gcp_path(:id => gcp.id),  :id => "delete_gcp_#{gcp.id}", :class=>"delete_button", :remote => true,  :method => "delete",  data: { confirm: 'Really delete these points?'})%>
   </td>
 </tr>
