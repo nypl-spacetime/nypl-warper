@@ -802,8 +802,8 @@ class MapsController < ApplicationController
   private
   
   def rectify_main
-    resample_param = @map.resample_options || params[:resample_options]
-    transform_param = @map.transform_options || params[:transform_options]
+    resample_param = params[:resample_options] || @map.resample_options
+    transform_param = params[:transform_options] || @map.transform_options
     masking_option = params[:mask]
     resample_option = ""
     transform_option = ""
