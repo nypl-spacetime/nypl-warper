@@ -10,7 +10,7 @@ if(typeof maps === 'undefined'){
 }
 
 maps['layer'] = {};
-maps['layer'].zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } );
+maps['layer'].zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
 maps['layer'].panZoomBar = new OpenLayers.Control.PanZoomBar();
 maps['layer'].keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' });
 
