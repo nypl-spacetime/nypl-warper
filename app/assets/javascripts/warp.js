@@ -238,72 +238,6 @@ function init() {
               switchTool('move');
               break;
 
-          case 173: // top row - in firefox
-              maps.changeZoom('out');
-              break;
-
-          /* numbers at top of keyboard */
-          case 49: // 1
-              maps.changeZoom(1);
-              break;
-          case 50: // -
-              maps.changeZoom(2);
-              break;
-          case 51: // -
-              maps.changeZoom(3);
-              break;
-          case 52: // -
-              maps.changeZoom(4);
-              break;
-          case 53: // -
-              maps.changeZoom(5);
-              break;
-          case 54: // -
-              maps.changeZoom(6);
-              break;
-          case 55: // -
-              maps.changeZoom(7);
-              break;
-          case 56: // -
-              maps.changeZoom(8);
-              break;
-          case 57: // -
-              maps.changeZoom(9);
-              break;
-
-
-          /* numeric keypad */
-          case 96: // 0
-              maps.changeZoom(1);
-              break;
-          case 97: // 1
-              maps.changeZoom(1);
-              break;
-          case 98: // -
-              maps.changeZoom(2);
-              break;
-          case 99: // -
-              maps.changeZoom(3);
-              break;
-          case 100: // -
-              maps.changeZoom(4);
-              break;
-          case 101: // -
-              maps.changeZoom(5);
-              break;
-          case 102: // -
-              maps.changeZoom(6);
-              break;
-          case 103: // -
-              maps.changeZoom(7);
-              break;
-          case 104: // -
-              maps.changeZoom(8);
-              break;
-          case 105: // -
-              maps.changeZoom(9);
-              break;
-
           default:
             //console.log('default')
         }
@@ -354,12 +288,12 @@ function init() {
     });
 
     from_map.events.register("zoomend", from_map, function(){
-        //console.log('zoomend -- to_map.zoom: ' + to_map.zoom + ' newZoom: ' + newZoom);
+        //console.log('zoomend -- from_map.zoom: ' + from_map.zoom + ' newZoom: ' + newZoom);
         if (from_map.zoom < maps['from_map'].newZoom){
-          //console.log('adding .5 to accommediate for the math.floor -- to_map.zoom: ' + to_map.zoom + ' newZoom: ' + newZoom);
-          maps['from_map'].newZoom = to_map.zoom + 0.5;
+          //console.log('adding .5 to accommediate for the math.floor -- from_map.zoom: ' + from_map.zoom + ' newZoom: ' + newZoom);
+          maps['from_map'].newZoom = from_map.zoom + 0.5;
         } else {
-          maps['from_map'].newZoom = to_map.zoom;
+          maps['from_map'].newZoom = from_map.zoom;
         }
     });
 
@@ -438,8 +372,6 @@ function init() {
 	  		}
   		}
 
-
-
   		console.log(mapName + ".active is now " + maps[mapName].active );
 
   		// check if both have been deactivated in which case reactive both
@@ -456,7 +388,40 @@ function init() {
 
   }
 
+  function enableWarpMap(mapName){
+  	//console.log('enableWarpMap: ' + mapName);
 
+  	if (typeof maps['from_map'] != 'undefined' && typeof maps['to_map'] != 'undefined'){
+
+  		if (mapName === 'from_map'){
+  			maps['from_map'].active = true;
+  			maps['from_map'].keyboard.activate();
+
+  			maps['to_map'].active = false;
+  			maps['to_map'].keyboard.deactivate();
+
+  			currentMaps = ['from_map']
+  		} else if (mapName === 'to_map'){
+  			maps['from_map'].active = false;
+  			maps['from_map'].keyboard.deactivate();
+
+  			maps['to_map'].active = true;
+  			maps['to_map'].keyboard.activate();
+
+  			currentMaps = ['to_map']
+  		} else if (mapName === 'both'){
+  			maps['from_map'].active = true;
+  			maps['from_map'].keyboard.activate();
+
+  			maps['to_map'].active = true;
+  			maps['to_map'].keyboard.activate();
+
+  			currentMaps = ['to_map', 'from_map'];
+  		}
+
+  	}
+
+  }
 
 
 
