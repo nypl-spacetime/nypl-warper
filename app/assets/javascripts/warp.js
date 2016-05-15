@@ -330,12 +330,19 @@ function init() {
 	  });
 	*/
 
+
+	jQuery('.marker_number').click(function(){
+		var markerID = jQuery(this).parent().find('input').val();
+		centerOnMarker(markerID);
+	})
+
+
   // setup resize
   window.addEventListener("resize", warp_updateSize);
   warp_updateSize();
   from_map.zoomToMaxExtent();
 
-}
+} // end init
 
 
   function toggleWarpMap(mapName){
@@ -806,6 +813,7 @@ function getColorString(error) {
 
 
 function populate_gcps(gcp_id, img_lon, img_lat, dest_lon, dest_lat, error) {
+  //console.log('populate_gcps: ' + gcp_id);
   error = typeof (error) != "undefined" ? error : 0;
   var color = getColorString(error);
 
@@ -834,6 +842,7 @@ function set_gcp() {
 
     var proper_img_lat = image_height - img_lat;
     var proper_img_lon = img_lon;
+    console.log('proper_img_lon: ' + proper_img_lon + ' proper_img_lat: ' + proper_img_lat);
 
     save_new_gcp(proper_img_lon, proper_img_lat, to_lonlat.lon, to_lonlat.lat);
 
@@ -954,6 +963,7 @@ function newaddGCPfrom(feat) {
     active_from_vectors.destroyFeatures(to_destroy);
   }
   var lonlat = new OpenLayers.LonLat(feat.geometry.x, feat.geometry.y);
+  //console.log('feat.geometry.x: ' + feat.geometry.x + ' feat.geometry.y: ' + feat.geometry.y + ' lonlat: ' + lonlat);
   highlight(from_map.div);
 
   from_templl = lonlat;
@@ -1052,6 +1062,19 @@ function bestGuess(guessObj) {
 function centerToMap(lon, lat, zoom) {
   var newCenter = new OpenLayers.LonLat(lon, lat).transform(to_map.displayProjection, to_map.projection);
   to_map.setCenter(newCenter, zoom);
+}
+
+function centerOnMarker(markerID){
+	//console.log('centerOnMarker: ' + markerID);
+
+	var imageLon = jQuery('input#x' + markerID).val();
+	var imageLat = jQuery('input#y' + markerID).val();
+
+	var mapLon = jQuery('input#lon' + markerID).val();
+	var mapLat = jQuery('input#lat' + markerID).val();
+
+	from_map.setCenter(new OpenLayers.LonLat(imageLon,image_height - imageLat), from_map.zoom)
+	to_map.setCenter(lonLatToMercator(new OpenLayers.LonLat(mapLon, mapLat)), to_map.zoom)
 }
 
 function warp_updateSize() {
