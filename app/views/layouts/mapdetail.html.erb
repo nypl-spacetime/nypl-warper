@@ -182,11 +182,19 @@
         } else {
           //if there is no hash, wat to do? currently, nothing, as by default it should be displayed tab.
           //show tab  //jQuery("#wooTabs").tabs("select", 0);
+          setTimeout(function(){
+            maps['unwarped'].activate();
+          }, 200);
         }
       }
 
       jQuery(document).ready(function() {
         jQuery.historyInit(pageload); //TODO
+
+        // if we don't have a hash in the URL manually call the pageload event to get the default tab setup properly
+        if (window.location.hash === ''){
+          pageload(window.location.hash);
+        } 
 
         // set onlick event for buttons
         jQuery("a[rel='history']").click(function() {

@@ -3,6 +3,31 @@ var mapIndexLayer;
 var mapIndexSelCtrl;
 var selectedFeature;
 
+
+
+if(typeof maps === 'undefined'){
+  var maps = {};
+}
+
+maps['layer'] = {};
+maps['layer'].zoomWheel = new OpenLayers.Control.Navigation( { zoomWheelEnabled: false } );
+maps['layer'].panZoomBar = new OpenLayers.Control.PanZoomBar();
+maps['layer'].keyboard = new OpenLayers.Control.KeyboardDefaults({ observeElement: 'map' });
+
+maps['layer'].newZoom = null;
+maps['layer'].oldZoom = null;
+
+maps['layer'].resolutions = [0.12, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8.5, 10, 14, 18] // not applied at the moment
+
+maps['layer'].active = true;
+
+if(typeof currentMaps === 'undefined'){
+  var currentMaps = {};
+}
+currentMaps = ['layer'];
+
+
+
 function init(){
   OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
   OpenLayers.Util.onImageLoadErrorColor = "transparent";
@@ -19,12 +44,25 @@ function init(){
     controls: [
     new OpenLayers.Control.Attribution(),
     switcher,
-    new OpenLayers.Control.Navigation({ zoomWheelEnabled: false } ),
-    new OpenLayers.Control.PanZoomBar()
+    maps['layer'].zoomWheel,
+    maps['layer'].panZoomBar,
+    maps['layer'].keyboard
     ]
   };
 
   layerMap = new OpenLayers.Map("map",options);
+  maps['layer'].map = layerMap;
+
+  layerMap.events.register("zoomend", layerMap, function(){
+
+    if (layerMap.zoom < maps['layer'].newZoom){
+      maps['layer'].newZoom = layerMap.zoom + 0.5;
+    } else {
+      maps['layer'].newZoom = layerMap.zoom;
+    }
+  });
+
+
   mapnik_lay1 = mapnik.clone();
 
 
@@ -51,6 +89,7 @@ function init(){
   layerMap.zoomToExtent(bounds_merc);
   layerMap.updateSize();
   
+  /*
   layerMap.events.register("zoomend", mapnik_lay1, function () {
     if (this.map.getZoom() > 18 && this.visibility == true) {
       this.map.setBaseLayer(nyc_lay1);
@@ -63,6 +102,7 @@ function init(){
       this.map.setBaseLayer(mapnik_lay1);
     }
   });
+  */
   
   //set up the map index layer to help find individual maps
   var mapIndexLayerStyle = OpenLayers.Util.extend({strokeWidth: 3}, OpenLayers.Feature.Vector.style['default']);
