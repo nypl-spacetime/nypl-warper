@@ -298,14 +298,14 @@ maps.changeZoom = function(zoom){
   switch(zoom) {
       	case 'in':
 			for (var i = 0; i < currentMaps.length; i++) {
-				//console.log('panning: ' + currentMaps[i]);
-				maps[ currentMaps[i] ].map.zoomTo(maps[ currentMaps[i] ].map.zoom - 1)
+				console.log('zoom in: ' + currentMaps[i]);
+				maps[ currentMaps[i] ].map.zoomTo(maps[ currentMaps[i] ].map.zoom + 1)
 			};
           	break;
       case 'out':
 			for (var i = 0; i < currentMaps.length; i++) {
-				//console.log('panning: ' + currentMaps[i]);
-				maps[ currentMaps[i] ].map.zoomTo(maps[ currentMaps[i] ].map.zoom + 1)
+				console.log('zoom out: ' + currentMaps[i]);
+				maps[ currentMaps[i] ].map.zoomTo(maps[ currentMaps[i] ].map.zoom - 1)
 			};
           	break;
       default: 
