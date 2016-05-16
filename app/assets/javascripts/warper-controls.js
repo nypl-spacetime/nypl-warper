@@ -202,12 +202,18 @@ if (warperGamepad.haveEvents) {
     // keyboard shortcuts for switching tools
     var keyboardControl = new OpenLayers.Control();  
     var callbacks = { keydown: function(evt) {
-      //console.log("You pressed a key: " + evt.keyCode);
+      console.log("You pressed a key: " + evt.keyCode);
       if (typeof currentMaps != 'undefined'){
 
         switch(evt.keyCode) {
 
+            case 61: // top row + in firefox
+            	//console.log('FF zoom in')
+                maps.changeZoom('in');
+                break;
+
             case 173: // top row - in firefox
+            	//console.log('FF zoom out')
                 maps.changeZoom('out');
                 break;
 
