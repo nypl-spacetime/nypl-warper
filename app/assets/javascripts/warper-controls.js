@@ -202,21 +202,21 @@ if (warperGamepad.haveEvents) {
     // keyboard shortcuts for switching tools
     var keyboardControl = new OpenLayers.Control();  
     var callbacks = { keydown: function(evt) {
-      console.log("You pressed a key: " + evt.keyCode);
+      //console.log("You pressed a key: " + evt.keyCode);
       if (typeof currentMaps != 'undefined'){
 
         switch(evt.keyCode) {
-
+          /*
             case 61: // top row + in firefox
             	//console.log('FF zoom in')
                 maps.changeZoom('in');
                 break;
-
+          */
             case 173: // top row - in firefox
             	//console.log('FF zoom out')
                 maps.changeZoom('out');
                 break;
-
+          
             /* numbers at top of keyboard */
             case 49: // 1
                 maps.changeZoom(1);
@@ -298,13 +298,13 @@ maps.changeZoom = function(zoom){
   switch(zoom) {
       	case 'in':
 			for (var i = 0; i < currentMaps.length; i++) {
-				console.log('zoom in: ' + currentMaps[i]);
+				//console.log('zoom in: ' + currentMaps[i]);
 				maps[ currentMaps[i] ].map.zoomTo(maps[ currentMaps[i] ].map.zoom + 1)
 			};
           	break;
       case 'out':
 			for (var i = 0; i < currentMaps.length; i++) {
-				console.log('zoom out: ' + currentMaps[i]);
+				//console.log('zoom out: ' + currentMaps[i]);
 				maps[ currentMaps[i] ].map.zoomTo(maps[ currentMaps[i] ].map.zoom - 1)
 			};
           	break;
