@@ -771,15 +771,12 @@ function update_row_numbers() {
     ////////////
 
     span_ele = li_ele.getElementsByTagName("span");
-    console.log(li_ele, span_ele)
     if (span_ele[0].className == "marker_number") {
-      console.log("marker")
       var thishtml = "<img src='" + icon_imgPath + (temp_marker.id_index + 1) + color + ".png' />";
       span_ele[0].innerHTML = thishtml;
     }
 
     if (span_ele[1] != undefined && span_ele[1].className == "ui-button-text") {
-      console.log("button")
       var thishtml = "delete point " + (temp_marker.id_index + 1) + "";
       span_ele[1].innerHTML = thishtml;
     }
