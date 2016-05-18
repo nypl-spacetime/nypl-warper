@@ -776,6 +776,11 @@ function update_row_numbers() {
       //var thishtml = "<img src='../../images/icons/"+(temp_marker.id_index + 1) + ".png' />";
       span_ele[0].innerHTML = thishtml;
     }
+
+    if (span_ele[0].className == "ui-button-text") {
+      var thishtml = "delete point " + (temp_marker.id_index + 1) + "";
+      span_ele[0].innerHTML = thishtml;
+    }
   }
   redrawGcpLayers();
 }
