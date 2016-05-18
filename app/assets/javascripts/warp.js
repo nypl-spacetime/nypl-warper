@@ -778,7 +778,7 @@ function update_row_numbers() {
       span_ele[0].innerHTML = thishtml;
     }
 
-    if (span_ele[1].className == "ui-button-text") {
+    if (span_ele[1] != undefined && span_ele[1].className == "ui-button-text") {
       console.log("button")
       var thishtml = "delete point " + (temp_marker.id_index + 1) + "";
       span_ele[1].innerHTML = thishtml;
