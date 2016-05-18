@@ -33,8 +33,10 @@
   margin-left: 20px;
 }
 
-a, a:link, a:visited {
-  text-decoration: underline;
+#Export, #clipping_mask_buttons, #map_table, #Activity {
+  a, a:link, a:visited {
+    text-decoration: underline;
+  }
 }
 
 ul#legal-links {
