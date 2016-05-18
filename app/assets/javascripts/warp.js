@@ -773,13 +773,12 @@ function update_row_numbers() {
     span_ele = li_ele.getElementsByTagName("span");
     if (span_ele[0].className == "marker_number") {
       var thishtml = "<img src='" + icon_imgPath + (temp_marker.id_index + 1) + color + ".png' />";
-      //var thishtml = "<img src='../../images/icons/"+(temp_marker.id_index + 1) + ".png' />";
       span_ele[0].innerHTML = thishtml;
     }
 
-    if (span_ele[0].className == "ui-button-text") {
+    if (span_ele[1] != undefined && span_ele[1].className == "ui-button-text") {
       var thishtml = "delete point " + (temp_marker.id_index + 1) + "";
-      span_ele[0].innerHTML = thishtml;
+      span_ele[1].innerHTML = thishtml;
     }
   }
   redrawGcpLayers();
