@@ -771,13 +771,15 @@ function update_row_numbers() {
     ////////////
 
     span_ele = li_ele.getElementsByTagName("span");
+    console.log(li_ele, span_ele)
     if (span_ele[0].className == "marker_number") {
+      console.log("marker")
       var thishtml = "<img src='" + icon_imgPath + (temp_marker.id_index + 1) + color + ".png' />";
-      //var thishtml = "<img src='../../images/icons/"+(temp_marker.id_index + 1) + ".png' />";
       span_ele[0].innerHTML = thishtml;
     }
 
     if (span_ele[0].className == "ui-button-text") {
+      console.log("button")
       var thishtml = "delete point " + (temp_marker.id_index + 1) + "";
       span_ele[0].innerHTML = thishtml;
     }
