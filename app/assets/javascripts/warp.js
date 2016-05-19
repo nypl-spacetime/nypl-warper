@@ -331,12 +331,6 @@ function init() {
 	*/
 
 
-	jQuery('.marker_number').click(function(){
-		var markerID = jQuery(this).parent().find('input').val();
-		centerOnMarker(markerID);
-	})
-
-
   // setup resize
   window.addEventListener("resize", warp_updateSize);
   warp_updateSize();
@@ -780,6 +774,13 @@ function update_row_numbers() {
       var thishtml = "delete point " + (temp_marker.id_index + 1) + "";
       span_ele[1].innerHTML = thishtml;
     }
+
+    jQuery('.marker_number').click(function(){
+      var markerID = jQuery(this).parent().find('input').val();
+      centerOnMarker(markerID);
+    })
+  
+
   }
   redrawGcpLayers();
 }
