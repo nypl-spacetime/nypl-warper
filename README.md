@@ -172,7 +172,40 @@ This will take a few minutes to pull the map. You now have a map you can work wi
 
 ## Deployment instructions
 
-The system can use capistrano for deployment
+The system can use capistrano for deployment.
+
+### Making Code Changes and Deployment
+
+There are two main changes to the system. Changes to checked in code, and changes to configuration files. [[Configuration files|Config]] are not stored in the repository. To change these the user would need to ssh into the server and change the file.
+
+#### Changes to checked in code.
+
+Develop, patch the code locally and get it running. Probably the easiest way to start developing is via Vagrant, see above for more details. Once you have Vagrant running, these are some useful commands to make sure updates are reflected:
+
+##### If assets had been changed (images, JS, CSS etc.) or if you just want to be safe:
+
+ `RAILS_ENV=production rake assets:clobber`
+
+ `RAILS_ENV=production rake assets:precompile`
+
+##### If necessary to run rails console commands:
+
+ `RAILS_ENV=production rails console`
+
+##### To restart the server:
+
+`touch tmp/restart.txt`
+
+##### To restart the Apache server (not needed in almost all cases):
+
+`sudo service apache2 restart`
+
+##### Changes to config file:
+
+1. ssh into the server
+2. Find the desired config file
+3. Edit the file
+4. Restart the warper: `touch tmp/restart.txt`
 
 ## API
 
