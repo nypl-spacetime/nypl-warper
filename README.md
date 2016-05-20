@@ -176,7 +176,7 @@ The system can use capistrano for deployment.
 
 ### Making Code Changes and Deployment
 
-There are two main changes to the system. Changes to checked in code, and changes to configuration files. [[Configuration files|Config]] are not stored in the repository. To change these the user would need to ssh into the server and change the file.
+There are two main changes to the system. Changes to checked in code, and changes to configuration files. Some configuration files (`/config/*`) are not stored in the repository. To change these you need to ssh into the server and change the file. Some `.example` files are provided for reference.
 
 #### Changes to checked in code.
 
