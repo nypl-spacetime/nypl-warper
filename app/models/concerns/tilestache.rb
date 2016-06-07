@@ -21,7 +21,7 @@ module Tilestache
     if self.warped_filename
       tile_width = 256.0
       im = Magick::Image.read(self.warped_filename).first
-      bbox = RGeo::Cartesian::BoundingBox.create_from_geometry(m.bbox_geom)
+      bbox = RGeo::Cartesian::BoundingBox.create_from_geometry(self.bbox_geom)
 
       pixel_width = im.columns
       degree_width = bbox.x_span
