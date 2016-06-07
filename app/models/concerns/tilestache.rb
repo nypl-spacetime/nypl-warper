@@ -29,20 +29,6 @@ module Tilestache
       # TODO: OR FLOOR?!
       max_tiles_x = (pixel_width / tile_width).ceil # 39
 
-      def compute_max_zoom(max_tiles_x, degree_width):
-        n = max_tiles_x / (degree_width / 360.0)
-        zoom = Math.log(n, 2).ceil
-
-        # n = 39 / (0.009768375864808831 / 360)
-        # n == 1437291.1315359962
-        # n = 2.0 ** zoom
-        # zoom = ln(n) / ln(2)
-
-        # TODO: do for both lat and long? and then take minimum?
-
-        return zoom
-      end
-
       max_zoom = compute_max_zoom(max_tiles_x, degree_width)
     end
     # ==============================================================================
@@ -97,6 +83,20 @@ module Tilestache
 
 
   private
+
+  def compute_max_zoom(max_tiles_x, degree_width)
+    n = max_tiles_x / (degree_width / 360.0)
+    zoom = Math.log(n, 2).ceil
+
+    # n = 39 / (0.009768375864808831 / 360)
+    # n == 1437291.1315359962
+    # n = 2.0 ** zoom
+    # zoom = ln(n) / ln(2)
+
+    # TODO: do for both lat and long? and then take minimum?
+
+    return zoom
+  end
 
   def tilestache_config_json(options)
 
