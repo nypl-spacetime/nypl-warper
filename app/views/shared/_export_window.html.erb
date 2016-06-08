@@ -40,10 +40,14 @@
         <% unless @layer -%>
           <ul>
             <li> <%= link_to(image_tag("KML-logo-20x25.png")+"Download KML file",  map_url(:id => @map, :format => :kml)) %>  </li>
-            <li><%= link_to(image_tag("wms-20x25.png")+"WMS Capabilities URL",url_for(wms_map_url(:id=>@map, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1")) )%> </li>
+            <li>
+              <%= image_tag("wms-20x25.png") %>
+              WMS Capabilities URL: <%= url_for(wms_map_url(:id=>@map, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1")) %>
+            </li>
             <li>
               <% tile_url = url_for(tile_map_url(:y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
-              <%=link_to image_tag("tiles-20x25.png")+"Tiles base URL", tile_url %> 
+              <%= image_tag("tiles-20x25.png") %>
+              Tiles base URL: <%= tile_url %>
             </li>
             <% if user_signed_in? -%>
               <li><%= link_to(image_tag("image-icon-20x25.png")+"Download rectified GeoTiff", export_map_url(:id => @map, :format => :tif)) %> </li>
@@ -58,10 +62,14 @@
   <%#layer%>
           <ul>
             <li> <%= link_to(image_tag("KML-logo-20x25.png")+"Download KML file",  layer_url(:id => @layer, :format => :kml)) %>  </li>
-            <li><%= link_to(image_tag("wms-20x25.png")+"WMS Capabilities", :action=>"wms", :id=>@layer, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1" )%> </li>
+            <li>
+              <%= image_tag("wms-20x25.png") %>
+              WMS Capabilities URL: <%= url_for(controller: 'layers', :action=>"wms", :id=>@layer, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1" )%>
+            </li>
             <li>
               <% tile_url = url_for(tile_layer_url(:y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
-              <%=link_to image_tag("tiles-20x25.png")+"Tiles base URL", tile_url %> 
+              <%= image_tag("tiles-20x25.png") %>
+              Tiles base URL: <%= tile_url %>
             </li>
             <% unless user_signed_in? -%>
               <li> Log in for</li>
