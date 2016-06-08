@@ -47,7 +47,7 @@
             <li>
               <% tile_url = url_for(tile_map_url(:y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
               <%= image_tag("tiles-20x25.png") %>
-              Tiles base URL: <%= tile_url.html_safe %>
+              Tiles base URL: <%= URI.unescape(tile_url) %>
             </li>
             <% if user_signed_in? -%>
               <li><%= link_to(image_tag("image-icon-20x25.png")+"Download rectified GeoTiff", export_map_url(:id => @map, :format => :tif)) %> </li>
@@ -69,7 +69,7 @@
             <li>
               <% tile_url = url_for(tile_layer_url(:y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
               <%= image_tag("tiles-20x25.png") %>
-              Tiles base URL: <%= tile_url.html_safe %>
+              Tiles base URL: <%= URI.unescape(tile_url) %>
             </li>
             <% unless user_signed_in? -%>
               <li> Log in for</li>
