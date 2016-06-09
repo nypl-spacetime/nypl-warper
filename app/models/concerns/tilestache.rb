@@ -89,7 +89,7 @@ module Tilestache
   def add_zoom_levels(zoom)
     # adds zoom levels to allow for deeper zoom despite the geotiff not being high-res enough
     new_zoom = zoom
-    if zoom >= 0 && zoom <= 10
+    if zoom >= 1 && zoom <= 10
       new_zoom = new_zoom + 3
     elsif zoom >= 11 && zoom <= 15
       new_zoom = new_zoom + 2
