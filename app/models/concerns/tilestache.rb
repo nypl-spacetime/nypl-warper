@@ -30,6 +30,8 @@ module Tilestache
       max_tiles_x = (pixel_width / tile_width).ceil # 39
 
       max_zoom = compute_max_zoom(max_tiles_x, degree_width)
+
+      max_zoom= add_zoom_levels(max_zoom)
     end
     # ==============================================================================
 
@@ -83,6 +85,19 @@ module Tilestache
 
 
   private
+
+  def add_zoom_levels(zoom)
+    # adds zoom levels to allow for deeper zoom despite the geotiff not being high-res enough
+    new_zoom = zoom
+    if zoom >= 0 && zoom <= 10
+      new_zoom = new_zoom + 3
+    elsif zoom >= 11 && zoom <= 15
+      new_zoom = new_zoom + 2
+    elsif zoom >= 16 && zoom <= 20
+      new_zoom = new_zoom + 1
+    end
+    return new_zoom
+  end
 
   def compute_max_zoom(max_tiles_x, degree_width)
     n = max_tiles_x / (degree_width / 360.0)
