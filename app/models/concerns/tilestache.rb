@@ -18,9 +18,15 @@ module Tilestache
     # ==============================================================================
     # Code to compute max_zoom
     # uses width of map in pixels, and width of map in degrees
-    if self.warped_filename
+    if self.class.to_s == "Map"
+      warped_filename = self.warped_filename
+    else
+      warped_filename = self.maps.first.warped_filename
+    end
+
+    if warped_filename
       tile_width = 256.0
-      im = Magick::Image.read(self.warped_filename).first
+      im = Magick::Image.read(warped_filename).first
       bbox = RGeo::Cartesian::BoundingBox.create_from_geometry(self.bbox_geom)
 
       pixel_width = im.columns
