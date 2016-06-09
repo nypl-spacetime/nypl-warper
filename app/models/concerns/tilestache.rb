@@ -44,6 +44,7 @@ module Tilestache
       :secret => secret,
       :access => key_id,
       :bucket => bucket_name,
+      :max_zoom => max_zoom,
       :path => bucket_path
     }
 
@@ -89,11 +90,11 @@ module Tilestache
   def add_zoom_levels(zoom)
     # adds zoom levels to allow for deeper zoom despite the geotiff not being high-res enough
     new_zoom = zoom
-    if zoom >= 1 && zoom <= 10
+    if zoom >= 1 && zoom <= 7
       new_zoom = new_zoom + 3
-    elsif zoom >= 11 && zoom <= 15
+    elsif zoom >= 8 && zoom <= 10
       new_zoom = new_zoom + 2
-    elsif zoom >= 16 && zoom <= 20
+    elsif zoom >= 11 && zoom <= 20
       new_zoom = new_zoom + 1
     end
     return new_zoom
@@ -192,6 +193,7 @@ module Tilestache
 
     name = self.title if options[:item_type] == "map"
     name = self.name if options[:item_type] == "layer"
+    max_zoom = options[:max_zoom] || 21
 
     description  = self.description
 
@@ -214,7 +216,7 @@ module Tilestache
       "scheme"      => "xyz",
       "tiles"       => ["http://maptiles.nypl.org/#{layer_name}/{z}/{x}/{y}.png"],
       "minzoom"     => 1,
-      "maxzoom"     => APP_CONFIG['s3_tiles_max_zoom'],
+      "maxzoom"     => max_zoom,
       "bounds"      => tile_bbox,
       "center"      => [centroid_x, centroid_y, 18 ]
     }
