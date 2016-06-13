@@ -224,7 +224,7 @@ module Tilestache
       "minzoom"     => 1,
       "maxzoom"     => max_zoom,
       "bounds"      => tile_bbox,
-      "center"      => [centroid_x, centroid_y, 18 ]
+      "center"      => [centroid_x, centroid_y, max_zoom ]
     }
 
     return JSON.pretty_generate(config)
