@@ -21,7 +21,7 @@ module Tilestache
     if self.class.to_s == "Map"
       warped_filename = self.warped_filename
     else
-      warped_filename = self.maps.first.warped_filename
+      warped_filename = self.maps.select({|m| m.map_type == :is_map}).first.warped_filename
     end
 
     if warped_filename
