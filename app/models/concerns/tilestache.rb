@@ -199,7 +199,7 @@ module Tilestache
 
     name = self.title if options[:item_type] == "map"
     name = self.name if options[:item_type] == "layer"
-    max_zoom = options[:max_zoom] || 21
+    max_zoom = options[:max_zoom].to_i || 21
 
     description  = self.description
 
