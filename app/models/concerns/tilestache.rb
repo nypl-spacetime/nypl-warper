@@ -145,21 +145,6 @@ module Tilestache
       }
     }
 
-    #    test_config = {
-    #      "cache" => {
-    #        "name" => "Test",
-    #        "path" => "/tmp/stache"
-    #      },
-    #      "layers" => {
-    #        layer_name => {
-    #          "provider" => {
-    #            "name" => "proxy",
-    #            "url" =>  url
-    #          }
-    #        }
-    #      }
-    #    }
-
     JSON.pretty_generate(config)
   end
 
