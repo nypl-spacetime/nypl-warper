@@ -96,6 +96,21 @@
 
           }
 
+          if (ui.panel.id == "Comments") {
+
+            if(typeof maps !== 'undefined'){
+              console.log('maps exists');
+              
+              if(typeof maps['unwarped'] !== 'undefined'){
+                console.log('unwarped exists');
+                  maps['unwarped'].deactivate();
+              }
+
+            }
+
+
+          }
+
           if (ui.panel.id == "Activity_History") {
 
           }
@@ -204,12 +219,18 @@
         });
       });
 
+
       // prevent browser from scrolling with arrow keys
       window.addEventListener("keydown", function(e) {
-          // space and arrow keys
-          if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-              e.preventDefault();
+          //make certain we aren't on the comments tab
+
+          if ( jQuery('.ui-tabs-active').attr('aria-controls') !== "Comments" ) {
+            // suppress the space and arrow keys
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
           }
+          
       }, false);
 
     </script>
