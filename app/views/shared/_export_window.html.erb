@@ -42,7 +42,7 @@
             <li> <%= link_to(image_tag("KML-logo-20x25.png")+"Download KML file",  map_url(:id => @map, :format => :kml)) %>  </li>
             <li><%= link_to(image_tag("wms-20x25.png")+"WMS Capabilities URL",url_for(wms_map_url(:id=>@map, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1")) )%> </li>
             <li>
-              <% tile_url = url_for(tile_map_url(:y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
+              <% tile_url = url_for(tile_map_url(:id=>@map, :y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
               <%= image_tag("tiles-20x25.png") %>
               Tiles base URL: <%= URI.unescape(tile_url) %>
             </li>
@@ -61,7 +61,7 @@
             <li> <%= link_to(image_tag("KML-logo-20x25.png")+"Download KML file",  layer_url(:id => @layer, :format => :kml)) %>  </li>
             <li><%= link_to(image_tag("wms-20x25.png")+"WMS Capabilities URL", :action=>"wms", :id=>@layer, :request => "GetCapabilities", :service => "WMS", :version => "1.1.1" )%> </li>
             <li>
-              <% tile_url = url_for(tile_layer_url(:y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
+              <% tile_url = url_for(tile_layer_url(:id => @layer, :y => "{y}", :x => "{x}", :z => "{z}", :format =>"png")) %>
               <%= image_tag("tiles-20x25.png") %>
               Tiles base URL: <%= URI.unescape(tile_url) %>
             </li>
