@@ -459,6 +459,8 @@ class Map < ActiveRecord::Base
       #command = "#{RAILS_ROOT}/bin/fetch.sh #{id} #{maps_dir}"
       command = "#{ Rails.root }/lib/nypl/fetch_repo.sh #{uuid} #{url} #{maps_dir}"
       logger.debug command
+
+      status = nil
       
       if url
         stdout, stderr, status = Open3.capture3( command )
@@ -488,7 +490,7 @@ class Map < ActiveRecord::Base
       self.paper_trail_event = 'load_finished'
       self.save!
       self.paper_trail_event = nil
-      return status.exitstatus == 0 ? true : false
+      return (status != nil && status.exitstatus == 0) ? true : false
    end
   
   def mask!
