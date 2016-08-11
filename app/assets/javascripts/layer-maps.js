@@ -162,6 +162,7 @@ function loadItems(resp){
   lmaps = jobj.items;
   for (var a=0;a<lmaps.length;a++){
     var lmap = lmaps[a];
+    if (lmap.bbox == undefined || lmap.bbox == "") continue;
     addMapToMapLayer(lmap);
   }
 }
