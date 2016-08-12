@@ -479,6 +479,7 @@ class Map < ActiveRecord::Base
          self.width        = img[0].columns
          self.filename     = filename
          self.status       = :available if not available?
+         self.status       = :available if self.gcps.count == 0
       elsif not available?
         if f_err_msg
          logger.error "fetch std error =" + f_err_msg
