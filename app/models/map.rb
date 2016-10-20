@@ -472,7 +472,7 @@ class Map < ActiveRecord::Base
       end
 
 
-      if url && status.exitstatus == 0 # && !f_err_msg.include?("ERROR")
+      if url && status.exitstatus == 0 && !f_err_msg.include?("ERROR")
          filename = File.join(maps_dir, uuid) + ".tif"
          img = Magick::Image.ping(filename)
          self.height       = img[0].rows
