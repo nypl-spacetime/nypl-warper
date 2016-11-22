@@ -103,6 +103,9 @@ module Tilestache
     elsif zoom >= 11 && zoom <= 20
       new_zoom = new_zoom + 1
     end
+    if new_zoom >= 19
+      new_zoom = 21
+    end
     return new_zoom
   end
 
