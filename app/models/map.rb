@@ -268,6 +268,10 @@ class Map < ActiveRecord::Base
     status == :published
   end
 
+  def publishing?
+    status == :publishing
+  end
+
   def warped_or_published?
     return [:warped, :published].include?(status)
   end
