@@ -15,7 +15,7 @@ module ApplicationHelper
   FLASH_NOTICE_KEYS = [:error, :notice, :warning]
   def flash_messages
     return unless messages = flash.keys.select{|k| FLASH_NOTICE_KEYS.include?(k.to_sym)}
-    formatted_messages = messages.map do |type|      
+    formatted_messages = messages.select { |k, v| v.present? }.map do |type|      
       content_tag :div, :id => type.to_s do
         message_for_item(flash[type], flash["#{type}_item".to_sym])
       end
