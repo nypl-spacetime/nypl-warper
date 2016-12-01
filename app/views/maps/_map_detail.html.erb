@@ -97,6 +97,9 @@
           | <%= link_to("UnPublish",publish_map_path(:id => map, :to => "unpublish"), :data => {:confirm => "Really un publish this map? This will mean that the map can be edited now"} ) -%>
         <% elsif map.publishing? %>
           | Map is being published (started <%= map.versions.where(:event => "publishing").last[:created_at].localtime.to_formatted_s(:short) %>)
+          <% if  Time.now - map.versions.where(:event => "publishing").last[:created_at].localtime > 60*60*12 %>
+            <%= link_to("RePublish?",publish_map_path(:id => map, :to => "publish"), :data => {:confirm => "Just making sure: do you really want to republish this map?"} ) -%>
+          <% end %>
         <% end %>
   
         <% if [:available, :warping, :warped, :published].include?(map.status) && map.parent.nil? %>
