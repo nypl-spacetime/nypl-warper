@@ -17,7 +17,7 @@ module ApplicationHelper
     return unless messages = flash.keys.select{|k| FLASH_NOTICE_KEYS.include?(k.to_sym)}
     formatted_messages = messages.map do |type|      
       content_tag :div, :id => type.to_s do
-        message_for_item(flash[type], flash["#{type}_item".to_sym]) unless type == nil
+        message_for_item(flash[type], flash["#{type}_item".to_sym])
       end
     end
     formatted_messages.join.html_safe
@@ -27,7 +27,7 @@ module ApplicationHelper
     if item.is_a?(Array)
      raw message % link_to(*item)
     else
-      message % item
+      message % item || message
     end
   end
   
