@@ -26,8 +26,10 @@ module ApplicationHelper
   def message_for_item(message, item = nil)
     if item.is_a?(Array)
      raw message % link_to(*item)
+    elsif item != nil
+      message % item
     else
-      message % item || message
+      message
     end
   end
   
