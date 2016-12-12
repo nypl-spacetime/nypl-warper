@@ -82,11 +82,10 @@ module Tilestache
       return nil
     else
 
-      send_tile_config(options)
-
       return true
     end
 
+    send_tile_config(options, self)
 
   end
 
@@ -151,7 +150,7 @@ module Tilestache
     JSON.pretty_generate(config)
   end
 
-  def send_tile_config(options)
+  def send_tile_config(options, thing)
     bucket_name = options[:bucket]
     access = options[:access]
     secret = options[:secret]
@@ -167,7 +166,7 @@ module Tilestache
     tile_config_file = layer_name + "/" + tile_config_filename
     tile_config_file = path + "/"+ tile_config_file unless path.blank?
 
-    the_json = tile_config_json(options)
+    the_json = tile_config_json(options, thing)
 
     config_file = File.join(Rails.root, 'tmp', tile_config_filename)
     File.open(config_file, "w+") do |f|
@@ -181,19 +180,19 @@ module Tilestache
   end
 
   #config file to be sent to s3 as well
-  def tile_config_json(options)
+  def tile_config_json(options, thing)
     layer_name = options[:item_id].to_s
     layer_name = "map-"+ layer_name if options[:item_type] == "map"
 
-    name = self.title if options[:item_type] == "map"
-    name = self.name if options[:item_type] == "layer"
+    name = thing.title if options[:item_type] == "map"
+    name = thing.name if options[:item_type] == "layer"
     max_zoom = options[:max_zoom].to_i || 21.to_i
 
-    description  = self.description
+    description  = thing.description
 
-    attribution ="From: <a href='http://digitalcollections.nypl.org/items/#{self.uuid}'>NYPL Digital Collections</a> | <a href='http://maps.nypl.org/warper/#{self.class.to_s.downcase}s/#{self.id}/'>Warper</a> "
+    attribution ="From: <a href='http://digitalcollections.nypl.org/items/#{thing.uuid}'>NYPL Digital Collections</a> | <a href='http://maps.nypl.org/warper/#{thing.class.to_s.downcase}s/#{thing.id}/'>Warper</a> "
 
-    bbox = self.bbox.split(",")
+    bbox = thing.bbox.split(",")
 
     tile_bbox = [bbox[0].to_f,bbox[1].to_f,bbox[2].to_f,bbox[3].to_f]
 
