@@ -75,6 +75,8 @@ module Tilestache
 
     t_stdout, t_stderr, t_status = Open3.capture3( command )
 
+    send_tile_config(options, self)
+
     unless t_status.success?
 
       puts t_stderr
@@ -84,8 +86,6 @@ module Tilestache
 
       return true
     end
-
-    send_tile_config(options, self)
 
   end
 
