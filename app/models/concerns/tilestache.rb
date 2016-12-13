@@ -9,10 +9,10 @@ module Tilestache
     key_id = ENV['s3_tiles_access_key_id'] || APP_CONFIG['s3_tiles_access_key_id']
     bucket_name = ENV['s3_tiles_bucket_name'] || APP_CONFIG['s3_tiles_bucket_name']
     bucket_path = ENV['s3_tiles_bucket_path'] || APP_CONFIG['s3_tiles_bucket_path']
-    max_zoom = ENV['s3_tiles_max_zoom'] || APP_CONFIG['s3_tiles_max_zoom'] #i.e. 21
+    max_zoom = ENV['s3_tiles_max_zoom'] || APP_CONFIG['s3_tiles_max_zoom'] #i.e. 22
 
     if max_zoom == "" || max_zoom.to_i > 25
-      max_zoom = 21
+      max_zoom = 22
     end
 
     # ==============================================================================
@@ -102,7 +102,7 @@ module Tilestache
     elsif zoom >= 11 && zoom <= 20
       new_zoom = new_zoom + 1
     end
-    if new_zoom >= 19
+    if new_zoom >= 19 && new_zoom < 22
       new_zoom = 21
     end
     return new_zoom
@@ -186,7 +186,7 @@ module Tilestache
 
     name = thing.title if options[:item_type] == "map"
     name = thing.name if options[:item_type] == "layer"
-    max_zoom = options[:max_zoom].to_i || 21.to_i
+    max_zoom = options[:max_zoom].to_i || 22.to_i
 
     description  = thing.description
 
