@@ -5,10 +5,6 @@ module Tilestache
   extend ActiveSupport::Concern
 
   def tilestache_seed
-    secret = ENV['s3_tiles_secret_access_key'] || APP_CONFIG['s3_tiles_secret_access_key']
-    key_id = ENV['s3_tiles_access_key_id'] || APP_CONFIG['s3_tiles_access_key_id']
-    bucket_name = ENV['s3_tiles_bucket_name'] || APP_CONFIG['s3_tiles_bucket_name']
-    bucket_path = ENV['s3_tiles_bucket_path'] || APP_CONFIG['s3_tiles_bucket_path']
     max_zoom = ENV['s3_tiles_max_zoom'] || APP_CONFIG['s3_tiles_max_zoom'] #i.e. 22
 
     if max_zoom == "" || max_zoom.to_i > 25
@@ -41,18 +37,7 @@ module Tilestache
     end
     # ==============================================================================
 
-    item_type  = self.class.to_s.downcase
-    item_id =  self.id
-
-    options = {
-      :item_type => item_type,
-      :item_id => item_id,
-      :secret => secret,
-      :access => key_id,
-      :bucket => bucket_name,
-      :max_zoom => max_zoom,
-      :path => bucket_path
-    }
+    options = create_options(self)
 
     config_json = tilestache_config_json(options)
 
@@ -87,6 +72,27 @@ module Tilestache
       return true
     end
 
+  end
+
+  def create_options(who)
+    secret = ENV['s3_tiles_secret_access_key'] || APP_CONFIG['s3_tiles_secret_access_key']
+    key_id = ENV['s3_tiles_access_key_id'] || APP_CONFIG['s3_tiles_access_key_id']
+    bucket_name = ENV['s3_tiles_bucket_name'] || APP_CONFIG['s3_tiles_bucket_name']
+    bucket_path = ENV['s3_tiles_bucket_path'] || APP_CONFIG['s3_tiles_bucket_path']
+    item_type  = who.class.to_s.downcase
+    item_id =  who.id
+
+    options = {
+      :item_type => item_type,
+      :item_id => item_id,
+      :secret => secret,
+      :access => key_id,
+      :bucket => bucket_name,
+      :max_zoom => max_zoom,
+      :path => bucket_path
+    }
+
+    return options
   end
 
 
