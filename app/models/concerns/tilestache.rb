@@ -40,6 +40,7 @@ module Tilestache
     File.open(config_file, "w+") do |f|
       f.write(config_json)
     end
+    return config_file
   end
 
   def build_tilestache_command(who, config_file, from_zoom, to_zoom)
@@ -64,6 +65,7 @@ module Tilestache
     bucket_path = ENV['s3_tiles_bucket_path'] || APP_CONFIG['s3_tiles_bucket_path']
     item_type  = who.class.to_s.downcase
     item_id =  who.id
+    max_zoom = get_max_zoom(who)
 
     options = {
       :item_type => item_type,
