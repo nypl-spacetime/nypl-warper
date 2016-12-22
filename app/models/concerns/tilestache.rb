@@ -9,22 +9,9 @@ module Tilestache
 
     max_zoom = get_max_zoom(self)
 
-    config_json = tilestache_config_json(options)
+    config_file = create_config_file(self)
 
-    config_file = File.join(Rails.root, 'tmp', "#{options[:item_type]}_#{options[:item_id]}_tilestache.json")
-    File.open(config_file, "w+") do |f|
-      f.write(config_json)
-    end
-
-    bbox = self.bbox.split(",")
-    tile_bbox = bbox[1],bbox[0],bbox[3],bbox[2]
-    tile_bbox_str = tile_bbox.join(" ")
-
-    layer_name = self.id.to_s
-    layer_name = "map-"+ layer_name if options[:item_type] == "map"
-
-    command = "cd #{APP_CONFIG['tilestache_path']}; python scripts/tilestache-seed.py -c #{config_file}" +
-      " -l #{layer_name} -b #{tile_bbox_str} --enable-retries -x #{(1..max_zoom.to_i).to_a.join(' ')}"
+    command = build_tilestache_command(self, config_file, 1, max_zoom)
 
     puts command
 
@@ -45,6 +32,30 @@ module Tilestache
   end
 
   private
+
+  def create_config_file(who)
+    options = create_options(who)
+    config_json = tilestache_config_json(options)
+    config_file = File.join(Rails.root, 'tmp', "#{options[:item_type]}_#{options[:item_id]}_tilestache.json")
+    File.open(config_file, "w+") do |f|
+      f.write(config_json)
+    end
+  end
+
+  def build_tilestache_command(who, config_file, from_zoom, to_zoom)
+    options = create_options(who)
+
+    bbox = who.bbox.split(",")
+    tile_bbox = bbox[1],bbox[0],bbox[3],bbox[2]
+    tile_bbox_str = tile_bbox.join(" ")
+
+    layer_name = who.id.to_s
+    layer_name = "map-"+ layer_name if options[:item_type] == "map"
+
+    command = "cd #{APP_CONFIG['tilestache_path']}; python scripts/tilestache-seed.py -c #{config_file}" +
+      " -l #{layer_name} -b #{tile_bbox_str} --enable-retries -x #{(from_zoom..to_zoom.to_i).to_a.join(' ')}"
+    return command
+  end
 
   def create_options(who)
     secret = ENV['s3_tiles_secret_access_key'] || APP_CONFIG['s3_tiles_secret_access_key']
