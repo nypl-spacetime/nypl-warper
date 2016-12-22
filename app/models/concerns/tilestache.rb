@@ -5,39 +5,9 @@ module Tilestache
   extend ActiveSupport::Concern
 
   def tilestache_seed
-    max_zoom = ENV['s3_tiles_max_zoom'] || APP_CONFIG['s3_tiles_max_zoom'] #i.e. 22
-
-    if max_zoom == "" || max_zoom.to_i > 25
-      max_zoom = 22
-    end
-
-    # ==============================================================================
-    # Code to compute max_zoom
-    # uses width of map in pixels, and width of map in degrees
-    if self.class.to_s == "Map"
-      warped_filename = self.warped_filename
-    else
-      warped_filename = self.maps.select {|m| m.map_type == :is_map}.first.warped_filename
-    end
-
-    if warped_filename
-      tile_width = 256.0
-      im = Magick::Image.read(warped_filename).first
-      bbox = RGeo::Cartesian::BoundingBox.create_from_geometry(self.bbox_geom)
-
-      pixel_width = im.columns
-      degree_width = bbox.x_span
-
-      # TODO: OR FLOOR?!
-      max_tiles_x = (pixel_width / tile_width).ceil # 39
-
-      max_zoom = compute_max_zoom(max_tiles_x, degree_width)
-
-      max_zoom= add_zoom_levels(max_zoom)
-    end
-    # ==============================================================================
-
     options = create_options(self)
+
+    max_zoom = get_max_zoom(self)
 
     config_json = tilestache_config_json(options)
 
@@ -74,6 +44,8 @@ module Tilestache
 
   end
 
+  private
+
   def create_options(who)
     secret = ENV['s3_tiles_secret_access_key'] || APP_CONFIG['s3_tiles_secret_access_key']
     key_id = ENV['s3_tiles_access_key_id'] || APP_CONFIG['s3_tiles_access_key_id']
@@ -95,8 +67,41 @@ module Tilestache
     return options
   end
 
+  def get_max_zoom(who)
+    max_zoom = ENV['s3_tiles_max_zoom'] || APP_CONFIG['s3_tiles_max_zoom'] #i.e. 22
 
-  private
+    if max_zoom == "" || max_zoom.to_i > 25
+      max_zoom = 22
+    end
+
+    # ==============================================================================
+    # Code to compute max_zoom
+    # uses width of map in pixels, and width of map in degrees
+    if who.class.to_s == "Map"
+      warped_filename = who.warped_filename
+    else
+      warped_filename = who.maps.select {|m| m.map_type == :is_map}.first.warped_filename
+    end
+
+    if warped_filename
+      tile_width = 256.0
+      im = Magick::Image.read(warped_filename).first
+      bbox = RGeo::Cartesian::BoundingBox.create_from_geometry(who.bbox_geom)
+
+      pixel_width = im.columns
+      degree_width = bbox.x_span
+
+      # TODO: OR FLOOR?!
+      max_tiles_x = (pixel_width / tile_width).ceil # 39
+
+      max_zoom = compute_max_zoom(max_tiles_x, degree_width)
+
+      max_zoom= add_zoom_levels(max_zoom)
+    end
+    # ==============================================================================
+
+    return max_zoom
+  end
 
   def add_zoom_levels(zoom)
     # adds zoom levels to allow for deeper zoom despite the geotiff not being high-res enough
