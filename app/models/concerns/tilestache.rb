@@ -5,19 +5,21 @@ module Tilestache
   extend ActiveSupport::Concern
 
   def tilestache_seed
-    options = create_options(self)
+    who = self
 
-    max_zoom = get_max_zoom(self)
+    options = create_options(who)
 
-    config_file = create_config_file(self)
+    max_zoom = get_max_zoom(who)
 
-    command = build_tilestache_command(self, config_file, 1, max_zoom)
+    config_file = create_config_file(who)
+
+    command = build_tilestache_command(who, config_file, 1, max_zoom)
 
     puts command
 
     t_stdout, t_stderr, t_status = Open3.capture3( command )
 
-    send_tile_config(options, self)
+    send_tile_config(options, who)
 
     unless t_status.success?
 
