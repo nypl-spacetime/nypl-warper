@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   before_filter :check_site_read_only, :unless => :devise_controller?
   
   before_filter :check_rack_attack
+
+  after_filter :set_access_control_headers
   
   def info_for_paper_trail
     { :ip => request.remote_ip, :user_agent => request.user_agent }
@@ -26,6 +28,11 @@ class ApplicationController < ActionController::Base
     check_role("developer")
   end
 
+
+  def set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Request-Method'] = '*'
+  end
 
   protected
 
