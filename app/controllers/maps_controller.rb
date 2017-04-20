@@ -331,6 +331,13 @@ class MapsController < ApplicationController
     
     
   end
+
+  def reimport
+    @map = Map.find(params[:id])
+    @map.fetch_from_image_server(true)
+
+    redirect_to map_path(@map)
+  end
   
 
   def comments
