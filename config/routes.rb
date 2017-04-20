@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       get 'inset_maps'
       post 'create_inset'
       post 'map_type'
+      post 'reimport'
       get 'export'
       get 'warp'
       get 'clip'
