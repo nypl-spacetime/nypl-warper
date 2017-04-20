@@ -107,7 +107,7 @@
     
         <% end %>
   
-        <%= form_for(@map, url: {action: "reimport"}, method: "post") do |f| %>
+        <%= form_for(@map, url: {action: "reimport"}, :class => "map-type-form" , method: "post") do |f| %>
           <%= f.submit "Re-import Map" %>
         <% end %>
   
