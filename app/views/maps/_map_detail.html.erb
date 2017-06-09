@@ -108,7 +108,7 @@
         <% end %>
   
         <% form_id = "map_import_form#{map.id}" %>
-        <%= link_to('Re-import Map', reimport_map_path(:id => map), :method => :post, html: {:id=>form_id, :class => "map-type-form"}, :data => {:confirm => "really reimport this map?"} ) -%>
+        <%= link_to('Re-import Map', reimport_map_path(:id => map), :method => :post, :class => "buttonWarper", :data => {:confirm => "really reimport this map?"} ) -%>
         <%#= form_for(map, url: url_for(action: "reimport", controller: "maps"), html: {:id=>form_id, :class => "map-type-form"}, method: "post") do |f| %>
           <%#= f.submit "Re-import Map" %>
         <%# end %>
