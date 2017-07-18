@@ -37,7 +37,11 @@ class User < ActiveRecord::Base
   
   #override the confirm method from devise, called when a user confirms their email. Email auth only
   def confirm!
-    UserMailer.new_registration(self).deliver_now
+    begin
+      UserMailer.new_registration(self).deliver_now
+    rescue
+      logger.debug "SMTP not working"
+    end
     super
   end
   
