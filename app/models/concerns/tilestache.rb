@@ -9,11 +9,11 @@ module Tilestache
 
     options = create_options(who)
 
-    max_zoom = get_max_zoom(who)
+    max_zoom = options[:max_zoom]
 
-    config_file = create_config_file(who)
+    config_file = create_config_file(who, options)
 
-    command = build_tilestache_command(who, config_file, 1, max_zoom)
+    command = build_tilestache_command(who, config_file, 1, max_zoom, options)
 
     puts command
 
@@ -35,8 +35,7 @@ module Tilestache
 
   private
 
-  def create_config_file(who)
-    options = create_options(who)
+  def create_config_file(who, options)
     config_json = tilestache_config_json(options)
     config_file = File.join(Rails.root, 'tmp', "#{options[:item_type]}_#{options[:item_id]}_tilestache.json")
     File.open(config_file, "w+") do |f|
@@ -45,8 +44,7 @@ module Tilestache
     return config_file
   end
 
-  def build_tilestache_command(who, config_file, from_zoom, to_zoom)
-    options = create_options(who)
+  def build_tilestache_command(who, config_file, from_zoom, to_zoom, options)
 
     bbox = who.bbox.split(",")
     tile_bbox = bbox[1],bbox[0],bbox[3],bbox[2]
