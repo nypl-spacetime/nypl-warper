@@ -23,7 +23,7 @@ GDAL_PATH = APP_CONFIG['gdal_path'] || ""
 
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.smtp_settings = {
-  :address => "outbounds9.obsmtp.com",
+  :address => "sendmail01.nypl.org",
   :port => 25,
   :domain => "maps.nypl.org",
   :enable_starttls_auto => true,
