@@ -21,13 +21,16 @@ GDAL_PATH = APP_CONFIG['gdal_path'] || ""
 #MAX_ATTACHMENT_SIZE = APP_CONFIG['max_attachment_size']
 #GDAL_MEMORY_LIMIT = APP_CONFIG['gdal_memory_limit']
 
+# See the value of AWS Parameter store (/production/ses/mapsATnypl.org/credentials)
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.smtp_settings = {
-  :address => "sendmail01.nypl.org",
+  :address => "email-smtp.us-east-1.amazonaws.com",
   :port => 25,
   :domain => "maps.nypl.org",
-  :enable_starttls_auto => true,
-  :openssl_verify_mode  => 'none'
+  :user_name => ENV['MAPS_SMPT_USERNAME'],
+  :password => ENV['MAPS_SMPT_PASSWORD'],
+  :authentication => :login,
+  :enable_starttls_auto => true
   }
 #ActionMailer::Base.delivery_method = :sendmail
 
