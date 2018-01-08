@@ -15,7 +15,7 @@ GDAL_PATH = APP_CONFIG['gdal_path'] || ""
 # Uncomment and populate the config file if you want to enable:
 # MAX_DIMENSION = will reduce the dimensions of the image when uploaded
 # MAX_ATTACHMENT_SIZE = will reject files that are bigger than this
-# GDAL_MEMORY_LIMIT = limit the amount of memory available to gdal 
+# GDAL_MEMORY_LIMIT = limit the amount of memory available to gdal
 #
 #MAX_DIMENSION = APP_CONFIG['max_dimension']
 #MAX_ATTACHMENT_SIZE = APP_CONFIG['max_attachment_size']
@@ -25,7 +25,7 @@ GDAL_PATH = APP_CONFIG['gdal_path'] || ""
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.smtp_settings = {
   :address => "email-smtp.us-east-1.amazonaws.com",
-  :port => 25,
+  :port => 587,
   :domain => "maps.nypl.org",
   :user_name => ENV['MAPS_SMPT_USERNAME'],
   :password => ENV['MAPS_SMPT_PASSWORD'],
