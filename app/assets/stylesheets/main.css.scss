@@ -49,6 +49,44 @@ table {
 
 /* end reset */
 
+.header-globalAlerts {
+  background-color: rgb(254, 226, 74);
+  color: rgb(51,51,51);
+  font-size: 16px;
+  font-weight: 400;
+  display: block;
+  border-bottom-color: rgb(144, 128, 52);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  font-family: "system-ui","Segoe UI",Tahoma,Helvetica,arial;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  padding-bottom: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 15px;
+}
+
+.header-globalAlerts-box {
+  margin-bottom: 7px;
+  margin-top: 7px;
+  margin-left: 16.8px;
+  margin-right: 16.8px;
+  position: relative;
+  text-size-adjust: 100%;
+}
+
+.header-globalAlerts-box-item {
+  line-height: 16px;
+  margin-bottom: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 8px;
+  text-size-adjust: 100%;
+}
+
 textarea.import_log { 
   width:auto;
   height: auto; 

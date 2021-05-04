@@ -17,8 +17,10 @@
   <%else-%>
     <body>
   <%end%>
-      
+
+    <%= render :partial => 'shared/nypl-advisory' %>  
     <%= render :partial => 'shared/nypl_stripe' %>
+
     <% if read_only_mode %>
       <%= render :partial => 'shared/read_only' %>
     <% end %>
