@@ -1,5 +1,13 @@
 # NYPL Map Warper
 
+Deprecation notice
+
+As of April 2021, Mapwarper will no longer be updated by NYPL, and will soon be archived. This means all embedded views utilizing Mapwarper will no longer work once the site is archived. However, all contributions and data will be retained by the Library for future use and research.
+
+Thank you for your interest and use of the tool.
+
+---
+
 This software has been developed by Topomancy LLC with the support and
 collaboration of the New York Public Library.
 
