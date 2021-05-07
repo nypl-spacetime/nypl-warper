@@ -17,8 +17,9 @@
   <%else-%>
     <body>
   <%end%>
-      
+
     <%= render :partial => 'shared/nypl_stripe' %>
+
     <% if read_only_mode %>
       <%= render :partial => 'shared/read_only' %>
     <% end %>
@@ -30,7 +31,7 @@
     </div>
     <%= breadcrumbs "application" %>
     <div id="warper-maindiv">
-
+      <%= render :partial => 'shared/nypl-advisory' %>
       <%= flash_messages %>
 
       <%= yield %>
