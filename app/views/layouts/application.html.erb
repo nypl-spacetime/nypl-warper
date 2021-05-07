@@ -23,7 +23,9 @@
     <% if read_only_mode %>
       <%= render :partial => 'shared/read_only' %>
     <% end %>
-      
+    
+    <%= render :partial => 'shared/nypl_advisory' %>
+
     <div id="headerDiv" class="headerDiv">
       <h1><%= link_to "NYPL Map Warper", root_path %></h1>
       <%= render :partial => 'shared/header' %>
@@ -31,7 +33,6 @@
     </div>
     <%= breadcrumbs "application" %>
     <div id="warper-maindiv">
-      <%= render :partial => 'shared/nypl-advisory' %>
       <%= flash_messages %>
 
       <%= yield %>
