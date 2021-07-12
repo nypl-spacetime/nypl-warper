@@ -42,8 +42,8 @@ GEM
     acts-as-taggable-on (3.3.0)
       activerecord (>= 3, < 5)
     acts_as_commentable (4.0.2)
-    addressable (2.5.1)
-      public_suffix (~> 2.0, >= 2.0.2)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     arel (6.0.4)
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
@@ -172,7 +172,7 @@ GEM
       mime-types
     pg (0.21.0)
     proxies (0.2.1)
-    public_suffix (2.0.5)
+    public_suffix (4.0.6)
     rack (1.6.8)
     rack-attack (3.0.0)
       rack
